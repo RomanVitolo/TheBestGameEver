@@ -2,20 +2,27 @@
 
 namespace Core.Scripts.Runtime.Agent
 {
+    [RequireComponent(typeof(CharacterController))]      
     public class Agent : MonoBehaviour
     {
         [field: SerializeField] public AgentMovement AgentMovement { get; set; }
         [field: SerializeField] public AgentAnimatorSO AgentAnimator { get; private set; }
+        [field: SerializeField] public Transform AimPoint { get; private set; }
         public CharacterController CharacterController { get; private set; }
-        
-        public Camera MainCamera { get; private set; }
 
-        private void Awake()
+        private Camera MainCamera;                  
+      
+        public void GetComponents()
         {
             AgentMovement.InputReader.InitializeControls();
             CharacterController = GetComponent<CharacterController>();
             AgentAnimator.Animator = GetComponentInChildren<Animator>();
         }
+
+        public void DestroyComponents()
+        {
+            AgentMovement.InputReader.DestroyControls();
+        }     
 
         public Camera FindMainCamera()
         {
@@ -23,9 +30,6 @@ namespace Core.Scripts.Runtime.Agent
             return MainCamera;
         }
 
-        private void OnDestroy()
-        {
-            AgentMovement.InputReader.DestroyControls();
-        }
+      
     }
 }

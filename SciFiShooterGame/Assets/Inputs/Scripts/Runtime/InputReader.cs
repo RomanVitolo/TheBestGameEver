@@ -10,8 +10,11 @@ namespace GlobalInputs
     {
         public Vector2 MovementValue { get; private set; }
         public Vector2 AimInputValue { get; private set; }
+        public bool IsRunning { get; private set; }
 
-        public event Action<bool> NotifyOnFire; 
+        public event Action<bool> NotifyOnFire;
+
+        
     
         private Controls _controls;
     
@@ -41,6 +44,12 @@ namespace GlobalInputs
         public void OnAim(InputAction.CallbackContext context)
         {
             AimInputValue = context.ReadValue<Vector2>();
+        }
+
+        public void OnRun(InputAction.CallbackContext context)
+        {
+            if (context.performed) IsRunning = true;
+            else if (context.canceled) IsRunning = false;   
         }
     }
 }

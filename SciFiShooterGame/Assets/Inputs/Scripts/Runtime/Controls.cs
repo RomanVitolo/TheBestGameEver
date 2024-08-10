@@ -55,6 +55,15 @@ namespace GlobalInputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd4eb59b-892b-4389-85b3-23021aa91731"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -134,6 +143,17 @@ namespace GlobalInputs
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1207f123-218c-49cd-bf25-64455d0f646f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -173,6 +193,7 @@ namespace GlobalInputs
             m_Character_Fire = m_Character.FindAction("Fire", throwIfNotFound: true);
             m_Character_Movement = m_Character.FindAction("Movement", throwIfNotFound: true);
             m_Character_Aim = m_Character.FindAction("Aim", throwIfNotFound: true);
+            m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
             // Weapon
             m_Weapon = asset.FindActionMap("Weapon", throwIfNotFound: true);
             m_Weapon_Newaction = m_Weapon.FindAction("New action", throwIfNotFound: true);
@@ -240,6 +261,7 @@ namespace GlobalInputs
         private readonly InputAction m_Character_Fire;
         private readonly InputAction m_Character_Movement;
         private readonly InputAction m_Character_Aim;
+        private readonly InputAction m_Character_Run;
         public struct CharacterActions
         {
             private @Controls m_Wrapper;
@@ -247,6 +269,7 @@ namespace GlobalInputs
             public InputAction @Fire => m_Wrapper.m_Character_Fire;
             public InputAction @Movement => m_Wrapper.m_Character_Movement;
             public InputAction @Aim => m_Wrapper.m_Character_Aim;
+            public InputAction @Run => m_Wrapper.m_Character_Run;
             public InputActionMap Get() { return m_Wrapper.m_Character; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -265,6 +288,9 @@ namespace GlobalInputs
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
             }
 
             private void UnregisterCallbacks(ICharacterActions instance)
@@ -278,6 +304,9 @@ namespace GlobalInputs
                 @Aim.started -= instance.OnAim;
                 @Aim.performed -= instance.OnAim;
                 @Aim.canceled -= instance.OnAim;
+                @Run.started -= instance.OnRun;
+                @Run.performed -= instance.OnRun;
+                @Run.canceled -= instance.OnRun;
             }
 
             public void RemoveCallbacks(ICharacterActions instance)
@@ -346,6 +375,7 @@ namespace GlobalInputs
             void OnFire(InputAction.CallbackContext context);
             void OnMovement(InputAction.CallbackContext context);
             void OnAim(InputAction.CallbackContext context);
+            void OnRun(InputAction.CallbackContext context);
         }
         public interface IWeaponActions
         {

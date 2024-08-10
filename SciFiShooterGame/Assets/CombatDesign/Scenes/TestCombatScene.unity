@@ -1230,7 +1230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e6939b9f6048e44f8b374ed4448ebbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aimMouse: {fileID: 1088426124}
 --- !u!114 &2128274924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1247,6 +1246,7 @@ MonoBehaviour:
     type: 2}
   <AgentAnimator>k__BackingField: {fileID: 11400000, guid: 235e7094113ae6d49a3acb6dbabb833b,
     type: 2}
+  <AimPoint>k__BackingField: {fileID: 1088426124}
 --- !u!143 &2128274925
 CharacterController:
   m_ObjectHideFlags: 0

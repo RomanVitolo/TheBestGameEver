@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <InputReader>k__BackingField: {fileID: 11400000, guid: dfab5b69e4f433a47aa90176c3eabbe8,
     type: 2}
-  <WalkSpeed>k__BackingField: 3
   <AimLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 192
-  MovementDirection: {x: 0, y: 0, z: 0}
+  <WalkSpeed>k__BackingField: 1.5
+  <RunSpeed>k__BackingField: 3.5
