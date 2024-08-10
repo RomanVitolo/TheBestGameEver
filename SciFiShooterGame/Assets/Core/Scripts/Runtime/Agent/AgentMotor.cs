@@ -64,7 +64,7 @@ namespace Core.Scripts.Runtime.Agent
         }
 
         private void OnEnable()
-        {
+        {    
             AssignAgentMovementFields(); 
             AssignAgentAimFields(); 
             AssignAnimationAgentFields();
@@ -140,9 +140,17 @@ namespace Core.Scripts.Runtime.Agent
 
             bool playRunAnimation = _agent.AgentMovement.InputReader.IsRunning && _movementDirection.magnitude > 0;
             _agentAnimator.SetBool(_agentIsRunningHash, playRunAnimation);
+            
+            TriggerShootAnimation();        
         }
 
-        #endregion                 
+        #endregion
+
+        private void TriggerShootAnimation()
+        {
+            if(_agent.AgentMovement.InputReader.CanShoot)
+                _agentAnimator.SetTrigger("Fire");
+        }         
     } 
 }
 

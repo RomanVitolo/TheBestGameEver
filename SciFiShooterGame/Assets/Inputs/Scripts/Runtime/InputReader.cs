@@ -11,10 +11,7 @@ namespace GlobalInputs
         public Vector2 MovementValue { get; private set; }
         public Vector2 AimInputValue { get; private set; }
         public bool IsRunning { get; private set; }
-
-        public event Action<bool> NotifyOnFire;
-
-        
+        public bool CanShoot { get; private set; }        
     
         private Controls _controls;
     
@@ -31,9 +28,8 @@ namespace GlobalInputs
     
         public void OnFire(InputAction.CallbackContext context)
         {
-            if (context.canceled) return;   
-        
-            NotifyOnFire?.Invoke(context.performed);
+            if (context.performed) CanShoot = context.performed;
+            else if (context.canceled) CanShoot = false;    
         }
 
         public void OnMovement(InputAction.CallbackContext context)
