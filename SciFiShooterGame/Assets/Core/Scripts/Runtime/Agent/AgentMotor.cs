@@ -68,13 +68,7 @@ namespace Core.Scripts.Runtime.Agent
             AssignAgentMovementFields(); 
             AssignAgentAimFields(); 
             AssignAnimationAgentFields();
-        }
-
-        private void OnDestroy()
-        {
-            _agent.DestroyComponents();
-        }
-
+        }     
 
         private void Update()
         {
@@ -139,18 +133,12 @@ namespace Core.Scripts.Runtime.Agent
             _agentAnimator.SetFloat(_agentZVelocityHash, zVelocity, _agentDampTime, Time.deltaTime);
 
             bool playRunAnimation = _agent.AgentMovement.InputReader.IsRunning && _movementDirection.magnitude > 0;
-            _agentAnimator.SetBool(_agentIsRunningHash, playRunAnimation);
-            
-            TriggerShootAnimation();        
+            _agentAnimator.SetBool(_agentIsRunningHash, playRunAnimation);                  
         }
 
         #endregion
 
-        private void TriggerShootAnimation()
-        {
-            if(_agent.AgentMovement.InputReader.CanShoot)
-                _agentAnimator.SetTrigger("Fire");
-        }         
+            
     } 
 }
 

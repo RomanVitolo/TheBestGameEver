@@ -18,11 +18,11 @@ namespace Core.Scripts.Runtime.Agent
             CharacterController = GetComponent<CharacterController>();
             AgentAnimator.Animator = GetComponentInChildren<Animator>();
         }
-
-        public void DestroyComponents()
+        
+        private void OnDestroy()
         {
             AgentMovement.InputReader.DestroyControls();
-        }     
+        }      
 
         public Camera FindMainCamera()
         {
