@@ -9,6 +9,7 @@ namespace Core.Scripts.Runtime.Agent
         
         private Agent _agent;     
         private float _verticalVelocity;
+        private Vector3 _movementDirection;
         private Vector3 _lookingDirection;
 
         private const float _gravityScale = 9.81f;
@@ -20,14 +21,14 @@ namespace Core.Scripts.Runtime.Agent
 
         private void Update()
         {
-            MovementBehavior();
-
+            MovementBehavior();    
             AimInputTowards();
+            AnimatorControllers();
         }
 
         private void AimInputTowards()
         {
-            Ray ray = Camera.main.ScreenPointToRay(_agent.AgentMovement.InputReader.AimInputValue);
+            Ray ray = _agent.FindMainCamera().ScreenPointToRay(_agent.AgentMovement.InputReader.AimInputValue);
 
             if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _agent.AgentMovement.AimLayerMask))
             {
@@ -43,13 +44,13 @@ namespace Core.Scripts.Runtime.Agent
 
         private void MovementBehavior()
         {
-            _agent.AgentMovement.MovementDirection = new Vector3(_agent.AgentMovement.InputReader.MovementValue.x, 0,
+            _movementDirection = new Vector3(_agent.AgentMovement.InputReader.MovementValue.x, 0,
                 _agent.AgentMovement.InputReader.MovementValue.y);
             ApplyGravity();
 
-            if (_agent.AgentMovement.MovementDirection.magnitude > 0)
+            if (_movementDirection.magnitude > 0)
             {
-                _agent.CharacterController.Move(_agent.AgentMovement.MovementDirection *
+                _agent.CharacterController.Move(_movementDirection *
                                                 (_agent.AgentMovement.WalkSpeed * Time.deltaTime));
             }
         }
@@ -59,9 +60,20 @@ namespace Core.Scripts.Runtime.Agent
             if (!_agent.CharacterController.isGrounded)
             {
                 _verticalVelocity -= _gravityScale * Time.deltaTime;
-                _agent.AgentMovement.MovementDirection.y = _verticalVelocity;
+                _movementDirection.y = _verticalVelocity;
             }
             else _verticalVelocity = -.5f;
+        }
+
+        private void AnimatorControllers()
+        {
+            float xVelocity = Vector3.Dot(_movementDirection.normalized, transform.right);
+            float zVelocity = Vector3.Dot(_movementDirection.normalized, transform.forward);
+            
+            _agent.AgentAnimator.Animator.SetFloat(_agent.AgentAnimator.XVelocity, xVelocity,
+                _agent.AgentAnimator.DampTime, Time.deltaTime );
+            _agent.AgentAnimator.Animator.SetFloat(_agent.AgentAnimator.ZVelocity, zVelocity,
+                _agent.AgentAnimator.DampTime, Time.deltaTime);
         }
     } 
 }

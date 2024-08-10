@@ -8,9 +8,7 @@ namespace Core.Scripts.Runtime.Agent
     {
         [field: SerializeField] public InputReader InputReader { get; private set; } 
         [field: SerializeField] public float WalkSpeed { get; set; } 
-        [field: SerializeField] public LayerMask AimLayerMask { get; private set; } 
-        
-        public Vector3 MovementDirection;
+        [field: SerializeField] public LayerMask AimLayerMask { get; private set; }
     }
 }
 
