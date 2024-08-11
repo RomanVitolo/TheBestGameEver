@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
-  <WeaponType>k__BackingField: 2
+  <WeaponType>k__BackingField: 3
+  <WeaponInputSlot>k__BackingField: 1
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0

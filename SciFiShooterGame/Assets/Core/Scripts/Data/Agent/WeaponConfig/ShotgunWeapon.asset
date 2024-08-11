@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 5
+  <WeaponInputSlot>k__BackingField: 2
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0

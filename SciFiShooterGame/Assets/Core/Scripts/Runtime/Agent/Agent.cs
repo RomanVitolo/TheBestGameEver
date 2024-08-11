@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using GlobalInputs;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agent
 {
     [RequireComponent(typeof(CharacterController))]      
     public class Agent : MonoBehaviour
     {
+        [field: SerializeField] public InputReader AgentInputReader { get; private set; } 
         [field: SerializeField] public AgentMovement AgentMovement { get; set; }
         [field: SerializeField] public AgentAnimatorSO AgentAnimator { get; private set; }
         [field: SerializeField] public Transform AimPoint { get; private set; }
@@ -14,14 +16,14 @@ namespace Core.Scripts.Runtime.Agent
       
         public void GetComponents()
         {
-            AgentMovement.InputReader.InitializeControls();
+            AgentInputReader.InitializeControls();
             CharacterController = GetComponent<CharacterController>();
             AgentAnimator.Animator = GetComponentInChildren<Animator>();
         }
         
         private void OnDestroy()
         {
-            AgentMovement.InputReader.DestroyControls();
+            AgentInputReader.DestroyControls();
         }      
 
         public Camera FindMainCamera()

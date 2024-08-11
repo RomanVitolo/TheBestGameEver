@@ -82,7 +82,7 @@ namespace Core.Scripts.Runtime.Agent
         #region AimBehavior    
         private void AimInputTowards()
         {
-            Ray ray = _agent.FindMainCamera().ScreenPointToRay(_agent.AgentMovement.InputReader.AimInputValue);
+            Ray ray = _agent.FindMainCamera().ScreenPointToRay(_agent.AgentInputReader.AimInputValue);
 
             if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity,_aimLayerMask))
             {
@@ -100,11 +100,11 @@ namespace Core.Scripts.Runtime.Agent
         #region MovementBehavior   
         private void MovementBehavior()
         {
-            _movementDirection = new Vector3(_agent.AgentMovement.InputReader.MovementValue.x, 0,
-                _agent.AgentMovement.InputReader.MovementValue.y);
+            _movementDirection = new Vector3(_agent.AgentInputReader.MovementValue.x, 0,
+                _agent.AgentInputReader.MovementValue.y);
             ApplyGravity();
 
-            _speed = _agent.AgentMovement.InputReader.IsRunning ? _runSpeed : _walkSpeed;      
+            _speed = _agent.AgentInputReader.IsRunning ? _runSpeed : _walkSpeed;      
             
             if (_movementDirection.magnitude > 0) 
                 _agent.CharacterController.Move(_movementDirection *
@@ -132,7 +132,7 @@ namespace Core.Scripts.Runtime.Agent
             _agentAnimator.SetFloat(_agentXVelocityHash, xVelocity, _agentDampTime, Time.deltaTime );
             _agentAnimator.SetFloat(_agentZVelocityHash, zVelocity, _agentDampTime, Time.deltaTime);
 
-            bool playRunAnimation = _agent.AgentMovement.InputReader.IsRunning && _movementDirection.magnitude > 0;
+            bool playRunAnimation = _agent.AgentInputReader.IsRunning && _movementDirection.magnitude > 0;
             _agentAnimator.SetBool(_agentIsRunningHash, playRunAnimation);                  
         }
 

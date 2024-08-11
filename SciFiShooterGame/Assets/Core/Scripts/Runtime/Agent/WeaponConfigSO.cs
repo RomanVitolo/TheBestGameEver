@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GlobalInputs;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agent
 {
@@ -19,7 +20,9 @@ namespace Core.Scripts.Runtime.Agent
     public class WeaponConfigSO : ScriptableObject
     {
         [field: SerializeField] public WeaponType WeaponType { get; private set; }
+        [field: SerializeField] public int WeaponInputSlot { get; set; }
         [field: SerializeField] public float WeaponFireRate { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
+        
     }
 }

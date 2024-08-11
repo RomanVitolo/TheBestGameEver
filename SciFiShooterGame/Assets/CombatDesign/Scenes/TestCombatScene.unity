@@ -1104,7 +1104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24271519914f9b4490e8abc53a66150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponSlot: 5
+  _weaponSlot: 3
+  _agent: {fileID: 8901536328034856721}
 --- !u!1 &1550750783
 GameObject:
   m_ObjectHideFlags: 0
@@ -3840,6 +3841,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82e5121b426a4964ada3b56ea6014c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <AgentInputReader>k__BackingField: {fileID: 11400000, guid: dfab5b69e4f433a47aa90176c3eabbe8,
+    type: 2}
   <AgentMovement>k__BackingField: {fileID: 11400000, guid: 055d391f79820c84497f106908572d2c,
     type: 2}
   <AgentAnimator>k__BackingField: {fileID: 11400000, guid: 235e7094113ae6d49a3acb6dbabb833b,

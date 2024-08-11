@@ -162,9 +162,45 @@ namespace GlobalInputs
             ""id"": ""30a23fe7-59f8-43d4-a343-d41c1d1cdca4"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""MainWeapon"",
                     ""type"": ""Button"",
                     ""id"": ""509c0464-159d-40db-9b0b-7d73c0eeed74"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondaryWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""54cadd91-1324-46f4-bbb1-aa38fb1dd79a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MeleeWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""ebdbd268-b452-450c-90a1-341709a1d9e0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThrowableWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""68593e5a-3f19-4f1c-a67a-74946dc98094"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwitchWeapons"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa4cead1-ffb6-485a-bc84-26ab09046b3d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -175,11 +211,55 @@ namespace GlobalInputs
                 {
                     ""name"": """",
                     ""id"": ""26dbcf30-380d-4379-81ae-f7ad9ca48837"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""MainWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15a6fa7e-992d-4b8e-9222-35d34330055a"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondaryWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04c4d5a5-e206-4c55-82c4-bdfd517a3941"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MeleeWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4223981-bda0-4f0e-837f-6c858eb0b0ba"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowableWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b0f7e0f-e351-468b-89d2-434eea9dad56"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchWeapons"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -196,7 +276,11 @@ namespace GlobalInputs
             m_Character_Run = m_Character.FindAction("Run", throwIfNotFound: true);
             // Weapon
             m_Weapon = asset.FindActionMap("Weapon", throwIfNotFound: true);
-            m_Weapon_Newaction = m_Weapon.FindAction("New action", throwIfNotFound: true);
+            m_Weapon_MainWeapon = m_Weapon.FindAction("MainWeapon", throwIfNotFound: true);
+            m_Weapon_SecondaryWeapon = m_Weapon.FindAction("SecondaryWeapon", throwIfNotFound: true);
+            m_Weapon_MeleeWeapon = m_Weapon.FindAction("MeleeWeapon", throwIfNotFound: true);
+            m_Weapon_ThrowableWeapon = m_Weapon.FindAction("ThrowableWeapon", throwIfNotFound: true);
+            m_Weapon_SwitchWeapons = m_Weapon.FindAction("SwitchWeapons", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -328,12 +412,20 @@ namespace GlobalInputs
         // Weapon
         private readonly InputActionMap m_Weapon;
         private List<IWeaponActions> m_WeaponActionsCallbackInterfaces = new List<IWeaponActions>();
-        private readonly InputAction m_Weapon_Newaction;
+        private readonly InputAction m_Weapon_MainWeapon;
+        private readonly InputAction m_Weapon_SecondaryWeapon;
+        private readonly InputAction m_Weapon_MeleeWeapon;
+        private readonly InputAction m_Weapon_ThrowableWeapon;
+        private readonly InputAction m_Weapon_SwitchWeapons;
         public struct WeaponActions
         {
             private @Controls m_Wrapper;
             public WeaponActions(@Controls wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Newaction => m_Wrapper.m_Weapon_Newaction;
+            public InputAction @MainWeapon => m_Wrapper.m_Weapon_MainWeapon;
+            public InputAction @SecondaryWeapon => m_Wrapper.m_Weapon_SecondaryWeapon;
+            public InputAction @MeleeWeapon => m_Wrapper.m_Weapon_MeleeWeapon;
+            public InputAction @ThrowableWeapon => m_Wrapper.m_Weapon_ThrowableWeapon;
+            public InputAction @SwitchWeapons => m_Wrapper.m_Weapon_SwitchWeapons;
             public InputActionMap Get() { return m_Wrapper.m_Weapon; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -343,16 +435,40 @@ namespace GlobalInputs
             {
                 if (instance == null || m_Wrapper.m_WeaponActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_WeaponActionsCallbackInterfaces.Add(instance);
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @MainWeapon.started += instance.OnMainWeapon;
+                @MainWeapon.performed += instance.OnMainWeapon;
+                @MainWeapon.canceled += instance.OnMainWeapon;
+                @SecondaryWeapon.started += instance.OnSecondaryWeapon;
+                @SecondaryWeapon.performed += instance.OnSecondaryWeapon;
+                @SecondaryWeapon.canceled += instance.OnSecondaryWeapon;
+                @MeleeWeapon.started += instance.OnMeleeWeapon;
+                @MeleeWeapon.performed += instance.OnMeleeWeapon;
+                @MeleeWeapon.canceled += instance.OnMeleeWeapon;
+                @ThrowableWeapon.started += instance.OnThrowableWeapon;
+                @ThrowableWeapon.performed += instance.OnThrowableWeapon;
+                @ThrowableWeapon.canceled += instance.OnThrowableWeapon;
+                @SwitchWeapons.started += instance.OnSwitchWeapons;
+                @SwitchWeapons.performed += instance.OnSwitchWeapons;
+                @SwitchWeapons.canceled += instance.OnSwitchWeapons;
             }
 
             private void UnregisterCallbacks(IWeaponActions instance)
             {
-                @Newaction.started -= instance.OnNewaction;
-                @Newaction.performed -= instance.OnNewaction;
-                @Newaction.canceled -= instance.OnNewaction;
+                @MainWeapon.started -= instance.OnMainWeapon;
+                @MainWeapon.performed -= instance.OnMainWeapon;
+                @MainWeapon.canceled -= instance.OnMainWeapon;
+                @SecondaryWeapon.started -= instance.OnSecondaryWeapon;
+                @SecondaryWeapon.performed -= instance.OnSecondaryWeapon;
+                @SecondaryWeapon.canceled -= instance.OnSecondaryWeapon;
+                @MeleeWeapon.started -= instance.OnMeleeWeapon;
+                @MeleeWeapon.performed -= instance.OnMeleeWeapon;
+                @MeleeWeapon.canceled -= instance.OnMeleeWeapon;
+                @ThrowableWeapon.started -= instance.OnThrowableWeapon;
+                @ThrowableWeapon.performed -= instance.OnThrowableWeapon;
+                @ThrowableWeapon.canceled -= instance.OnThrowableWeapon;
+                @SwitchWeapons.started -= instance.OnSwitchWeapons;
+                @SwitchWeapons.performed -= instance.OnSwitchWeapons;
+                @SwitchWeapons.canceled -= instance.OnSwitchWeapons;
             }
 
             public void RemoveCallbacks(IWeaponActions instance)
@@ -379,7 +495,11 @@ namespace GlobalInputs
         }
         public interface IWeaponActions
         {
-            void OnNewaction(InputAction.CallbackContext context);
+            void OnMainWeapon(InputAction.CallbackContext context);
+            void OnSecondaryWeapon(InputAction.CallbackContext context);
+            void OnMeleeWeapon(InputAction.CallbackContext context);
+            void OnThrowableWeapon(InputAction.CallbackContext context);
+            void OnSwitchWeapons(InputAction.CallbackContext context);
         }
     }
 }
