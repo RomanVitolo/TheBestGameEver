@@ -9,18 +9,23 @@ public class AgentWeaponMotor : MonoBehaviour
     [SerializeField] private Agent _agent;
     private AgentWeapon[] _agentWeaponsSlots;
 
-    private void OnEnable()
+    private void Awake()
     {
         _agent = GetComponentInParent<Agent>();
         _agentWeaponsSlots = GetComponentsInChildren<AgentWeapon>();
         AssignDefaultWeapon();
-       _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeapons;
-       _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
-       _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
-       _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
     }
+    
+    private void Start()
+    {
+       
+        _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeapons;
+        _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
+        _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
+        _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
+    }         
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeapons;
         _agent.AgentInputReader.NotifyMainWeaponSwitch -= OnButtonPressed;
@@ -30,7 +35,7 @@ public class AgentWeaponMotor : MonoBehaviour
 
     private void Update()
     {
-        TriggerShootAnimation();
+        TriggerShootAnimation(); 
     }
 
     private void AssignDefaultWeapon()

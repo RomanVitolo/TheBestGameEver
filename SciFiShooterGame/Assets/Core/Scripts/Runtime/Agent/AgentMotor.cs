@@ -92,7 +92,7 @@ namespace Core.Scripts.Runtime.Agent
 
                 transform.forward = _lookingDirection;
 
-                _agent.AimPoint.position = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+                _agent.AimPoint.position = new Vector3(hitInfo.point.x, transform.position.y + 1, hitInfo.point.z);    
             }
         }         
         #endregion
