@@ -18,8 +18,8 @@ namespace Core.Scripts.Runtime.Agent
         private float _verticalVelocity;
         private float _speed;
         private float _walkSpeed;
-        private float _runSpeed;        
-
+        private float _runSpeed;                                       
+        
         private const float _gravityScale = 9.81f; 
         
         private void AssignAgentAimFields()
@@ -84,16 +84,14 @@ namespace Core.Scripts.Runtime.Agent
         {
             Ray ray = _agent.FindMainCamera().ScreenPointToRay(_agent.AgentInputReader.AimInputValue);
 
-            if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity,_aimLayerMask))
-            {
-                _lookingDirection = hitInfo.point - transform.position;
-                _lookingDirection.y = 0f;
-                _lookingDirection.Normalize();
+            if (!Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _aimLayerMask)) return;
+            _lookingDirection = hitInfo.point - transform.position;
+            _lookingDirection.y = 0f;
+            _lookingDirection.Normalize();
 
-                transform.forward = _lookingDirection;
+            transform.forward = _lookingDirection;
 
-                _agent.AimPoint.position = new Vector3(hitInfo.point.x, transform.position.y + 1, hitInfo.point.z);    
-            }
+            _agent.AimPoint.position = new Vector3(hitInfo.point.x, transform.position.y + 1, hitInfo.point.z);
         }         
         #endregion
 
