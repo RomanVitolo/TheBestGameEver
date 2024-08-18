@@ -23,6 +23,7 @@ namespace Core.Scripts.Runtime.Agent
         [field: SerializeField] public int WeaponInputSlot { get; set; }
         [field: SerializeField] public float WeaponFireRate { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
+        [field: SerializeField] public int AnimLayer { get; set; }
         
     }
 }

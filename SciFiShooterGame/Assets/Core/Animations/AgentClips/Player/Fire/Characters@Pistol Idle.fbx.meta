@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 37bfbc261b55b2a42b975694e42e8d5f
+guid: 78574aa31001cdb488007ff0695be11f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -16,8 +16,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -33,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Firing Shotgun
+      name: Pistol Idle
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 31
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

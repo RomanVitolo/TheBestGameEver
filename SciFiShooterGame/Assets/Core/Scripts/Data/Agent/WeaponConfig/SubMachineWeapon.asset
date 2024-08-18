@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
-  m_Name: RifleWeapon
+  m_Name: SubMachineWeapon
   m_EditorClassIdentifier: 
-  <WeaponType>k__BackingField: 3
-  <WeaponInputSlot>k__BackingField: 1
+  <WeaponType>k__BackingField: 2
+  <WeaponInputSlot>k__BackingField: 2
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
-  <AnimLayer>k__BackingField: 1
