@@ -30,8 +30,6 @@ namespace Core.Scripts.Runtime.Agent
         {
             MainCamera = Camera.main;
             return MainCamera;
-        }
-
-      
+        }                
     }
 }

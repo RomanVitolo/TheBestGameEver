@@ -1,25 +1,44 @@
-using System;
 using Core.Scripts.Runtime.Agent;
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;       
 
 public class AgentWeaponMotor : MonoBehaviour
 {
-    [Header("Left hand IK")] 
-    [SerializeField] private Transform _leftHand;
-    
-    [SerializeField] private WeaponType _weaponSlot;
-    
-    [SerializeField] private Agent _agent;
-    private AgentWeapon[] _agentWeaponsSlots;
-    private int _currentIndex = 0;
+    private static readonly int Reload = Animator.StringToHash("Reload");
+    private static readonly int WeaponGrabType = Animator.StringToHash("WeaponGrabType");
+    private static readonly int WeaponGrab = Animator.StringToHash("WeaponGrab");
+    private static readonly int BusyGrabbingWeapon = Animator.StringToHash("BusyGrabbingWeapon");
 
-    private Transform _currentWeapon;
+    [Header("Agent Objects")]
+    [SerializeField] private Agent _agent;
+    
+    [Header("Weapon Settings")]
+    [SerializeField] private WeaponType _weaponSlot;
+    [SerializeField] private GrabType _grabType;
+    
+     private AgentWeapon[] _agentWeaponsSlots;
+     private Transform _currentWeapon;
+     private int _currentIndex;
+    
+    [Header("Left hand IK")] 
+    [SerializeField] private TwoBoneIKConstraint _leftHandIK;
+    [SerializeField] private Transform _leftHandIK_Target;
+    [SerializeField] private float _leftHandIKWeightIncreaseRate;
+    private bool _shouldIncrease_LeftHandIKWeight;
+    
+    [Header("Rig")]
+    [SerializeField] private Rig _rig;
+    [SerializeField] private float _rigWeightIncreaseRate;
+    private bool _shouldIncrease_RigWeight;
+    private bool _isGrabbingWeapon;
+
 
     private void Awake()
     {
         _agent = GetComponentInParent<Agent>();
         _agentWeaponsSlots = GetComponentsInChildren<AgentWeapon>();
+        _rig ??= FindAnyObjectByType<Rig>();
         AssignDefaultWeapon();      
     }
     
@@ -29,7 +48,26 @@ public class AgentWeaponMotor : MonoBehaviour
         _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
-    }         
+        _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;
+        
+        Debug.Log((float)GrabType.SideGrab);
+    }
+
+    private void OnWeaponReload()
+    {
+        if (_isGrabbingWeapon) return;
+        Debug.Log("Reloading");
+        _agent.AgentAnimator.Animator.SetTrigger(Reload);
+        ReduceRigWeight();
+    }
+
+    private void ReduceRigWeight()
+    {
+        _rig.weight = 0.15f;
+    }
+
+    public void MaximizeRigWeight() => _shouldIncrease_RigWeight = true; 
+    public void MaximizeLeftHandWeight() => _shouldIncrease_LeftHandIKWeight = true;       
 
     private void OnDestroy()
     {
@@ -37,11 +75,46 @@ public class AgentWeaponMotor : MonoBehaviour
         _agent.AgentInputReader.NotifyMainWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= OnButtonPressed;
+        _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
     }
 
     private void Update()
     {
-        TriggerShootAnimation(); 
+        TriggerShootAnimation();
+
+        if (_shouldIncrease_RigWeight)
+        {
+            _rig.weight += _rigWeightIncreaseRate * Time.deltaTime;
+
+            if (_rig.weight >= 1)
+                _shouldIncrease_RigWeight = false;
+        }
+
+        if (_shouldIncrease_LeftHandIKWeight)
+        {
+           _leftHandIK.weight += _leftHandIKWeightIncreaseRate * Time.deltaTime;
+
+           if (_leftHandIK.weight >= 1)
+           {
+               _shouldIncrease_LeftHandIKWeight = false;
+           }
+        }
+    }
+
+    private void PlayWeaponGrabAnimation(GrabType grabType)
+    {
+        _leftHandIK.weight = 0;
+        ReduceRigWeight();
+        _agent.AgentAnimator.Animator.SetFloat(WeaponGrabType, ((float)grabType));
+        _agent.AgentAnimator.Animator.SetTrigger(WeaponGrab);
+
+        SetBusyGrabbingWeaponTo(true);
+    }
+
+    public void SetBusyGrabbingWeaponTo(bool isBusy)
+    {
+        _isGrabbingWeapon = isBusy;
+        _agent.AgentAnimator.Animator.SetBool(BusyGrabbingWeapon, _isGrabbingWeapon);
     }
 
     private void AssignDefaultWeapon()
@@ -62,6 +135,7 @@ public class AgentWeaponMotor : MonoBehaviour
         _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);    
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimLayer);
+        PlayWeaponGrabAnimation(_grabType);
     }
     
     private void OnButtonPressed()
@@ -74,11 +148,11 @@ public class AgentWeaponMotor : MonoBehaviour
                 weapon.gameObject.SetActive(true);
                 AttachLeftHand(weapon.transform); 
                 SwitchAnimationLayer(weapon.WeaponConfigConfiguration.AnimLayer);
+                PlayWeaponGrabAnimation(_grabType);
             }
             else   
                 weapon.gameObject.SetActive(false);      
-        }    
-        
+        }                              
     }
 
     private void AttachLeftHand(Transform weaponTransform)
@@ -86,8 +160,8 @@ public class AgentWeaponMotor : MonoBehaviour
         _currentWeapon = weaponTransform;
         
         Transform targetTransform = _currentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
-        _leftHand.localPosition = targetTransform.localPosition;
-        _leftHand.localRotation = targetTransform.localRotation;
+        _leftHandIK_Target.localPosition = targetTransform.localPosition;
+        _leftHandIK_Target.localRotation = targetTransform.localRotation;
     }
 
     private void SwitchAnimationLayer(int layerIndex)

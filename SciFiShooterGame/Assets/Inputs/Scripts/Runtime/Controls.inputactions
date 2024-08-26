@@ -9,7 +9,7 @@
                     "name": "Fire",
                     "type": "Button",
                     "id": "d5164fcb-6d09-40d7-99db-591210098aaa",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -141,7 +141,7 @@
                     "name": "MainWeapon",
                     "type": "Button",
                     "id": "509c0464-159d-40db-9b0b-7d73c0eeed74",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -178,6 +178,15 @@
                     "type": "Button",
                     "id": "aa4cead1-ffb6-485a-bc84-26ab09046b3d",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "392db4d3-0bfa-43f9-b2bb-ebde41439267",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -236,6 +245,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwitchWeapons",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a69da6ae-c557-4648-b12c-54b06a694da2",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -19,6 +19,7 @@ namespace GlobalInputs
         public event Action NotifySecondaryWeaponSwitch;
         public event Action NotifyMeleeWeaponSwitch;
         public event Action NotifyThrowableWeaponSwitch;
+        public event Action NotifyWeaponReload;
         
     
         private Controls _controls;
@@ -94,6 +95,13 @@ namespace GlobalInputs
             if (!context.performed) return;   
             
             NotifyWeaponSwitch?.Invoke();
+        }
+
+        public void OnReload(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;   
+            
+            NotifyWeaponReload?.Invoke();
         }
     }
 }

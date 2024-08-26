@@ -34,7 +34,7 @@ namespace GlobalInputs
                     ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""d5164fcb-6d09-40d7-99db-591210098aaa"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -166,7 +166,7 @@ namespace GlobalInputs
                     ""name"": ""MainWeapon"",
                     ""type"": ""Button"",
                     ""id"": ""509c0464-159d-40db-9b0b-7d73c0eeed74"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -203,6 +203,15 @@ namespace GlobalInputs
                     ""type"": ""Button"",
                     ""id"": ""aa4cead1-ffb6-485a-bc84-26ab09046b3d"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""392db4d3-0bfa-43f9-b2bb-ebde41439267"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -263,6 +272,17 @@ namespace GlobalInputs
                     ""action"": ""SwitchWeapons"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a69da6ae-c557-4648-b12c-54b06a694da2"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -282,6 +302,7 @@ namespace GlobalInputs
             m_Weapon_MeleeWeapon = m_Weapon.FindAction("MeleeWeapon", throwIfNotFound: true);
             m_Weapon_ThrowableWeapon = m_Weapon.FindAction("ThrowableWeapon", throwIfNotFound: true);
             m_Weapon_SwitchWeapons = m_Weapon.FindAction("SwitchWeapons", throwIfNotFound: true);
+            m_Weapon_Reload = m_Weapon.FindAction("Reload", throwIfNotFound: true);
         }
 
         ~@Controls()
@@ -424,6 +445,7 @@ namespace GlobalInputs
         private readonly InputAction m_Weapon_MeleeWeapon;
         private readonly InputAction m_Weapon_ThrowableWeapon;
         private readonly InputAction m_Weapon_SwitchWeapons;
+        private readonly InputAction m_Weapon_Reload;
         public struct WeaponActions
         {
             private @Controls m_Wrapper;
@@ -433,6 +455,7 @@ namespace GlobalInputs
             public InputAction @MeleeWeapon => m_Wrapper.m_Weapon_MeleeWeapon;
             public InputAction @ThrowableWeapon => m_Wrapper.m_Weapon_ThrowableWeapon;
             public InputAction @SwitchWeapons => m_Wrapper.m_Weapon_SwitchWeapons;
+            public InputAction @Reload => m_Wrapper.m_Weapon_Reload;
             public InputActionMap Get() { return m_Wrapper.m_Weapon; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -457,6 +480,9 @@ namespace GlobalInputs
                 @SwitchWeapons.started += instance.OnSwitchWeapons;
                 @SwitchWeapons.performed += instance.OnSwitchWeapons;
                 @SwitchWeapons.canceled += instance.OnSwitchWeapons;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
 
             private void UnregisterCallbacks(IWeaponActions instance)
@@ -476,6 +502,9 @@ namespace GlobalInputs
                 @SwitchWeapons.started -= instance.OnSwitchWeapons;
                 @SwitchWeapons.performed -= instance.OnSwitchWeapons;
                 @SwitchWeapons.canceled -= instance.OnSwitchWeapons;
+                @Reload.started -= instance.OnReload;
+                @Reload.performed -= instance.OnReload;
+                @Reload.canceled -= instance.OnReload;
             }
 
             public void RemoveCallbacks(IWeaponActions instance)
@@ -507,6 +536,7 @@ namespace GlobalInputs
             void OnMeleeWeapon(InputAction.CallbackContext context);
             void OnThrowableWeapon(InputAction.CallbackContext context);
             void OnSwitchWeapons(InputAction.CallbackContext context);
+            void OnReload(InputAction.CallbackContext context);
         }
     }
 }
