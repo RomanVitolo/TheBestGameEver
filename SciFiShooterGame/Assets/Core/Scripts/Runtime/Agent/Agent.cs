@@ -9,9 +9,7 @@ namespace Core.Scripts.Runtime.Agent
         [field: SerializeField] public InputReader AgentInputReader { get; private set; } 
         [field: SerializeField] public AgentMovement AgentMovement { get; set; }
         [field: SerializeField] public AgentAnimatorSO AgentAnimator { get; private set; }
-        [field: SerializeField] public Transform AimPoint { get; private set; }
-        public CharacterController CharacterController { get; private set; }
-
+        public CharacterController CharacterController { get; private set; }    
         private Camera MainCamera;                  
       
         public void GetComponents()
@@ -26,7 +24,7 @@ namespace Core.Scripts.Runtime.Agent
             AgentInputReader.DestroyControls();
         }      
 
-        public Camera FindMainCamera()
+        public Camera AssignMainCamera()
         {
             MainCamera = Camera.main;
             return MainCamera;

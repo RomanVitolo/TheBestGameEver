@@ -7,8 +7,11 @@ namespace Core.Scripts.Runtime.Agent
     public class AgentMotor : MonoBehaviour
     {   
         private Agent _agent;
+        private AgentAim _agentAim;
 
         #region Aim&MovementFields
+        
+        private Camera _mainCamera;
 
         private LayerMask _aimLayerMask;   
        
@@ -18,7 +21,8 @@ namespace Core.Scripts.Runtime.Agent
         private float _verticalVelocity;
         private float _speed;
         private float _walkSpeed;
-        private float _runSpeed;                                       
+        private float _runSpeed;
+        private float _turnSpeed;                                       
         
         private const float _gravityScale = 9.81f; 
         
@@ -31,6 +35,7 @@ namespace Core.Scripts.Runtime.Agent
         {     
             _walkSpeed = _agent.AgentMovement.WalkSpeed;
             _runSpeed = _agent.AgentMovement.RunSpeed;   
+            _turnSpeed = _agent.AgentMovement.TurnSpeed;   
             _speed = _walkSpeed;
         }
 
@@ -60,11 +65,13 @@ namespace Core.Scripts.Runtime.Agent
         private void Awake()
         {
             _agent = GetComponent<Agent>();
+            _agentAim = GetComponent<AgentAim>();
             _agent.GetComponents();
         }
 
         private void OnEnable()
-        {    
+        {
+            _mainCamera = _agent.AssignMainCamera();
             AssignAgentMovementFields(); 
             AssignAgentAimFields(); 
             AssignAnimationAgentFields();
@@ -73,25 +80,24 @@ namespace Core.Scripts.Runtime.Agent
         private void Update()
         {
             MovementBehavior();    
-            AimInputTowards();
+            _agentAim.UpdateAgentMousePosition(_agentAim.GetMousePosition(_mainCamera, 
+                _agent.AgentInputReader.AimInputValue, _aimLayerMask));
+            ApplyRotation();
             AnimatorControllers();
         }
 
         #endregion
 
         #region AimBehavior    
-        private void AimInputTowards()
-        {
-            Ray ray = _agent.FindMainCamera().ScreenPointToRay(_agent.AgentInputReader.AimInputValue);
-
-            if (!Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, _aimLayerMask)) return;
-            _lookingDirection = hitInfo.point - transform.position;
+        private void ApplyRotation()
+        {     
+            _lookingDirection = _agentAim.GetMousePosition(_mainCamera, _agent.AgentInputReader.AimInputValue
+                ,_aimLayerMask) - transform.position;
             _lookingDirection.y = 0f;
             _lookingDirection.Normalize();
 
-            transform.forward = _lookingDirection;
-
-            _agent.AimPoint.position = new Vector3(hitInfo.point.x, transform.position.y + 1, hitInfo.point.z);
+            Quaternion desiredRotation = Quaternion.LookRotation(_lookingDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, _turnSpeed * Time.deltaTime); 
         }         
         #endregion
 

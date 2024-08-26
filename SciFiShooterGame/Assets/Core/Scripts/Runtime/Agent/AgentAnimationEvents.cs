@@ -1,30 +1,33 @@
-using System;
 using UnityEngine;
 
-public class AgentAnimationEvents : MonoBehaviour
+namespace Core.Scripts.Runtime.Agent
 {
-    private AgentWeaponMotor _agentWeaponMotor;
-
-    private void Start()
+    public class AgentAnimationEvents : MonoBehaviour
     {
-        _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>();
-    }
+        private AgentWeaponMotor _agentWeaponMotor;
 
-    public void ReloadIsOver()
-    {
-        _agentWeaponMotor.MaximizeRigWeight();
+        private void Start()
+        {
+            _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>();
+        }
+
+        public void ReloadIsOver()
+        {
+            _agentWeaponMotor.MaximizeRigWeight();
         
-        //refill-bullets
-    }
+            //refill-bullets
+        }
 
-    public void ReturnRig()
-    {
-        _agentWeaponMotor.MaximizeRigWeight();
-        _agentWeaponMotor.MaximizeLeftHandWeight();    
-    }
+        public void ReturnRig()
+        {
+            _agentWeaponMotor.MaximizeRigWeight();
+            _agentWeaponMotor.MaximizeLeftHandWeight();    
+        }
 
-    public void WeaponGrabIsOveR()
-    {
-        _agentWeaponMotor.SetBusyGrabbingWeaponTo(false);
+        public void WeaponGrabIsOveR()
+        {
+            _agentWeaponMotor.SetBusyGrabbingWeaponTo(false);
+        }
     }
 }
+

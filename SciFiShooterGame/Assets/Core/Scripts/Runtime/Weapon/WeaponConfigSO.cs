@@ -1,7 +1,7 @@
 ﻿using GlobalInputs;
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Weapon
 {
     public enum WeaponType
     {
@@ -20,7 +20,7 @@ namespace Core.Scripts.Runtime.Agent
     {
        SideGrab,
        BackGrab
-    }
+    }  
     
     [CreateAssetMenu(menuName = "Core/Create AgentWeapon", fileName = "AgentWeapon")]
     public class WeaponConfigSO : ScriptableObject
@@ -30,8 +30,6 @@ namespace Core.Scripts.Runtime.Agent
         [field: SerializeField] public int WeaponInputSlot { get; set; }
         [field: SerializeField] public float WeaponFireRate { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
-        [field: SerializeField] public int AnimLayer { get; set; }
-        
-        
+        [field: SerializeField] public int AnimLayer { get; set; }     
     }
 }

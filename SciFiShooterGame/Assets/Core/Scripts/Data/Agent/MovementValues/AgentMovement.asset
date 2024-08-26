@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0b4998ff9f9274bacfb4aa3a8c9320, type: 3}
   m_Name: AgentMovement
   m_EditorClassIdentifier: 
-  <InputReader>k__BackingField: {fileID: 11400000, guid: dfab5b69e4f433a47aa90176c3eabbe8,
-    type: 2}
   <AimLayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 192
   <WalkSpeed>k__BackingField: 1.5
   <RunSpeed>k__BackingField: 3.5
+  <TurnSpeed>k__BackingField: 3

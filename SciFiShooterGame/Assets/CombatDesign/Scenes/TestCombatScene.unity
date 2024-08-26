@@ -2132,7 +2132,6 @@ MonoBehaviour:
     type: 2}
   <AgentAnimator>k__BackingField: {fileID: 11400000, guid: 235e7094113ae6d49a3acb6dbabb833b,
     type: 2}
-  <AimPoint>k__BackingField: {fileID: 1088426124}
 --- !u!4 &654493098487862442
 Transform:
   m_ObjectHideFlags: 0
@@ -6455,6 +6454,7 @@ GameObject:
   - component: {fileID: 441475835083348321}
   - component: {fileID: 640307089341675889}
   - component: {fileID: 7272827143964693923}
+  - component: {fileID: 7272827143964693924}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -6595,6 +6595,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e6939b9f6048e44f8b374ed4448ebbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7272827143964693924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915306997466863106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b51d3ada8c45749d9d1004cf6539f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aimPosition: {fileID: 1088426124}
 --- !u!1 &7304303915802017512
 GameObject:
   m_ObjectHideFlags: 0

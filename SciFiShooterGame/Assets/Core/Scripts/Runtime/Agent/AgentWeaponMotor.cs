@@ -1,21 +1,19 @@
-using Core.Scripts.Runtime.Agent;
 using Core.Scripts.Runtime.Utilities;
+using Core.Scripts.Runtime.Weapon;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;       
+using UnityEngine.Animations.Rigging;
 
-public class AgentWeaponMotor : MonoBehaviour
+namespace Core.Scripts.Runtime.Agent
 {
-    private static readonly int Reload = Animator.StringToHash("Reload");
-    private static readonly int WeaponGrabType = Animator.StringToHash("WeaponGrabType");
-    private static readonly int WeaponGrab = Animator.StringToHash("WeaponGrab");
-    private static readonly int BusyGrabbingWeapon = Animator.StringToHash("BusyGrabbingWeapon");
-
+    public class AgentWeaponMotor : MonoBehaviour
+{     
     [Header("Agent Objects")]
     [SerializeField] private Agent _agent;
     
     [Header("Weapon Settings")]
     [SerializeField] private WeaponType _weaponSlot;
     [SerializeField] private GrabType _grabType;
+    private WeaponAnimations _weaponAnimations;
     
      private AgentWeapon[] _agentWeaponsSlots;
      private Transform _currentWeapon;
@@ -36,6 +34,7 @@ public class AgentWeaponMotor : MonoBehaviour
 
     private void Awake()
     {
+        _weaponAnimations = new WeaponAnimations();
         _agent = GetComponentInParent<Agent>();
         _agentWeaponsSlots = GetComponentsInChildren<AgentWeapon>();
         _rig ??= FindAnyObjectByType<Rig>();
@@ -57,7 +56,7 @@ public class AgentWeaponMotor : MonoBehaviour
     {
         if (_isGrabbingWeapon) return;
         Debug.Log("Reloading");
-        _agent.AgentAnimator.Animator.SetTrigger(Reload);
+        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
         ReduceRigWeight();
     }
 
@@ -105,8 +104,8 @@ public class AgentWeaponMotor : MonoBehaviour
     {
         _leftHandIK.weight = 0;
         ReduceRigWeight();
-        _agent.AgentAnimator.Animator.SetFloat(WeaponGrabType, ((float)grabType));
-        _agent.AgentAnimator.Animator.SetTrigger(WeaponGrab);
+        _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.WeaponGrabType, ((float)grabType));
+        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.WeaponGrab);
 
         SetBusyGrabbingWeaponTo(true);
     }
@@ -114,7 +113,7 @@ public class AgentWeaponMotor : MonoBehaviour
     public void SetBusyGrabbingWeaponTo(bool isBusy)
     {
         _isGrabbingWeapon = isBusy;
-        _agent.AgentAnimator.Animator.SetBool(BusyGrabbingWeapon, _isGrabbingWeapon);
+        _agent.AgentAnimator.Animator.SetBool(_weaponAnimations.BusyGrabbingWeapon, _isGrabbingWeapon);
     }
 
     private void AssignDefaultWeapon()
@@ -180,4 +179,4 @@ public class AgentWeaponMotor : MonoBehaviour
             _agent.AgentAnimator.Animator.SetTrigger(_agent.AgentAnimator.Fire);
     }  
 }
-
+}     
