@@ -1,21 +1,19 @@
 using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapon;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
+using UnityEngine.Animations.Rigging;    
 
 namespace Core.Scripts.Runtime.Agent
-{
+{    
     public class AgentWeaponMotor : MonoBehaviour
 {     
     [Header("Agent Objects")]
     [SerializeField] private Agent _agent;
-    
+     
     [Header("Weapon Settings")]
-    [SerializeField] private WeaponType _weaponSlot;
-    [SerializeField] private GrabType _grabType;
-    private WeaponAnimations _weaponAnimations;
-    
-     private AgentWeapon[] _agentWeaponsSlots;
+    [SerializeField] private AgentWeapon[] _agentWeaponsSlots;    
+    [SerializeField] private WeaponType _initialWeaponType; 
+     private WeaponAnimations _weaponAnimations;      
      private Transform _currentWeapon;
      private int _currentIndex;
     
@@ -23,13 +21,13 @@ namespace Core.Scripts.Runtime.Agent
     [SerializeField] private TwoBoneIKConstraint _leftHandIK;
     [SerializeField] private Transform _leftHandIK_Target;
     [SerializeField] private float _leftHandIKWeightIncreaseRate;
-    private bool _shouldIncrease_LeftHandIKWeight;
+     private bool _shouldIncrease_LeftHandIKWeight;
     
     [Header("Rig")]
     [SerializeField] private Rig _rig;
     [SerializeField] private float _rigWeightIncreaseRate;
-    private bool _shouldIncrease_RigWeight;
-    private bool _isGrabbingWeapon;
+     private bool _shouldIncrease_RigWeight;
+     private bool _isGrabbingWeapon;
 
 
     private void Awake()
@@ -48,8 +46,6 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;
-        
-        Debug.Log((float)GrabType.SideGrab);
     }
 
     private void OnWeaponReload()
@@ -120,7 +116,7 @@ namespace Core.Scripts.Runtime.Agent
     {
         foreach (var weapon in _agentWeaponsSlots)
         {
-            weapon.gameObject.SetActive(weapon.WeaponConfigConfiguration.WeaponType == _weaponSlot);    
+            weapon.gameObject.SetActive(weapon.WeaponConfigConfiguration.WeaponType == _initialWeaponType);    
             AttachLeftHand(weapon.transform);
             
         }   
@@ -134,7 +130,7 @@ namespace Core.Scripts.Runtime.Agent
         _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);    
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimLayer);
-        PlayWeaponGrabAnimation(_grabType);
+        PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.GrabType);
     }
     
     private void OnButtonPressed()
@@ -147,7 +143,7 @@ namespace Core.Scripts.Runtime.Agent
                 weapon.gameObject.SetActive(true);
                 AttachLeftHand(weapon.transform); 
                 SwitchAnimationLayer(weapon.WeaponConfigConfiguration.AnimLayer);
-                PlayWeaponGrabAnimation(_grabType);
+                PlayWeaponGrabAnimation(weapon.WeaponConfigConfiguration.GrabType);
             }
             else   
                 weapon.gameObject.SetActive(false);      

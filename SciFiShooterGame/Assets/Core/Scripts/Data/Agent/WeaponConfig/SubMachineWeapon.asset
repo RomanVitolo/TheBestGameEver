@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SubMachineWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 2
+  <GrabType>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 2
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
+  <AnimLayer>k__BackingField: 0

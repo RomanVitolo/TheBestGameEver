@@ -2,8 +2,5 @@
 
 namespace Core.Scripts.Runtime.Utilities
 {
-    public class LeftHandTargetTransform : MonoBehaviour
-    {
-        
-    }
+    public class LeftHandTargetTransform : MonoBehaviour { }
 }

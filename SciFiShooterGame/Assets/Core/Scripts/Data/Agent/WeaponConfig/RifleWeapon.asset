@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 3
+  <GrabType>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 1
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0

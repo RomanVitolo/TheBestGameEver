@@ -79,9 +79,11 @@ namespace Core.Scripts.Runtime.Agent
 
         private void Update()
         {
-            MovementBehavior();    
-            _agentAim.UpdateAgentMousePosition(_agentAim.GetMousePosition(_mainCamera, 
-                _agent.AgentInputReader.AimInputValue, _aimLayerMask));
+            MovementBehavior();  
+            _agentAim.UpdateAgentCameraPosition(_agentAim.GetMouseHitInfo(_mainCamera, 
+                _agent.AgentInputReader.AimInputValue, _aimLayerMask).point, _agent.AgentInputReader.MovementValue);
+            _agentAim.UpdateAgentAimPosition(_agentAim.GetMouseHitInfo(_mainCamera, 
+                _agent.AgentInputReader.AimInputValue, _aimLayerMask).point);
             ApplyRotation();
             AnimatorControllers();
         }
@@ -91,8 +93,8 @@ namespace Core.Scripts.Runtime.Agent
         #region AimBehavior    
         private void ApplyRotation()
         {     
-            _lookingDirection = _agentAim.GetMousePosition(_mainCamera, _agent.AgentInputReader.AimInputValue
-                ,_aimLayerMask) - transform.position;
+            _lookingDirection = _agentAim.GetMouseHitInfo(_mainCamera, _agent.AgentInputReader.AimInputValue
+                ,_aimLayerMask).point - transform.position;
             _lookingDirection.y = 0f;
             _lookingDirection.Normalize();
 
