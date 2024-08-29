@@ -142,9 +142,7 @@ namespace Core.Scripts.Runtime.Agent
             _agentAnimator.SetBool(_agentIsRunningHash, playRunAnimation);                  
         }
 
-        #endregion
-
-            
+        #endregion    
     } 
 }
 

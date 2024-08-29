@@ -6,11 +6,8 @@ namespace Core.Scripts.Runtime.Agent
     {
         private AgentWeaponMotor _agentWeaponMotor;
 
-        private void Start()
-        {
-            _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>();
-        }
-
+        private void Start() => _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>(); 
+       
         public void ReloadIsOver()
         {
             _agentWeaponMotor.MaximizeRigWeight();
@@ -24,10 +21,7 @@ namespace Core.Scripts.Runtime.Agent
             _agentWeaponMotor.MaximizeLeftHandWeight();    
         }
 
-        public void WeaponGrabIsOveR()
-        {
-            _agentWeaponMotor.SetBusyGrabbingWeaponTo(false);
-        }
+        public void WeaponGrabIsOveR()=> _agentWeaponMotor.SetBusyGrabbingWeaponTo(false);      
     }
 }
 

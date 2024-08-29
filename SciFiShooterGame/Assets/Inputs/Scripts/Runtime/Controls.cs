@@ -215,6 +215,15 @@ namespace GlobalInputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PreciseShooting"",
+                    ""type"": ""Button"",
+                    ""id"": ""0cb105a3-c311-49e9-82e6-aa991ee33f74"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -283,6 +292,17 @@ namespace GlobalInputs
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01fce896-e38c-4a6f-bb32-ce104aaa5393"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PreciseShooting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -303,6 +323,7 @@ namespace GlobalInputs
             m_Weapon_ThrowableWeapon = m_Weapon.FindAction("ThrowableWeapon", throwIfNotFound: true);
             m_Weapon_SwitchWeapons = m_Weapon.FindAction("SwitchWeapons", throwIfNotFound: true);
             m_Weapon_Reload = m_Weapon.FindAction("Reload", throwIfNotFound: true);
+            m_Weapon_PreciseShooting = m_Weapon.FindAction("PreciseShooting", throwIfNotFound: true);
         }
 
         ~@Controls()
@@ -446,6 +467,7 @@ namespace GlobalInputs
         private readonly InputAction m_Weapon_ThrowableWeapon;
         private readonly InputAction m_Weapon_SwitchWeapons;
         private readonly InputAction m_Weapon_Reload;
+        private readonly InputAction m_Weapon_PreciseShooting;
         public struct WeaponActions
         {
             private @Controls m_Wrapper;
@@ -456,6 +478,7 @@ namespace GlobalInputs
             public InputAction @ThrowableWeapon => m_Wrapper.m_Weapon_ThrowableWeapon;
             public InputAction @SwitchWeapons => m_Wrapper.m_Weapon_SwitchWeapons;
             public InputAction @Reload => m_Wrapper.m_Weapon_Reload;
+            public InputAction @PreciseShooting => m_Wrapper.m_Weapon_PreciseShooting;
             public InputActionMap Get() { return m_Wrapper.m_Weapon; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -483,6 +506,9 @@ namespace GlobalInputs
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @PreciseShooting.started += instance.OnPreciseShooting;
+                @PreciseShooting.performed += instance.OnPreciseShooting;
+                @PreciseShooting.canceled += instance.OnPreciseShooting;
             }
 
             private void UnregisterCallbacks(IWeaponActions instance)
@@ -505,6 +531,9 @@ namespace GlobalInputs
                 @Reload.started -= instance.OnReload;
                 @Reload.performed -= instance.OnReload;
                 @Reload.canceled -= instance.OnReload;
+                @PreciseShooting.started -= instance.OnPreciseShooting;
+                @PreciseShooting.performed -= instance.OnPreciseShooting;
+                @PreciseShooting.canceled -= instance.OnPreciseShooting;
             }
 
             public void RemoveCallbacks(IWeaponActions instance)
@@ -537,6 +566,7 @@ namespace GlobalInputs
             void OnThrowableWeapon(InputAction.CallbackContext context);
             void OnSwitchWeapons(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
+            void OnPreciseShooting(InputAction.CallbackContext context);
         }
     }
 }

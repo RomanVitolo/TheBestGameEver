@@ -8,5 +8,6 @@ namespace Core.Scripts.Runtime.Weapon
         public readonly int WeaponGrabType = Animator.StringToHash("WeaponGrabType");
         public readonly int WeaponGrab = Animator.StringToHash("WeaponGrab");
         public readonly int BusyGrabbingWeapon = Animator.StringToHash("BusyGrabbingWeapon");
+        public readonly int Fire = Animator.StringToHash("Fire");
     }
 }

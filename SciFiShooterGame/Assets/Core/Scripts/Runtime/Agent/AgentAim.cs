@@ -7,6 +7,8 @@ namespace Core.Scripts.Runtime.Agent
     {
         [Header("Aim Information")] 
         [SerializeField] private Transform _aim;
+
+        [SerializeField] private bool _isAimingPrecisely;
         
         [Space]
         
@@ -30,7 +32,17 @@ namespace Core.Scripts.Runtime.Agent
         public void UpdateAgentAimPosition(Vector3 mousePosition)
         {
             _aim.position = mousePosition;
-            _aim.position = new Vector3(_aim.position.x, transform.position.y + 1, _aim.position.z);
+            
+            if(!_isAimingPrecisely)
+                _aim.position = new Vector3(_aim.position.x, transform.position.y + 1, _aim.position.z);
+        }
+
+        public bool CanAimPrecisely()
+        {
+            if (_isAimingPrecisely)
+                return true;
+
+            return false;
         }
 
         private Vector3 DesiredCameraPosition(Vector3 aimPosition, Vector2 moveInput)

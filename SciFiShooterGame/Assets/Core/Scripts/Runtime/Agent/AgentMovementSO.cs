@@ -1,4 +1,3 @@
-using GlobalInputs;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agent
@@ -11,6 +10,4 @@ namespace Core.Scripts.Runtime.Agent
         [field: SerializeField] public float RunSpeed { get; set; } 
         [field: SerializeField] public float TurnSpeed { get; set; } 
     }
-}
-
-
+}              

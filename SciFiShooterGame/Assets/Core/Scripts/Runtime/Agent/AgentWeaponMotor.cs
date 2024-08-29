@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 namespace Core.Scripts.Runtime.Agent
 {    
     public class AgentWeaponMotor : MonoBehaviour
-{     
+ {     
     [Header("Agent Objects")]
     [SerializeField] private Agent _agent;
      
@@ -28,6 +28,13 @@ namespace Core.Scripts.Runtime.Agent
     [SerializeField] private float _rigWeightIncreaseRate;
      private bool _shouldIncrease_RigWeight;
      private bool _isGrabbingWeapon;
+     
+     [Header("Ammo Settings")]
+     [SerializeField] private GameObject _bulletPrefab;
+     [SerializeField] private float _bulletSpeed;
+     [SerializeField] private Transform _gunPoint;
+       
+     [SerializeField] private Transform _aim;
 
 
     private void Awake()
@@ -41,6 +48,7 @@ namespace Core.Scripts.Runtime.Agent
     
     private void Start()
     {   
+        _agent.AgentInputReader.NotifyCanShoot += WeaponShoot;
         _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeapons;
         _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
@@ -51,7 +59,6 @@ namespace Core.Scripts.Runtime.Agent
     private void OnWeaponReload()
     {
         if (_isGrabbingWeapon) return;
-        Debug.Log("Reloading");
         _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
         ReduceRigWeight();
     }
@@ -66,6 +73,7 @@ namespace Core.Scripts.Runtime.Agent
 
     private void OnDestroy()
     {
+        _agent.AgentInputReader.NotifyCanShoot -= WeaponShoot;
         _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeapons;
         _agent.AgentInputReader.NotifyMainWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= OnButtonPressed;
@@ -75,8 +83,6 @@ namespace Core.Scripts.Runtime.Agent
 
     private void Update()
     {
-        TriggerShootAnimation();
-
         if (_shouldIncrease_RigWeight)
         {
             _rig.weight += _rigWeightIncreaseRate * Time.deltaTime;
@@ -117,8 +123,7 @@ namespace Core.Scripts.Runtime.Agent
         foreach (var weapon in _agentWeaponsSlots)
         {
             weapon.gameObject.SetActive(weapon.WeaponConfigConfiguration.WeaponType == _initialWeaponType);    
-            AttachLeftHand(weapon.transform);
-            
+            AttachLeftHand(weapon.transform); 
         }   
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimLayer);
     }
@@ -161,18 +166,34 @@ namespace Core.Scripts.Runtime.Agent
 
     private void SwitchAnimationLayer(int layerIndex)
     {
-        for (int i = 0; i < _agent.AgentAnimator.Animator.layerCount; i++)
-        {
-            _agent.AgentAnimator.Animator.SetLayerWeight(i, 0);
-        }
+        for (int i = 0; i < _agent.AgentAnimator.Animator.layerCount; i++)     
+            _agent.AgentAnimator.Animator.SetLayerWeight(i, 0);   
         
         _agent.AgentAnimator.Animator.SetLayerWeight(layerIndex, 1);
     }
 
-    private void TriggerShootAnimation()
+    private void WeaponShoot()
+    {   
+        GameObject newBullet = Instantiate(_bulletPrefab, _gunPoint.position, Quaternion.LookRotation(_gunPoint.forward));
+        
+        newBullet.GetComponent<Rigidbody>().linearVelocity = BulletDirection() * _bulletSpeed;
+        
+        Destroy(newBullet, 3f);
+        TriggerShootAnimation();
+    }
+
+    private Vector3 BulletDirection()
     {
-        if(_agent.AgentInputReader.CanShoot)
-            _agent.AgentAnimator.Animator.SetTrigger(_agent.AgentAnimator.Fire);
-    }  
-}
+        Vector3 direction = (_aim.position - _gunPoint.position).normalized;
+        
+        if(_agent.AgentAim.CanAimPrecisely() == false)
+         direction.y = 0;
+        
+       // this.transform.LookAt(_aim);
+        _gunPoint.LookAt(_aim);
+        
+        return direction;
+    }
+    private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
+ }
 }     

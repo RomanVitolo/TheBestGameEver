@@ -14,6 +14,7 @@ namespace GlobalInputs
         public bool CanShoot { get; private set; }
         public int WeaponSlotLocation { get; set; }
 
+        public event Action NotifyCanShoot;
         public event Action NotifyWeaponSwitch;
         public event Action NotifyMainWeaponSwitch;
         public event Action NotifySecondaryWeaponSwitch;
@@ -39,8 +40,12 @@ namespace GlobalInputs
     
         public void OnFire(InputAction.CallbackContext context)
         {
-            if (context.performed) CanShoot = context.performed;
-            else if (context.canceled) CanShoot = false;    
+            /*if (context.performed) CanShoot = context.performed;
+            else if (context.canceled) CanShoot = false; */   
+            
+            if (!context.performed) return;   
+            
+            NotifyCanShoot?.Invoke();
         }
 
         public void OnMovement(InputAction.CallbackContext context)
@@ -102,6 +107,11 @@ namespace GlobalInputs
             if (!context.performed) return;   
             
             NotifyWeaponReload?.Invoke();
+        }
+
+        public void OnPreciseShooting(InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }

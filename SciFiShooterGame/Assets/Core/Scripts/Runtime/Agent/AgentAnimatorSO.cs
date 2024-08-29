@@ -9,7 +9,6 @@ namespace Core.Scripts.Runtime.Agent
         public Animator Animator { get; set; }                           
         public int XVelocity { get; private set; } = Animator.StringToHash("xVelocity");
         public int ZVelocity { get; private set; } = Animator.StringToHash("zVelocity");
-        public int IsRunning { get; private set; } = Animator.StringToHash("isRunning");
-        public int Fire { get; private set; } = Animator.StringToHash("Fire");
+        public int IsRunning { get; private set; } = Animator.StringToHash("isRunning");  
     }
 }
