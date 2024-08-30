@@ -5,10 +5,13 @@ namespace Core.Scripts.Runtime.Agent
 {
     public class AgentAim : MonoBehaviour
     {
+        [SerializeField] private LineRenderer _aimLaser; 
+        
         [Header("Aim Information")] 
         [SerializeField] private Transform _aim;
 
         [SerializeField] private bool _isAimingPrecisely;
+        [SerializeField] private bool _isLockingToTarget;
         
         [Space]
         
@@ -29,12 +32,32 @@ namespace Core.Scripts.Runtime.Agent
                 _cameraSensitivity * Time.deltaTime);    
         }
 
-        public void UpdateAgentAimPosition(Vector3 mousePosition)
+        public void UpdateAgentAimPosition(Vector3 mousePosition, RaycastHit targetTransform)
         {
+            Transform target = Target(targetTransform);
+
+            if (target != null && _isLockingToTarget)
+            {
+                _aim.position = target.position;
+                return;
+            } 
+            
             _aim.position = mousePosition;
             
             if(!_isAimingPrecisely)
                 _aim.position = new Vector3(_aim.position.x, transform.position.y + 1, _aim.position.z);
+        }
+
+        public Transform Target(RaycastHit targetTransform)
+        {
+            Transform target = null;
+
+            if (targetTransform.transform.GetComponent<Target>() != null)
+            {
+                target = targetTransform.transform;
+            }
+
+            return target;
         }
 
         public bool CanAimPrecisely()
@@ -69,6 +92,28 @@ namespace Core.Scripts.Runtime.Agent
                 return _lastKnownMouseHit;
             _lastKnownMouseHit = hitInfo;
             return hitInfo;
+        }
+
+        public void UpdateAimLaser(Transform gunPoint, Vector3 bulletDirection)
+        {
+            float laserTipLenght = .5f;
+            
+            Transform gunPosition = gunPoint;
+            Vector3 laserDirection = bulletDirection;
+            float gunDistance = 4f;
+            
+            Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
+
+            if (Physics.Raycast(gunPoint.position, laserDirection, out RaycastHit hit, gunDistance))
+            {
+                endPoint = hit.point;
+                laserTipLenght = 0;
+            }
+                
+            
+            _aimLaser.SetPosition(0, gunPosition.position);
+            _aimLaser.SetPosition(1, endPoint);
+            _aimLaser.SetPosition(2, endPoint + laserDirection * laserTipLenght);
         }
     }
 }

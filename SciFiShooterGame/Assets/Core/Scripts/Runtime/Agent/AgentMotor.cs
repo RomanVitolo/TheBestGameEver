@@ -6,8 +6,7 @@ namespace Core.Scripts.Runtime.Agent
     [RequireComponent(typeof(Agent))]
     public class AgentMotor : MonoBehaviour
     {   
-        private Agent _agent;
-        private AgentAim _agentAim;
+        private Agent _agent;    
 
         #region Aim&MovementFields
         
@@ -64,8 +63,7 @@ namespace Core.Scripts.Runtime.Agent
 
         private void Awake()
         {
-            _agent = GetComponent<Agent>();
-            _agentAim = GetComponent<AgentAim>();
+            _agent = GetComponent<Agent>(); 
             _agent.GetComponents();
         }
 
@@ -80,10 +78,14 @@ namespace Core.Scripts.Runtime.Agent
         private void Update()
         {
             MovementBehavior();  
-            _agentAim.UpdateAgentCameraPosition(_agentAim.GetMouseHitInfo(_mainCamera, 
+            _agent.AgentAim.UpdateAgentCameraPosition(_agent.AgentAim.GetMouseHitInfo(_mainCamera, 
                 _agent.AgentInputReader.AimInputValue, _aimLayerMask).point, _agent.AgentInputReader.MovementValue);
-            _agentAim.UpdateAgentAimPosition(_agentAim.GetMouseHitInfo(_mainCamera, 
-                _agent.AgentInputReader.AimInputValue, _aimLayerMask).point);
+            
+            _agent.AgentAim.UpdateAgentAimPosition(_agent.AgentAim.GetMouseHitInfo(_mainCamera, 
+                _agent.AgentInputReader.AimInputValue, _aimLayerMask).point, 
+                _agent.AgentAim.GetMouseHitInfo(_mainCamera, _agent.AgentInputReader.AimInputValue,
+                    _aimLayerMask));
+            
             ApplyRotation();
             AnimatorControllers();
         }
@@ -93,7 +95,7 @@ namespace Core.Scripts.Runtime.Agent
         #region AimBehavior    
         private void ApplyRotation()
         {     
-            _lookingDirection = _agentAim.GetMouseHitInfo(_mainCamera, _agent.AgentInputReader.AimInputValue
+            _lookingDirection = _agent.AgentAim.GetMouseHitInfo(_mainCamera, _agent.AgentInputReader.AimInputValue
                 ,_aimLayerMask).point - transform.position;
             _lookingDirection.y = 0f;
             _lookingDirection.Normalize();

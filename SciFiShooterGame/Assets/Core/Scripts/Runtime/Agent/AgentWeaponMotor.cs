@@ -100,6 +100,8 @@ namespace Core.Scripts.Runtime.Agent
                _shouldIncrease_LeftHandIKWeight = false;
            }
         }
+
+        _agent.AgentAim.UpdateAimLaser(_gunPoint, BulletDirection());
     }
 
     private void PlayWeaponGrabAnimation(GrabType grabType)
@@ -182,18 +184,21 @@ namespace Core.Scripts.Runtime.Agent
         TriggerShootAnimation();
     }
 
-    private Vector3 BulletDirection()
+    public Vector3 BulletDirection()
     {
         Vector3 direction = (_aim.position - _gunPoint.position).normalized;
-        
-        if(_agent.AgentAim.CanAimPrecisely() == false)
-         direction.y = 0;
-        
-       // this.transform.LookAt(_aim);
+
+        if (_agent.AgentAim.CanAimPrecisely() == false && 
+            _agent.AgentAim.Target(_agent.AgentAim.GetMouseHitInfo(Camera.main, 
+                _agent.AgentInputReader.AimInputValue, _agent.AgentMovement.AimLayerMask)) == null)  
+         direction.y = 0;     
+       
         _gunPoint.LookAt(_aim);
         
         return direction;
     }
+
+    public Transform GunPoint() => _gunPoint;
     private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
  }
 }     
