@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.Agent
 {
@@ -8,7 +7,7 @@ namespace Core.Scripts.Runtime.Agent
         [SerializeField] private LineRenderer _aimLaser; 
         
         [Header("Aim Information")] 
-        [SerializeField] private Transform _aim;
+        [field: SerializeField] public Transform Aim { get; private set; }
 
         [SerializeField] private bool _isAimingPrecisely;
         [SerializeField] private bool _isLockingToTarget;
@@ -38,14 +37,14 @@ namespace Core.Scripts.Runtime.Agent
 
             if (target != null && _isLockingToTarget)
             {
-                _aim.position = target.position;
+                Aim.position = target.position;
                 return;
             } 
             
-            _aim.position = mousePosition;
+            Aim.position = mousePosition;
             
             if(!_isAimingPrecisely)
-                _aim.position = new Vector3(_aim.position.x, transform.position.y + 1, _aim.position.z);
+                Aim.position = new Vector3(Aim.position.x, transform.position.y + 1, Aim.position.z);
         }
 
         public Transform Target(RaycastHit targetTransform)
@@ -60,13 +59,7 @@ namespace Core.Scripts.Runtime.Agent
             return target;
         }
 
-        public bool CanAimPrecisely()
-        {
-            if (_isAimingPrecisely)
-                return true;
-
-            return false;
-        }
+        public bool CanAimPrecisely() => _isAimingPrecisely;  
 
         private Vector3 DesiredCameraPosition(Vector3 aimPosition, Vector2 moveInput)
         {
@@ -96,11 +89,11 @@ namespace Core.Scripts.Runtime.Agent
 
         public void UpdateAimLaser(Transform gunPoint, Vector3 bulletDirection)
         {
-            float laserTipLenght = .5f;
-            
             Transform gunPosition = gunPoint;
             Vector3 laserDirection = bulletDirection;
-            float gunDistance = 4f;
+            
+            float laserTipLenght = .5f;
+            float gunDistance = 4f;        
             
             Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
 
@@ -108,8 +101,7 @@ namespace Core.Scripts.Runtime.Agent
             {
                 endPoint = hit.point;
                 laserTipLenght = 0;
-            }
-                
+            }                   
             
             _aimLaser.SetPosition(0, gunPosition.position);
             _aimLaser.SetPosition(1, endPoint);

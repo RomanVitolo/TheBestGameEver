@@ -13,6 +13,12 @@ MonoBehaviour:
   m_Name: AxeWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 6
+  <GrabType>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 3
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
+  <AnimationLayer>k__BackingField: 4
+  <BulletMass>k__BackingField: 0
+  <BulletVelocity>k__BackingField: 0
+  <Ammo>k__BackingField: 0
+  <MaxAmmo>k__BackingField: 0

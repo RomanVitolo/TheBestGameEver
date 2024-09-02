@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 5
+  <GrabType>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 2
+  <WeaponShootPoint>k__BackingField: {fileID: 2125699425474731022, guid: ddc93d9c727ccd54e9115b52702520f9,
+    type: 3}
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
-  <AnimLayer>k__BackingField: 2
+  <AnimationLayer>k__BackingField: 2
+  <BulletMass>k__BackingField: 0
+  <BulletVelocity>k__BackingField: 0
+  <Ammo>k__BackingField: 0
+  <MaxAmmo>k__BackingField: 20
