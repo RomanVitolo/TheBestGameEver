@@ -17,4 +17,4 @@ MonoBehaviour:
     m_Bits: 2240
   <WalkSpeed>k__BackingField: 2
   <RunSpeed>k__BackingField: 3.5
-  <TurnSpeed>k__BackingField: 3
+  <TurnSpeed>k__BackingField: 15
