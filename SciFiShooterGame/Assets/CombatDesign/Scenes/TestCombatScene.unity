@@ -5359,7 +5359,7 @@ MonoBehaviour:
   - {fileID: 3779640529040315856}
   - {fileID: 7700517544554419331}
   - {fileID: 3713060463596468593}
-  _initialWeaponType: 3
+  _actualWeaponType: 3
   _gunPointTransforms:
   - {fileID: 1882707182956869187}
   - {fileID: 128398812941227778}
@@ -7979,7 +7979,7 @@ GameObject:
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 975a671442b6e429d9d8960dd976d422, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -8220,8 +8220,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _aimLaser: {fileID: 7593822053412250590}
   <Aim>k__BackingField: {fileID: 1831787738}
-  _isAimingPrecisely: 1
-  _isLockingToTarget: 1
+  _isAimingPrecisely: 0
+  _isLockingToTarget: 0
   _cameraTarget: {fileID: 1088426124}
   _minCameraDistance: 1
   _maxCameraDistance: 3

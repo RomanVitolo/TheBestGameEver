@@ -36,7 +36,7 @@
                     "name": "Run",
                     "type": "Button",
                     "id": "fd4eb59b-892b-4389-85b3-23021aa91731",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -111,8 +111,30 @@
                 },
                 {
                     "name": "",
+                    "id": "b58dbfd3-cc8d-4f83-8b8e-ad0555ffad9c",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0c041479-dc5c-4570-893b-30811078cecd",
                     "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af77068c-3893-4629-b5f7-8d72c05e2bd0",
+                    "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

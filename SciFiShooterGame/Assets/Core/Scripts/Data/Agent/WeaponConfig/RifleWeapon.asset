@@ -15,12 +15,10 @@ MonoBehaviour:
   <WeaponType>k__BackingField: 3
   <GrabType>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 1
-  <WeaponShootPoint>k__BackingField: {fileID: 1516665943754509698, guid: cb1b097e8dee4874aa977becf456cc52,
-    type: 3}
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
   <AnimationLayer>k__BackingField: 3
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 0
-  <Ammo>k__BackingField: 0
-  <MaxAmmo>k__BackingField: 0
+  <Ammo>k__BackingField: -27
+  <MaxAmmo>k__BackingField: 50

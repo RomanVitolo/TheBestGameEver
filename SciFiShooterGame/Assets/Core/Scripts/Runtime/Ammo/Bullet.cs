@@ -15,15 +15,13 @@ namespace Core.Scripts.Runtime.Ammo
 
         private void InstantiateImpactEffect(Collision other)
         {
-            if (other.contacts.Length > 0)
-            {
-                ContactPoint contact = other.contacts[0];
+            if (other.contacts.Length <= 0) return;
+            ContactPoint contact = other.contacts[0];
                
-                GameObject newImpactEffect =
-                    Instantiate(bulletImpactEffect, contact.point, Quaternion.LookRotation(contact.normal));
+            GameObject newImpactEffect =
+                Instantiate(bulletImpactEffect, contact.point, Quaternion.LookRotation(contact.normal));
                 
-                Destroy(newImpactEffect, 1f);
-            }
+            Destroy(newImpactEffect, 1f);
         }
     }
 }

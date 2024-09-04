@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agent
