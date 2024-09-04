@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 3
-  <GrabType>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 0
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
   <AnimationLayer>k__BackingField: 3
+  <GrabType>k__BackingField: 1
   <BulletMass>k__BackingField: 0
-  <BulletVelocity>k__BackingField: 0
-  <Ammo>k__BackingField: 49
-  <MaxAmmo>k__BackingField: 50
+  <BulletVelocity>k__BackingField: 20
+  <CurrentAmmo>k__BackingField: 0
+  <MaxWeaponAmmo>k__BackingField: 100

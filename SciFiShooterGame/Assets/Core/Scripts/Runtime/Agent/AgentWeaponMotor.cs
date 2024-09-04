@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;     
 using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapon;
 using UnityEngine;
@@ -128,7 +127,7 @@ namespace Core.Scripts.Runtime.Agent
         foreach (var weapon in _agentWeaponsSlots)
         {
             weapon.gameObject.SetActive(weapon.WeaponConfigConfiguration.WeaponType == _actualWeaponType);
-            weapon.WeaponConfigConfiguration.Ammo = weapon.WeaponConfigConfiguration.MaxAmmo;
+            weapon.WeaponConfigConfiguration.CurrentAmmo = weapon.WeaponConfigConfiguration.MaxWeaponAmmo;
             AttachLeftHand(weapon.transform); 
         }   
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimationLayer);
@@ -200,11 +199,11 @@ namespace Core.Scripts.Runtime.Agent
     {
         var getWeaponType = _agentWeaponsSlots
             .Find(w => w.WeaponConfigConfiguration.WeaponType == _actualWeaponType);
-        var getCurrentAmmo = getWeaponType.WeaponConfigConfiguration.Ammo;
+        var getCurrentAmmo = getWeaponType.WeaponConfigConfiguration.CurrentAmmo;
             
         if (getWeaponType != null && getCurrentAmmo > 0)
         {
-            getWeaponType.WeaponConfigConfiguration.Ammo--;     
+            getWeaponType.WeaponConfigConfiguration.CurrentAmmo--;     
             Debug.Log("Weapon is: " + getWeaponType.gameObject.name + " " +
             _gunPointTransforms[_currentIndex].gameObject.name + " " + _currentIndex);
             
