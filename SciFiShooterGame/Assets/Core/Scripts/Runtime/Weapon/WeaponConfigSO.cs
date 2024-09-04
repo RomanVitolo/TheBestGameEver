@@ -4,15 +4,15 @@ namespace Core.Scripts.Runtime.Weapon
 {
     public enum WeaponType
     {
-        None,
-        Pistol,
-        SubMachine,
-        Rifle,
-        Sniper,
-        Shotgun,
-        Axe,
-        Hammer,
-        Sword
+        None = 0,
+        Pistol = 1,
+        SubMachine = 2,
+        Rifle = 3,
+        Sniper = 4,
+        Shotgun = 5,
+        Axe = 6,
+        Hammer = 7,
+        Sword = 8
     }
 
     public enum GrabType

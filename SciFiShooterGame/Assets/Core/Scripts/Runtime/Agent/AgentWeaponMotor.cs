@@ -14,19 +14,19 @@ namespace Core.Scripts.Runtime.Agent
 
     [Header("Weapon Settings")]      
     [SerializeField] private List<AgentWeapon> _agentWeaponsSlots = new List<AgentWeapon>();    
-    [SerializeField] private WeaponType _actualWeaponType;
     [SerializeField] private Transform[] _gunPointTransforms; 
      private Transform _currentWeapon;
      private int _currentIndex;
      
-     [Header("Weapon Animations")]
-     private WeaponAnimations _weaponAnimations;      
+    [Header("Actual Weapon Type")]
+    [SerializeField] private WeaponType _actualWeaponType;
     
     [Header("Left hand IK")] 
     [SerializeField] private TwoBoneIKConstraint _leftHandIK;
     [SerializeField] private Transform _leftHandIK_Target;
     [SerializeField] private float _leftHandIKWeightIncreaseRate;
      private bool _shouldIncrease_LeftHandIKWeight;
+     private WeaponAnimations _weaponAnimations;      
     
     [Header("Rig")]
     [SerializeField] private Rig _rig;
@@ -157,6 +157,7 @@ namespace Core.Scripts.Runtime.Agent
                 AttachLeftHand(weapon.transform); 
                 SwitchAnimationLayer(weapon.WeaponConfigConfiguration.AnimationLayer);
                 PlayWeaponGrabAnimation(weapon.WeaponConfigConfiguration.GrabType); 
+                _currentIndex = (weapon.WeaponConfigConfiguration.WeaponInputSlot);
             }
             else   
                 weapon.gameObject.SetActive(false);      
@@ -204,7 +205,9 @@ namespace Core.Scripts.Runtime.Agent
         if (getWeaponType != null && getCurrentAmmo > 0)
         {
             getWeaponType.WeaponConfigConfiguration.Ammo--;     
-            Debug.Log("Weapon is: " + getWeaponType.gameObject.name);
+            Debug.Log("Weapon is: " + getWeaponType.gameObject.name + " " +
+            _gunPointTransforms[_currentIndex].gameObject.name + " " + _currentIndex);
+            
             
             GameObject newBullet = Instantiate(_bulletPrefab, _gunPointTransforms[_currentIndex].position,
                 Quaternion.LookRotation(_gunPointTransforms[_currentIndex].forward));

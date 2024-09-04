@@ -2537,7 +2537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2020230939}
   m_Layer: 0
-  m_Name: GunPoint
+  m_Name: GunPoint_Axe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4486,7 +4486,7 @@ GameObject:
   m_Component:
   - component: {fileID: 128398812941227778}
   m_Layer: 0
-  m_Name: GunPoint
+  m_Name: GunPoint_ShootGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5359,11 +5359,11 @@ MonoBehaviour:
   - {fileID: 3779640529040315856}
   - {fileID: 7700517544554419331}
   - {fileID: 3713060463596468593}
-  _actualWeaponType: 3
   _gunPointTransforms:
   - {fileID: 1882707182956869187}
   - {fileID: 128398812941227778}
   - {fileID: 2020230939}
+  _actualWeaponType: 3
   _leftHandIK: {fileID: 1981842968614199850}
   _leftHandIK_Target: {fileID: 5248138778038715764}
   _leftHandIKWeightIncreaseRate: 3
@@ -6302,7 +6302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1882707182956869187}
   m_Layer: 0
-  m_Name: GunPoint
+  m_Name: GunPoint_AssaultRifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

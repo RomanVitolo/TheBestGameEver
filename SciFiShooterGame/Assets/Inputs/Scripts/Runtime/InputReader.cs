@@ -68,7 +68,7 @@ namespace GlobalInputs
         {
             if (!context.performed) return;
 
-            WeaponSlotLocation = 1;
+            WeaponSlotLocation = 0;
             NotifyMainWeaponSwitch?.Invoke();
         }
 
@@ -76,7 +76,7 @@ namespace GlobalInputs
         {
             if (!context.performed) return;
 
-            WeaponSlotLocation = 2;
+            WeaponSlotLocation = 1;
             NotifySecondaryWeaponSwitch?.Invoke();
         }
 
@@ -84,7 +84,7 @@ namespace GlobalInputs
         {
             if (!context.performed) return;
 
-            WeaponSlotLocation = 3;
+            WeaponSlotLocation = 2;
             NotifyMeleeWeaponSwitch?.Invoke();
         }
 
