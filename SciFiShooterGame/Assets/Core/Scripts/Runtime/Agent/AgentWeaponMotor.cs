@@ -14,8 +14,9 @@ namespace Core.Scripts.Runtime.Agent
     [Header("Weapon Settings")]      
     [SerializeField] private List<AgentWeapon> _agentWeaponsSlots = new List<AgentWeapon>();    
     [SerializeField] private Transform[] _gunPointTransforms; 
-     private Transform _currentWeapon;
+     private Transform _assignLeftHandCurrentWeapon;
      private int _currentIndex;
+     [SerializeField] private AgentWeapon _currentWeapon;
      
     [Header("Actual Weapon Type")]
     [SerializeField] private WeaponType _actualWeaponType;
@@ -53,6 +54,7 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
         _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;    
+        _agent.AgentInputReader.NotifyWhenWeaponDropped += DropWeapon;    
     }
 
     private void OnWeaponReload()
@@ -78,6 +80,7 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
+        _agent.AgentInputReader.NotifyWhenWeaponDropped -= DropWeapon;
     }
 
     private void Update()
@@ -128,7 +131,8 @@ namespace Core.Scripts.Runtime.Agent
         {
             weapon.gameObject.SetActive(weapon.WeaponConfigConfiguration.WeaponType == _actualWeaponType);
             weapon.WeaponConfigConfiguration.CurrentAmmo = weapon.WeaponConfigConfiguration.MaxWeaponAmmo;
-            AttachLeftHand(weapon.transform); 
+            AttachLeftHand(weapon.transform);
+            _currentWeapon = weapon;
         }   
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimationLayer);
     }
@@ -142,32 +146,53 @@ namespace Core.Scripts.Runtime.Agent
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
         SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimationLayer);
         PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.GrabType);
+        _currentWeapon = _agentWeaponsSlots[_currentIndex];
     }
     
     private void OnButtonPressed()
-    {   
+    {  
+        bool weaponFound = false;   
+        
         foreach (var weapon in _agentWeaponsSlots)
-        {
-            if (weapon.WeaponConfigConfiguration.WeaponInputSlot ==
-                _agent.AgentInputReader.WeaponSlotLocation)
+        {   
+            if (weapon.WeaponConfigConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
             {
+                weaponFound = true;      
+               
                 _actualWeaponType = weapon.WeaponConfigConfiguration.WeaponType;
-                weapon.gameObject.SetActive(true);
-                AttachLeftHand(weapon.transform); 
+                _currentWeapon = weapon;          
+               
+                AttachLeftHand(weapon.transform);
                 SwitchAnimationLayer(weapon.WeaponConfigConfiguration.AnimationLayer);
-                PlayWeaponGrabAnimation(weapon.WeaponConfigConfiguration.GrabType); 
-                _currentIndex = (weapon.WeaponConfigConfiguration.WeaponInputSlot);
+                PlayWeaponGrabAnimation(weapon.WeaponConfigConfiguration.GrabType);
+                _currentIndex = weapon.WeaponConfigConfiguration.WeaponInputSlot;        
+               
+                weapon.gameObject.SetActive(true);
             }
-            else   
-                weapon.gameObject.SetActive(false);      
-        }                              
+            else
+            {
+               
+                if (_currentWeapon != null || weapon != _currentWeapon)
+                {
+                    weapon.gameObject.SetActive(false);  
+                }
+            }
+        }
+
+        if (weaponFound) return;
+        if (_currentWeapon != null)
+        {
+            _currentWeapon.gameObject.SetActive(true); 
+            _currentIndex = _currentWeapon.WeaponConfigConfiguration.WeaponInputSlot;
+        }                          
+        Debug.Log("Selected weapon not found in the list, keeping current weapon.");
     }
 
     private void AttachLeftHand(Transform weaponTransform)
     {
-        _currentWeapon = weaponTransform;
+        _assignLeftHandCurrentWeapon = weaponTransform;
         
-        Transform targetTransform = _currentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
+        Transform targetTransform = _assignLeftHandCurrentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
         _leftHandIK_Target.localPosition = targetTransform.localPosition;
         _leftHandIK_Target.localRotation = targetTransform.localRotation;
     }
@@ -196,15 +221,13 @@ namespace Core.Scripts.Runtime.Agent
     }
 
     private void WeaponShoot()
-    {
-        var getWeaponType = _agentWeaponsSlots
-            .Find(w => w.WeaponConfigConfiguration.WeaponType == _actualWeaponType);
-        var getCurrentAmmo = getWeaponType.WeaponConfigConfiguration.CurrentAmmo;
+    {        
+        var getCurrentAmmo = _currentWeapon.WeaponConfigConfiguration.CurrentAmmo;
             
-        if (getWeaponType != null && getCurrentAmmo > 0)
+        if (_currentWeapon != null && getCurrentAmmo > 0)
         {
-            getWeaponType.WeaponConfigConfiguration.CurrentAmmo--;     
-            Debug.Log("Weapon is: " + getWeaponType.gameObject.name + " " +
+            _currentWeapon.WeaponConfigConfiguration.CurrentAmmo--;     
+            Debug.Log("Weapon is: " + _currentWeapon.gameObject.name + " " +
             _gunPointTransforms[_currentIndex].gameObject.name + " " + _currentIndex);
             
             
@@ -224,5 +247,17 @@ namespace Core.Scripts.Runtime.Agent
 
     private static void DoSomethingAndRefactorThis() => Debug.Log("NEED MORE AMMO");  
     private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
+
+    private void DropWeapon()
+    {
+        if (_agentWeaponsSlots.Count <= 1) return;
+        
+        _agentWeaponsSlots.Remove(_currentWeapon);
+        _currentWeapon.gameObject.SetActive(false);
+        _currentWeapon = _agentWeaponsSlots[0];
+        _actualWeaponType = _currentWeapon.WeaponConfigConfiguration.WeaponType;
+        _currentWeapon.gameObject.SetActive(true);
+        _currentIndex = _currentWeapon.WeaponConfigConfiguration.WeaponInputSlot;
+    }
  }
 }     

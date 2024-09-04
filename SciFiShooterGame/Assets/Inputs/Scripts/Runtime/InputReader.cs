@@ -21,6 +21,7 @@ namespace GlobalInputs
         public event Action NotifyMeleeWeaponSwitch;
         public event Action NotifyThrowableWeaponSwitch;
         public event Action NotifyWeaponReload;
+        public event Action NotifyWhenWeaponDropped;
         
     
         private Controls _controls;
@@ -40,10 +41,7 @@ namespace GlobalInputs
     
         public void OnFire(InputAction.CallbackContext context)
         {
-            /*if (context.performed) CanShoot = context.performed;
-            else if (context.canceled) CanShoot = false; */   
-            
-            if (!context.performed) return;   
+            if (!context.performed) return;  
             
             NotifyCanShoot?.Invoke();
         }
@@ -112,6 +110,13 @@ namespace GlobalInputs
         public void OnPreciseShooting(InputAction.CallbackContext context)
         {
             throw new NotImplementedException();
+        }
+
+        public void OnDropWeapon(InputAction.CallbackContext context)
+        {
+            if (!context.performed) return;
+            
+            NotifyWhenWeaponDropped?.Invoke();
         }
     }
 }

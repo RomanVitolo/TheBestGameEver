@@ -246,6 +246,15 @@ namespace GlobalInputs
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""2ee81032-1b21-4fe9-b448-30195fc3d05d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -325,6 +334,17 @@ namespace GlobalInputs
                     ""action"": ""PreciseShooting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98724fd1-f349-4e87-bc9f-b15d8bcff9ee"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -346,6 +366,7 @@ namespace GlobalInputs
             m_Weapon_SwitchWeapons = m_Weapon.FindAction("SwitchWeapons", throwIfNotFound: true);
             m_Weapon_Reload = m_Weapon.FindAction("Reload", throwIfNotFound: true);
             m_Weapon_PreciseShooting = m_Weapon.FindAction("PreciseShooting", throwIfNotFound: true);
+            m_Weapon_DropWeapon = m_Weapon.FindAction("DropWeapon", throwIfNotFound: true);
         }
 
         ~@Controls()
@@ -490,6 +511,7 @@ namespace GlobalInputs
         private readonly InputAction m_Weapon_SwitchWeapons;
         private readonly InputAction m_Weapon_Reload;
         private readonly InputAction m_Weapon_PreciseShooting;
+        private readonly InputAction m_Weapon_DropWeapon;
         public struct WeaponActions
         {
             private @Controls m_Wrapper;
@@ -501,6 +523,7 @@ namespace GlobalInputs
             public InputAction @SwitchWeapons => m_Wrapper.m_Weapon_SwitchWeapons;
             public InputAction @Reload => m_Wrapper.m_Weapon_Reload;
             public InputAction @PreciseShooting => m_Wrapper.m_Weapon_PreciseShooting;
+            public InputAction @DropWeapon => m_Wrapper.m_Weapon_DropWeapon;
             public InputActionMap Get() { return m_Wrapper.m_Weapon; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -531,6 +554,9 @@ namespace GlobalInputs
                 @PreciseShooting.started += instance.OnPreciseShooting;
                 @PreciseShooting.performed += instance.OnPreciseShooting;
                 @PreciseShooting.canceled += instance.OnPreciseShooting;
+                @DropWeapon.started += instance.OnDropWeapon;
+                @DropWeapon.performed += instance.OnDropWeapon;
+                @DropWeapon.canceled += instance.OnDropWeapon;
             }
 
             private void UnregisterCallbacks(IWeaponActions instance)
@@ -556,6 +582,9 @@ namespace GlobalInputs
                 @PreciseShooting.started -= instance.OnPreciseShooting;
                 @PreciseShooting.performed -= instance.OnPreciseShooting;
                 @PreciseShooting.canceled -= instance.OnPreciseShooting;
+                @DropWeapon.started -= instance.OnDropWeapon;
+                @DropWeapon.performed -= instance.OnDropWeapon;
+                @DropWeapon.canceled -= instance.OnDropWeapon;
             }
 
             public void RemoveCallbacks(IWeaponActions instance)
@@ -589,6 +618,7 @@ namespace GlobalInputs
             void OnSwitchWeapons(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
             void OnPreciseShooting(InputAction.CallbackContext context);
+            void OnDropWeapon(InputAction.CallbackContext context);
         }
     }
 }
