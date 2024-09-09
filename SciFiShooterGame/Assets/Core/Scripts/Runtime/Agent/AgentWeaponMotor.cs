@@ -1,33 +1,39 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Scripts.Runtime.Utilities;
-using Core.Scripts.Runtime.Weapon;
+using Core.Scripts.Runtime.Weapons;
+using Core.Scripts.Runtime.Items;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;     
+using UnityEngine.Animations.Rigging;      
 
 namespace Core.Scripts.Runtime.Agent
 {    
-    public class AgentWeaponMotor : MonoBehaviour
- {     
-    [Header("Agent Objects")]
-    [SerializeField] private Agent _agent;
-
-    [Header("Weapon Settings")]      
-    [SerializeField] private List<AgentWeapon> _agentWeaponsSlots = new List<AgentWeapon>();    
-    [SerializeField] private Transform[] _gunPointTransforms; 
-    [SerializeField] private AgentWeapon _currentWeapon;
-     private Transform _assignLeftHandCurrentWeapon;
-     private int _currentIndex;
+    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponType>, UtilityEvent
+  {                
+    public event Action NotifyAction;      
      
     [Header("Actual Weapon Type")]
     [SerializeField] private WeaponType _actualWeaponType;
+    
+    [Header("Agent Objects")]
+    [SerializeField] private Agent _agent;      
+    
+    [Header("Weapon Settings")]      
+    [SerializeField] private Weapon[] _totalWeaponsHolder;
+    [SerializeField] private List<Weapon> _agentWeaponsSlots = new List<Weapon>();    
+    [SerializeField] private Transform[] _gunPointTransforms; 
+     private Weapon _currentWeapon;
+     private int _currentIndex;       
+     private const int _maxWeaponsSlotsAllowed = 3;
     
     [Header("Left hand IK")] 
     [SerializeField] private TwoBoneIKConstraint _leftHandIK;
     [SerializeField] private Transform _leftHandIK_Target;
     [SerializeField] private float _leftHandIKWeightIncreaseRate;
-     private bool _shouldIncrease_LeftHandIKWeight;
      private WeaponAnimations _weaponAnimations;      
+     private Transform _assignLeftHandCurrentWeapon;
+     private bool _shouldIncrease_LeftHandIKWeight;
     
     [Header("Rig")]
     [SerializeField] private Rig _rig;
@@ -56,22 +62,7 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;    
         _agent.AgentInputReader.NotifyWhenWeaponDropped += DropWeapon;   
         AssignDefaultWeapon();
-    }
-
-    private void OnWeaponReload()
-    {
-        if (_isGrabbingWeapon) return;
-        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
-        ReduceRigWeight();
-    }
-
-    private void ReduceRigWeight()
-    {
-        _rig.weight = 0.15f;
-    }
-
-    public void MaximizeRigWeight() => _shouldIncrease_RigWeight = true; 
-    public void MaximizeLeftHandWeight() => _shouldIncrease_LeftHandIKWeight = true;       
+    }             
 
     private void OnDestroy()
     {
@@ -83,6 +74,15 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
         _agent.AgentInputReader.NotifyWhenWeaponDropped -= DropWeapon;
     }
+    private void OnWeaponReload()
+    {
+        if (_isGrabbingWeapon) return;
+        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
+        ReduceRigWeight();
+    }                              
+    private void ReduceRigWeight() => _rig.weight = 0.15f;      
+    public void MaximizeRigWeight() => _shouldIncrease_RigWeight = true; 
+    public void MaximizeLeftHandWeight() => _shouldIncrease_LeftHandIKWeight = true;       
 
     private void Update()
     {
@@ -130,19 +130,19 @@ namespace Core.Scripts.Runtime.Agent
     {
         foreach (var weapon in _agentWeaponsSlots)
         {
-            weapon.WeaponConfigConfiguration.CurrentAmmo = weapon.WeaponConfigConfiguration.MaxWeaponAmmo;
-            if (weapon.WeaponConfigConfiguration.WeaponType == _actualWeaponType)   
-                AssignWeaponConfig(weapon);  
+            weapon.WeaponDataConfiguration.CurrentAmmo = weapon.WeaponDataConfiguration.MaxWeaponAmmo;
+            if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)   
+                WeaponConfig(weapon);  
             else
                 weapon.gameObject.SetActive(false);      
         }                  
     }
 
-    private void AssignWeaponConfig(AgentWeapon weapon)
+    private void WeaponConfig(Weapon weapon)
     {
         AttachLeftHand(weapon.transform);
-        SwitchAnimationLayer(weapon.WeaponConfigConfiguration.AnimationLayer);
-        PlayWeaponGrabAnimation(weapon.WeaponConfigConfiguration.GrabType);
+        SwitchAnimationLayer(weapon.WeaponDataConfiguration.AnimationLayer);
+        PlayWeaponGrabAnimation(weapon.WeaponDataConfiguration.GrabType);
         _currentWeapon = weapon;
         weapon.gameObject.SetActive(true);
     }
@@ -152,10 +152,10 @@ namespace Core.Scripts.Runtime.Agent
         _agentWeaponsSlots[_currentIndex].gameObject.SetActive(false);     
         _currentIndex = (_currentIndex + 1) % _agentWeaponsSlots.Count;
         _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
-        _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.WeaponType;
+        _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
-        SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.AnimationLayer);
-        PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponConfigConfiguration.GrabType);
+        SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
+        PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.GrabType);
         _currentWeapon = _agentWeaponsSlots[_currentIndex];
     }
     
@@ -165,13 +165,13 @@ namespace Core.Scripts.Runtime.Agent
         
         foreach (var weapon in _agentWeaponsSlots)
         {   
-            if (weapon.WeaponConfigConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
+            if (weapon.WeaponDataConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
             {
                 weaponFound = true;      
                
-                _actualWeaponType = weapon.WeaponConfigConfiguration.WeaponType;  
-                AssignWeaponConfig(weapon);
-                _currentIndex = weapon.WeaponConfigConfiguration.WeaponInputSlot;       
+                _actualWeaponType = weapon.WeaponDataConfiguration.WeaponType;  
+                WeaponConfig(weapon);
+                _currentIndex = weapon.WeaponDataConfiguration.WeaponInputSlot;       
             }
             else
             {    
@@ -185,7 +185,7 @@ namespace Core.Scripts.Runtime.Agent
         if (_currentWeapon != null)
         {
             _currentWeapon.gameObject.SetActive(true); 
-            _currentIndex = _currentWeapon.WeaponConfigConfiguration.WeaponInputSlot;
+            _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
         }                          
         Debug.Log("Selected weapon not found in the list, keeping current weapon.");
     }
@@ -224,11 +224,11 @@ namespace Core.Scripts.Runtime.Agent
 
     private void WeaponShoot()
     {        
-        var getCurrentAmmo = _currentWeapon.WeaponConfigConfiguration.CurrentAmmo;
+        var getCurrentAmmo = _currentWeapon.WeaponDataConfiguration.CurrentAmmo;
             
         if (_currentWeapon != null && getCurrentAmmo > 0)
         {
-            _currentWeapon.WeaponConfigConfiguration.CurrentAmmo--;     
+            _currentWeapon.WeaponDataConfiguration.CurrentAmmo--;     
             Debug.Log("Weapon is: " + _currentWeapon.gameObject.name + " " +
             _gunPointTransforms[_currentIndex].gameObject.name + " " + _currentIndex);
             
@@ -258,9 +258,25 @@ namespace Core.Scripts.Runtime.Agent
         _currentWeapon.gameObject.SetActive(false);
         _currentWeapon = _agentWeaponsSlots.FirstOrDefault();
         if (_currentWeapon == null) return;
-        _actualWeaponType = _currentWeapon.WeaponConfigConfiguration.WeaponType;
+        _actualWeaponType = _currentWeapon.WeaponDataConfiguration.WeaponType;
         _currentWeapon.gameObject.SetActive(true);
-        _currentIndex = _currentWeapon.WeaponConfigConfiguration.WeaponInputSlot;
-    }
- }
+        _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
+    }    
+
+    public void PickUpObject(WeaponType weaponType)
+    {   
+        if (_agentWeaponsSlots.Count >= _maxWeaponsSlotsAllowed && _agentWeaponsSlots.Exists(
+                w => w.WeaponDataConfiguration.WeaponType != weaponType))  
+            return;      
+           
+        foreach (var newWeapon in _totalWeaponsHolder.
+                     Where(newWeapon => newWeapon.WeaponDataConfiguration.WeaponType == weaponType))
+        {
+            NotifyAction?.Invoke();
+            _agentWeaponsSlots.Add(newWeapon);
+            return;
+        }        
+        
+    } 
+  }
 }     

@@ -21,4 +21,4 @@ MonoBehaviour:
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
   <CurrentAmmo>k__BackingField: 0
-  <MaxWeaponAmmo>k__BackingField: 10
+  <MaxWeaponAmmo>k__BackingField: 60

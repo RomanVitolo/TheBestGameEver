@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core.Scripts.Runtime.Weapon
+namespace Core.Scripts.Runtime.Weapons
 {
     public class WeaponAnimations
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core.Scripts.Runtime.Weapon
+namespace Core.Scripts.Runtime.Weapons
 {
     public enum WeaponType
     {
@@ -22,7 +22,7 @@ namespace Core.Scripts.Runtime.Weapon
     }  
     
     [CreateAssetMenu(menuName = "Core/Create AgentWeapon", fileName = "AgentWeapon")]
-    public class WeaponConfigSO : ScriptableObject
+    public class WeaponDataSO : ScriptableObject
     {
         [field: SerializeField, Header("Weapon Settings")] public WeaponType WeaponType { get; private set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; } 

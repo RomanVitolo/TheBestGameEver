@@ -2,12 +2,12 @@
 
 namespace Core.Scripts.Runtime.Agent
 {
-    public class AgentAim : MonoBehaviour
+    public class AgentAim : MonoBehaviour, IAgentAim
     {
         [SerializeField] private LineRenderer _aimLaser; 
         
         [Header("Aim Information")] 
-        [field: SerializeField] public Transform Aim { get; private set; }
+        [field: SerializeField] public Transform Aim { get; set; }
 
         [SerializeField] private bool _isAimingPrecisely;
         [SerializeField] private bool _isLockingToTarget;
@@ -61,21 +61,6 @@ namespace Core.Scripts.Runtime.Agent
 
         public bool CanAimPrecisely() => _isAimingPrecisely;  
 
-        private Vector3 DesiredCameraPosition(Vector3 aimPosition, Vector2 moveInput)
-        {
-            float actualMaxCameraDistance = moveInput.y < -.5f ? _minCameraDistance : _maxCameraDistance;     
-            
-            Vector3 desiredCameraPosition = aimPosition;
-            Vector3 aimDirection = (desiredCameraPosition - transform.position).normalized;
-
-            float distanceToDesiredPosition = Vector3.Distance(transform.position, desiredCameraPosition);
-            float clampedDistance = Mathf.Clamp(distanceToDesiredPosition, _minCameraDistance, actualMaxCameraDistance);
-            
-            desiredCameraPosition = transform.position + aimDirection * clampedDistance;  
-            desiredCameraPosition.y = transform.position.y + 1;
-            
-            return desiredCameraPosition;
-        }
 
         public RaycastHit GetMouseHitInfo(Camera agentCamera, Vector2 InputAim, LayerMask aimLayerMask)
         {
@@ -106,6 +91,21 @@ namespace Core.Scripts.Runtime.Agent
             _aimLaser.SetPosition(0, gunPosition.position);
             _aimLaser.SetPosition(1, endPoint);
             _aimLaser.SetPosition(2, endPoint + laserDirection * laserTipLenght);
+        }
+        private Vector3 DesiredCameraPosition(Vector3 aimPosition, Vector2 moveInput)
+        {
+            float actualMaxCameraDistance = moveInput.y < -.5f ? _minCameraDistance : _maxCameraDistance;     
+            
+            Vector3 desiredCameraPosition = aimPosition;
+            Vector3 aimDirection = (desiredCameraPosition - transform.position).normalized;
+
+            float distanceToDesiredPosition = Vector3.Distance(transform.position, desiredCameraPosition);
+            float clampedDistance = Mathf.Clamp(distanceToDesiredPosition, _minCameraDistance, actualMaxCameraDistance);
+            
+            desiredCameraPosition = transform.position + aimDirection * clampedDistance;  
+            desiredCameraPosition.y = transform.position.y + 1;
+            
+            return desiredCameraPosition;
         }
     }
 }
