@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Weapons
 {
@@ -6,5 +7,10 @@ namespace Core.Scripts.Runtime.Weapons
     {
         [Header("Weapon Configuration")]
         [field: SerializeField] public WeaponDataSO WeaponDataConfiguration { get; private set; }
+
+        private void OnEnable()
+        {
+            WeaponDataConfiguration.InitializeAmmo();
+        }
     }
 }

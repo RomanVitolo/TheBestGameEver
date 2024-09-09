@@ -32,7 +32,43 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public GrabType GrabType { get; private set; }
         [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
         [field: SerializeField] public float BulletVelocity { get; set; } 
-        [field: SerializeField] public int CurrentAmmo { get; set; }
-        [field: SerializeField] public int MaxWeaponAmmo { get; set; }
+        [field: SerializeField] public int AmmoInMagazine { get; set; }
+        [field: SerializeField] public int MagazineCapacity { get; set; }
+        [field: SerializeField] public int TotalReserveAmmo { get; private set; }
+        [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
+
+        public void InitializeAmmo() => TotalReserveAmmo = InitialWeaponAmmo;
+        
+        public bool CanShoot() =>  HaveEnoughBullets(); 
+
+        private bool HaveEnoughBullets()
+        {
+            if (AmmoInMagazine <= 0) return false;
+            AmmoInMagazine--;
+            return true;
+        }
+
+        public bool CanReload()
+        {
+            if (AmmoInMagazine == MagazineCapacity) return false;
+            
+            return TotalReserveAmmo > 0; 
+        }   
+
+        public void RefillAmmo()
+        {
+            //TotalReserveAmmo += AmmoInMagazine;
+            
+            int ammoToReload = MagazineCapacity;
+
+            if (ammoToReload > TotalReserveAmmo)
+                ammoToReload = TotalReserveAmmo;
+            
+            TotalReserveAmmo -= ammoToReload;
+            AmmoInMagazine = ammoToReload;
+
+            if (TotalReserveAmmo < 0)
+                TotalReserveAmmo = 0;           
+        }         
     }
 }

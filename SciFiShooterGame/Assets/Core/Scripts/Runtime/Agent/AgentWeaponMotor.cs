@@ -12,12 +12,10 @@ namespace Core.Scripts.Runtime.Agent
     public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponType>, UtilityEvent
   {                
     public event Action NotifyAction;      
+    private Agent _agent;      
      
     [Header("Actual Weapon Type")]
-    [SerializeField] private WeaponType _actualWeaponType;
-    
-    [Header("Agent Objects")]
-    [SerializeField] private Agent _agent;      
+    [SerializeField] private WeaponType _actualWeaponType; 
     
     [Header("Weapon Settings")]      
     [SerializeField] private Weapon[] _totalWeaponsHolder;
@@ -26,6 +24,8 @@ namespace Core.Scripts.Runtime.Agent
      private Weapon _currentWeapon;
      private int _currentIndex;       
      private const int _maxWeaponsSlotsAllowed = 3;
+
+     public Weapon CurrentWeapon() => _currentWeapon;
     
     [Header("Left hand IK")] 
     [SerializeField] private TwoBoneIKConstraint _leftHandIK;
@@ -76,6 +76,7 @@ namespace Core.Scripts.Runtime.Agent
     }
     private void OnWeaponReload()
     {
+        if (!_currentWeapon.WeaponDataConfiguration.CanReload()) return;
         if (_isGrabbingWeapon) return;
         _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
         ReduceRigWeight();
@@ -130,7 +131,7 @@ namespace Core.Scripts.Runtime.Agent
     {
         foreach (var weapon in _agentWeaponsSlots)
         {
-            weapon.WeaponDataConfiguration.CurrentAmmo = weapon.WeaponDataConfiguration.MaxWeaponAmmo;
+            weapon.WeaponDataConfiguration.AmmoInMagazine = weapon.WeaponDataConfiguration.TotalReserveAmmo;
             if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)   
                 WeaponConfig(weapon);  
             else
@@ -194,7 +195,8 @@ namespace Core.Scripts.Runtime.Agent
     {
         _assignLeftHandCurrentWeapon = weaponTransform;
         
-        Transform targetTransform = _assignLeftHandCurrentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
+        Transform targetTransform =
+            _assignLeftHandCurrentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
         _leftHandIK_Target.localPosition = targetTransform.localPosition;
         _leftHandIK_Target.localRotation = targetTransform.localRotation;
     }
@@ -223,16 +225,9 @@ namespace Core.Scripts.Runtime.Agent
     }
 
     private void WeaponShoot()
-    {        
-        var getCurrentAmmo = _currentWeapon.WeaponDataConfiguration.CurrentAmmo;
-            
-        if (_currentWeapon != null && getCurrentAmmo > 0)
-        {
-            _currentWeapon.WeaponDataConfiguration.CurrentAmmo--;     
-            Debug.Log("Weapon is: " + _currentWeapon.gameObject.name + " " +
-            _gunPointTransforms[_currentIndex].gameObject.name + " " + _currentIndex);
-            
-            
+    {      
+        if (_currentWeapon is not null && _currentWeapon.WeaponDataConfiguration.CanShoot())
+        {    
             GameObject newBullet = Instantiate(_bulletPrefab, _gunPointTransforms[_currentIndex].position,
                 Quaternion.LookRotation(_gunPointTransforms[_currentIndex].forward));
         
@@ -274,9 +269,8 @@ namespace Core.Scripts.Runtime.Agent
         {
             NotifyAction?.Invoke();
             _agentWeaponsSlots.Add(newWeapon);
-            return;
-        }        
-        
+            return;                  
+        }                     
     } 
   }
 }     
