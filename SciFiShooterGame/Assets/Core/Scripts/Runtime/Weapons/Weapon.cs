@@ -1,16 +1,18 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Core.Scripts.Runtime.Weapons
 {
     public class Weapon : MonoBehaviour
     {
+        [SerializeField] private Transform _weaponGunPoint;
+        
         [Header("Weapon Configuration")]
         [field: SerializeField] public WeaponDataSO WeaponDataConfiguration { get; private set; }
 
         private void OnEnable()
         {
-            WeaponDataConfiguration.InitializeAmmo();
+            WeaponDataConfiguration.GunPoint = _weaponGunPoint;
+            WeaponDataConfiguration.InitializeAmmo();   
         }
     }
 }

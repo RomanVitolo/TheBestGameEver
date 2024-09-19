@@ -19,7 +19,15 @@ namespace Core.Scripts.Runtime.Weapons
     {
        SideGrab,
        BackGrab
-    }  
+    }
+
+    public enum WeaponAnimationLayerType
+    {    
+        CommonHold = 1,
+        LowHold = 2,
+        HighHold = 3,
+        MeleeHold = 4,
+    }
     
     [CreateAssetMenu(menuName = "Core/Create AgentWeapon", fileName = "AgentWeapon")]
     public class WeaponDataSO : ScriptableObject
@@ -28,7 +36,7 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
-        [field: SerializeField, Header("Animation Layer")] public int AnimationLayer { get; private set; }     
+        [field: SerializeField, Header("Animation Layer")] public WeaponAnimationLayerType AnimationLayer { get; private set; }     
         [field: SerializeField] public GrabType GrabType { get; private set; }
         [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
         [field: SerializeField] public float BulletVelocity { get; set; } 
@@ -36,8 +44,14 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public int MagazineCapacity { get; set; }
         [field: SerializeField] public int TotalReserveAmmo { get; private set; }
         [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
+        public Transform GunPoint { get; set; }
 
-        public void InitializeAmmo() => TotalReserveAmmo = InitialWeaponAmmo;
+        public void InitializeAmmo()
+        {
+            TotalReserveAmmo = InitialWeaponAmmo;
+            if(InitialWeaponAmmo > MagazineCapacity)
+                AmmoInMagazine = MagazineCapacity;
+        } 
         
         public bool CanShoot() =>  HaveEnoughBullets(); 
 

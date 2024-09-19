@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: SubMachineWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 2
-  <GrabType>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 1
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
-  <AnimationLayer>k__BackingField: 1
+  <AnimationLayer>k__BackingField: 3
+  <GrabType>k__BackingField: 1
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 0
-  <Ammo>k__BackingField: 0
-  <MaxAmmo>k__BackingField: 0
+  <AmmoInMagazine>k__BackingField: 0
+  <MagazineCapacity>k__BackingField: 0
+  <TotalReserveAmmo>k__BackingField: 0
+  <InitialWeaponAmmo>k__BackingField: 0

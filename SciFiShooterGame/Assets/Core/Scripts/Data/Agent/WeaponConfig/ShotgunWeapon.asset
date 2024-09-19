@@ -20,5 +20,7 @@ MonoBehaviour:
   <GrabType>k__BackingField: 0
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
-  <CurrentAmmo>k__BackingField: 0
-  <MaxWeaponAmmo>k__BackingField: 60
+  <AmmoInMagazine>k__BackingField: 0
+  <MagazineCapacity>k__BackingField: 8
+  <TotalReserveAmmo>k__BackingField: 24
+  <InitialWeaponAmmo>k__BackingField: 32

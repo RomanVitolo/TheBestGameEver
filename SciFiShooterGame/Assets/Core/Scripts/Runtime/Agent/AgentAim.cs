@@ -53,7 +53,7 @@ namespace Core.Scripts.Runtime.Agent
 
             if (targetTransform.transform.GetComponent<Target>() != null)
             {
-                target = targetTransform.transform;
+                target = targetTransform.transform;                               
             }
 
             return target;

@@ -18,14 +18,13 @@ namespace Core.Scripts.Runtime.Agent
     [SerializeField] private WeaponType _actualWeaponType; 
     
     [Header("Weapon Settings")]      
-    [SerializeField] private Weapon[] _totalWeaponsHolder;
+     private Weapon[] _totalWeaponsHolder;
     [SerializeField] private List<Weapon> _agentWeaponsSlots = new List<Weapon>();    
-    [SerializeField] private Transform[] _gunPointTransforms; 
      private Weapon _currentWeapon;
      private int _currentIndex;       
      private const int _maxWeaponsSlotsAllowed = 3;
 
-     public Weapon CurrentWeapon() => _currentWeapon;
+     public Weapon CurrentWeapon() => _currentWeapon;      
     
     [Header("Left hand IK")] 
     [SerializeField] private TwoBoneIKConstraint _leftHandIK;
@@ -46,14 +45,21 @@ namespace Core.Scripts.Runtime.Agent
      [SerializeField] private float _bulletSpeed;
 
     private void Awake()
-    {   
+    {
+        var getWeapons = GetComponentsInChildren<Weapon>(true);
+        foreach (var weapon in getWeapons)
+        {
+            _agentWeaponsSlots.Add(weapon);
+        }
+        
         _agent = GetComponentInParent<Agent>();          
         _rig ??= FindAnyObjectByType<Rig>();  
         _weaponAnimations = new WeaponAnimations();
     }
          
     private void Start()
-    {    
+    {
+        _totalWeaponsHolder = _agentWeaponsSlots.ToArray();
         _agent.AgentInputReader.NotifyCanShoot += WeaponShoot;
         _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeapons;
         _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
@@ -73,7 +79,9 @@ namespace Core.Scripts.Runtime.Agent
         _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= OnButtonPressed;
         _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
         _agent.AgentInputReader.NotifyWhenWeaponDropped -= DropWeapon;
-    }
+    }  
+  
+    
     private void OnWeaponReload()
     {
         if (!_currentWeapon.WeaponDataConfiguration.CanReload()) return;
@@ -87,9 +95,9 @@ namespace Core.Scripts.Runtime.Agent
 
     private void Update()
     {
-        ControlAnimationRig();
-
-        _agent.AgentAim.UpdateAimLaser(_gunPointTransforms[_currentIndex], BulletDirection());
+        ControlAnimationRig();       
+        
+        _agent.AgentAim.UpdateAimLaser(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection());
     }
 
     private void ControlAnimationRig()
@@ -130,8 +138,7 @@ namespace Core.Scripts.Runtime.Agent
     private void AssignDefaultWeapon()
     {
         foreach (var weapon in _agentWeaponsSlots)
-        {
-            weapon.WeaponDataConfiguration.AmmoInMagazine = weapon.WeaponDataConfiguration.TotalReserveAmmo;
+        {   
             if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)   
                 WeaponConfig(weapon);  
             else
@@ -142,7 +149,7 @@ namespace Core.Scripts.Runtime.Agent
     private void WeaponConfig(Weapon weapon)
     {
         AttachLeftHand(weapon.transform);
-        SwitchAnimationLayer(weapon.WeaponDataConfiguration.AnimationLayer);
+        SwitchAnimationLayer((int)weapon.WeaponDataConfiguration.AnimationLayer);
         PlayWeaponGrabAnimation(weapon.WeaponDataConfiguration.GrabType);
         _currentWeapon = weapon;
         weapon.gameObject.SetActive(true);
@@ -155,7 +162,7 @@ namespace Core.Scripts.Runtime.Agent
         _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
         _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
-        SwitchAnimationLayer(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
+        SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
         PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.GrabType);
         _currentWeapon = _agentWeaponsSlots[_currentIndex];
     }
@@ -213,7 +220,7 @@ namespace Core.Scripts.Runtime.Agent
     {
         Transform aim = _agent.AgentAim.Aim;
         
-        Vector3 direction = (aim.position - _gunPointTransforms[_currentIndex].position).normalized;
+        Vector3 direction = (aim.position - _currentWeapon.WeaponDataConfiguration.GunPoint.position).normalized;
 
         if (_agent.AgentAim.CanAimPrecisely() == false && 
             _agent.AgentAim.Target(_agent.AgentAim.GetMouseHitInfo(Camera.main, 
@@ -227,9 +234,9 @@ namespace Core.Scripts.Runtime.Agent
     private void WeaponShoot()
     {      
         if (_currentWeapon is not null && _currentWeapon.WeaponDataConfiguration.CanShoot())
-        {    
-            GameObject newBullet = Instantiate(_bulletPrefab, _gunPointTransforms[_currentIndex].position,
-                Quaternion.LookRotation(_gunPointTransforms[_currentIndex].forward));
+        {               
+            GameObject newBullet = Instantiate(_bulletPrefab, _currentWeapon.WeaponDataConfiguration.GunPoint.position,
+                    Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
         
             Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
             rbNewBullet.mass = 5f / _bulletSpeed;
