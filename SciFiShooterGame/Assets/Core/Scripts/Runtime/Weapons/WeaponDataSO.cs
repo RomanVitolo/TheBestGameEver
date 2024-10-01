@@ -15,7 +15,7 @@ namespace Core.Scripts.Runtime.Weapons
         Sword = 8
     }
 
-    public enum GrabType
+    public enum EquipType
     {
        SideGrab,
        BackGrab
@@ -36,14 +36,17 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
+        [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
+        [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
         [field: SerializeField, Header("Animation Layer")] public WeaponAnimationLayerType AnimationLayer { get; private set; }     
-        [field: SerializeField] public GrabType GrabType { get; private set; }
+        [field: SerializeField] public EquipType EquipType { get; private set; }
         [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
         [field: SerializeField] public float BulletVelocity { get; set; } 
         [field: SerializeField] public int AmmoInMagazine { get; set; }
         [field: SerializeField] public int MagazineCapacity { get; set; }
         [field: SerializeField] public int TotalReserveAmmo { get; private set; }
         [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
+        
         public Transform GunPoint { get; set; }
 
         public void InitializeAmmo()

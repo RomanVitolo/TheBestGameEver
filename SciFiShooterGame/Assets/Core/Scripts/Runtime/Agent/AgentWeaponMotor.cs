@@ -86,7 +86,11 @@ namespace Core.Scripts.Runtime.Agent
     {
         if (!_currentWeapon.WeaponDataConfiguration.CanReload()) return;
         if (_isGrabbingWeapon) return;
+
+        float reloadSpeed = _currentWeapon.WeaponDataConfiguration.WeaponReloadSpeed;
+        
         _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
+        _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.WeaponReloadSpeed, reloadSpeed);
         ReduceRigWeight();
     }                              
     private void ReduceRigWeight() => _rig.weight = 0.15f;      
@@ -119,12 +123,15 @@ namespace Core.Scripts.Runtime.Agent
         }
     }
 
-    private void PlayWeaponGrabAnimation(GrabType grabType)
+    private void PlayWeaponEquipAnimation(EquipType equipType, float currentWeapon)
     {
+        float equipmentSpeed = currentWeapon;
+        
         _leftHandIK.weight = 0;
         ReduceRigWeight();
-        _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.WeaponGrabType, ((float)grabType));
-        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.WeaponGrab);
+        _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.EquipWeapon);
+        _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipType, ((float)equipType)); 
+        _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipSpeed, equipmentSpeed);
 
         SetBusyGrabbingWeaponTo(true);
     }
@@ -132,7 +139,7 @@ namespace Core.Scripts.Runtime.Agent
     public void SetBusyGrabbingWeaponTo(bool isBusy)
     {
         _isGrabbingWeapon = isBusy;
-        _agent.AgentAnimator.Animator.SetBool(_weaponAnimations.BusyGrabbingWeapon, _isGrabbingWeapon);
+        _agent.AgentAnimator.Animator.SetBool(_weaponAnimations.BusyEquippingWeapon, _isGrabbingWeapon);
     }
 
     private void AssignDefaultWeapon()
@@ -150,7 +157,7 @@ namespace Core.Scripts.Runtime.Agent
     {
         AttachLeftHand(weapon.transform);
         SwitchAnimationLayer((int)weapon.WeaponDataConfiguration.AnimationLayer);
-        PlayWeaponGrabAnimation(weapon.WeaponDataConfiguration.GrabType);
+        PlayWeaponEquipAnimation(weapon.WeaponDataConfiguration.EquipType, weapon.WeaponDataConfiguration.WeaponEquipmentSpeed);
         _currentWeapon = weapon;
         weapon.gameObject.SetActive(true);
     }
@@ -163,7 +170,8 @@ namespace Core.Scripts.Runtime.Agent
         _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
         AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
         SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
-        PlayWeaponGrabAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.GrabType);
+        PlayWeaponEquipAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.EquipType,
+            _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponEquipmentSpeed);
         _currentWeapon = _agentWeaponsSlots[_currentIndex];
     }
     
