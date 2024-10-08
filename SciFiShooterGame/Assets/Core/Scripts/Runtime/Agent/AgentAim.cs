@@ -13,7 +13,6 @@ namespace Core.Scripts.Runtime.Agent
         [SerializeField] private bool _isLockingToTarget;
         
         [Space]
-        
         [Header("Camera Information")]
         [SerializeField] private Transform _cameraTarget;
         [Range(.5f, 1f)]
