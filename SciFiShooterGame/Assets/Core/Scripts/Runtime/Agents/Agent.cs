@@ -1,7 +1,8 @@
-﻿using GlobalInputs;
+﻿using Core.Scripts.Runtime.Agents.Interfaces;
+using GlobalInputs;
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Agents
 {
     [RequireComponent(typeof(CharacterController))]      
     public class Agent : MonoBehaviour

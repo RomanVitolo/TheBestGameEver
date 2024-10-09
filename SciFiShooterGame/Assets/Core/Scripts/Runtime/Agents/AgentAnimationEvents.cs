@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Agents
 {
     public class AgentAnimationEvents : MonoBehaviour
     {

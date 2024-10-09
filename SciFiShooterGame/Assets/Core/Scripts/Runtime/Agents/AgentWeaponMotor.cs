@@ -7,7 +7,7 @@ using Core.Scripts.Runtime.Items;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;      
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Agents
 {    
     public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponType>, UtilityEvent
   {                

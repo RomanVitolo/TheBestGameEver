@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Core.Scripts.Runtime.Agents.Interfaces;
+using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Agents
 {
     public class AgentAim : MonoBehaviour, IAgentAim
     {

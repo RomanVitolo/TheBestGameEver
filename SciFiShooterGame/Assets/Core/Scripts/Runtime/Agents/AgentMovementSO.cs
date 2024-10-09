@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agent
+namespace Core.Scripts.Runtime.Agents
 {
     [CreateAssetMenu(menuName = "Core/Agent Movement", fileName = "AgentMovement")]
     public class AgentMovement : ScriptableObject
