@@ -11,7 +11,7 @@ namespace Core.Scripts.Runtime.Ammo
         private void OnCollisionEnter(Collision other)
         {
             InstantiateImpactEffect(other);
-            ObjectPool.Instance.ReturnObjectToPool(gameObject);
+            FindAnyObjectByType<BulletPool>().ReturnBullet(this);
         }
 
         private void InstantiateImpactEffect(Collision other)

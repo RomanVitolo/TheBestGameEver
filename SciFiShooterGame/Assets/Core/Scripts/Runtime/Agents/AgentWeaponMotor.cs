@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Scripts.Runtime.Ammo;
 using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapons;
 using Core.Scripts.Runtime.Items;
@@ -43,6 +44,7 @@ namespace Core.Scripts.Runtime.Agents
      [Header("Ammo Settings")]
      [SerializeField] private GameObject _bulletPrefab;
      [SerializeField] private float _bulletSpeed;
+     [SerializeField] private BulletPool _bulletPool;
 
     private void Awake()
     {
@@ -54,6 +56,7 @@ namespace Core.Scripts.Runtime.Agents
         
         _agent = GetComponentInParent<Agent>();          
         _rig ??= FindAnyObjectByType<Rig>();  
+        _bulletPool ??= FindAnyObjectByType<BulletPool>();
         _weaponAnimations = new WeaponAnimations();
     }
          
@@ -242,12 +245,13 @@ namespace Core.Scripts.Runtime.Agents
     {      
         if (_currentWeapon is not null && _currentWeapon.WeaponDataConfiguration.CanShoot())
         {
-            GameObject newBullet = ObjectPool.Instance.GetObject(); 
+            //GameObject newBullet = ObjectPool.Instance.GetObject(); 
+            Bullet newBullet = _bulletPool.GetBullet();
             //Instantiate(_bulletPrefab, _currentWeapon.WeaponDataConfiguration.GunPoint.position,
             //Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
                 
-            newBullet.transform.position = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
-            newBullet.transform.rotation = 
+            newBullet.gameObject.transform.position = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
+            newBullet.gameObject.transform.rotation = 
                 Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward);
             
             Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();

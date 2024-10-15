@@ -1,64 +1,51 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Utilities
 {
-    public class ObjectPool : MonoBehaviour
+    public class ObjectPool<T> where T : Component
     {
-        public static ObjectPool Instance;
+        private T prefab;
+        private Queue<T> objects = new Queue<T>();
+        private Transform parentTransform;  // Parent transform to store the pooled objects
 
-        [SerializeField] private GameObject _prefabType;
-        [SerializeField] private int _poolSize = 10;
-
-        private Queue<GameObject> gameObjectsQueue;
-
-        private void Awake()
+        // Constructor to initialize the pool with a parent for the objects
+        public ObjectPool(T prefab, int initialSize, Transform parent)
         {
-            if (Instance == null)
-                Instance = this;
-            else
-                Destroy(gameObject);
-        }
+            this.prefab = prefab;
+            this.parentTransform = parent;
 
-        private void Start()
-        {
-            gameObjectsQueue = new Queue<GameObject>();
-            CreateInitialPool();
-        }
-
-        public GameObject GetObject()
-        {
-            if (gameObjectsQueue.Count == 0)
-                CreateObject();
-            
-            GameObject objectToGet = gameObjectsQueue.Dequeue();
-            objectToGet.SetActive(true);
-            objectToGet.transform.parent = null;
-
-            return objectToGet;
-        }
-
-        public void ReturnObjectToPool(GameObject objectToReturn)
-        {
-            objectToReturn.SetActive(false);
-            gameObjectsQueue.Enqueue(objectToReturn);
-            objectToReturn.transform.parent = transform;
-        }
-
-        private void CreateInitialPool()
-        {
-            for (int i = 0; i < _poolSize; i++)
+            for (int i = 0; i < initialSize; i++)
             {
-                CreateObject();
+                T newObject = GameObject.Instantiate(prefab, parent); // Instantiate under the parent
+                newObject.gameObject.SetActive(false);
+                objects.Enqueue(newObject);
             }
         }
 
-        private void CreateObject()
+        // Get an object from the pool
+        public T Get()
         {
-            GameObject newGameObject = Instantiate(_prefabType, transform);
-            newGameObject.SetActive(false);
-            gameObjectsQueue.Enqueue(newGameObject);
+            if (objects.Count > 0)
+            {
+                T obj = objects.Dequeue();
+                obj.gameObject.SetActive(true);
+                obj.transform.SetParent(parentTransform);  // Ensure object is under the parent
+                return obj;
+            }
+            else
+            {
+                T newObject = GameObject.Instantiate(prefab, parentTransform);  // Create new object under parent
+                return newObject;
+            }
+        }
+
+        // Return an object to the pool
+        public void ReturnToPool(T obj)
+        {
+            obj.gameObject.SetActive(false);
+            obj.transform.SetParent(parentTransform);  // Make sure it stays under the parent
+            objects.Enqueue(obj);
         }
     }
 }
