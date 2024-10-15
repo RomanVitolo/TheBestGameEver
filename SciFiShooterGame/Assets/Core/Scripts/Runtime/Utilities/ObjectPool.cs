@@ -5,11 +5,10 @@ namespace Core.Scripts.Runtime.Utilities
 {
     public class ObjectPool<T> where T : Component
     {
-        private T prefab;
-        private Queue<T> objects = new Queue<T>();
-        private Transform parentTransform;  // Parent transform to store the pooled objects
-
-        // Constructor to initialize the pool with a parent for the objects
+        private readonly T prefab;
+        private readonly Queue<T> objects = new Queue<T>();
+        private readonly Transform parentTransform; 
+        
         public ObjectPool(T prefab, int initialSize, Transform parent)
         {
             this.prefab = prefab;
@@ -17,34 +16,32 @@ namespace Core.Scripts.Runtime.Utilities
 
             for (int i = 0; i < initialSize; i++)
             {
-                T newObject = GameObject.Instantiate(prefab, parent); // Instantiate under the parent
+                T newObject = Object.Instantiate(prefab, parent); 
                 newObject.gameObject.SetActive(false);
                 objects.Enqueue(newObject);
             }
         }
-
-        // Get an object from the pool
+        
         public T Get()
         {
             if (objects.Count > 0)
             {
                 T obj = objects.Dequeue();
                 obj.gameObject.SetActive(true);
-                obj.transform.SetParent(parentTransform);  // Ensure object is under the parent
+                obj.transform.SetParent(parentTransform); 
                 return obj;
             }
             else
             {
-                T newObject = GameObject.Instantiate(prefab, parentTransform);  // Create new object under parent
+                T newObject = Object.Instantiate(prefab, parentTransform);  
                 return newObject;
             }
         }
-
-        // Return an object to the pool
+       
         public void ReturnToPool(T obj)
         {
             obj.gameObject.SetActive(false);
-            obj.transform.SetParent(parentTransform);  // Make sure it stays under the parent
+            obj.transform.SetParent(parentTransform);  
             objects.Enqueue(obj);
         }
     }

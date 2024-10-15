@@ -164,10 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d86481ebf8b44d8a61e1b4e8342def0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPrefab: {fileID: 1191219486002435234, guid: 30c006fd80da1054cbde419f13b1b8ed,
+  _poolName: BulletPool
+  _prefabType: {fileID: 1191219486002435234, guid: 30c006fd80da1054cbde419f13b1b8ed,
     type: 3}
-  _initialPoolSize: 10
-  _bulletParent: {fileID: 111679360}
+  _initialPoolSize: 50
+  _objectParent: {fileID: 111679360}
 --- !u!1 &181756601
 GameObject:
   m_ObjectHideFlags: 0

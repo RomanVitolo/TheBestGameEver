@@ -245,10 +245,8 @@ namespace Core.Scripts.Runtime.Agents
     {      
         if (_currentWeapon is not null && _currentWeapon.WeaponDataConfiguration.CanShoot())
         {
-            //GameObject newBullet = ObjectPool.Instance.GetObject(); 
-            Bullet newBullet = _bulletPool.GetBullet();
-            //Instantiate(_bulletPrefab, _currentWeapon.WeaponDataConfiguration.GunPoint.position,
-            //Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
+            
+            Bullet newBullet = _bulletPool.GetObject();
                 
             newBullet.gameObject.transform.position = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
             newBullet.gameObject.transform.rotation = 
