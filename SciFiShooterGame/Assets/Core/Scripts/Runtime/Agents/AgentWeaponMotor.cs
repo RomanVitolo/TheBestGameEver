@@ -267,10 +267,10 @@ namespace Core.Scripts.Runtime.Agents
                 TriggerShootAnimation();
             }
             else
-                EmptyCartridge();
+                EmptyMagazine();
         }
 
-        private void EmptyCartridge() => Debug.Log("NEED MORE AMMO");
+        private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
         private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
 
         private void DropWeapon()
