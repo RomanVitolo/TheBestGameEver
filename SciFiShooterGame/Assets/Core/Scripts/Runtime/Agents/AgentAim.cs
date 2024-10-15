@@ -27,7 +27,8 @@ namespace Core.Scripts.Runtime.Agents
         
         public void UpdateAgentCameraPosition(Vector3 mousePosition, Vector2 moveInput)
         {
-            _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, DesiredCameraPosition(mousePosition, moveInput),
+            _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, DesiredCameraPosition(
+                    mousePosition, moveInput),
                 _cameraSensitivity * Time.deltaTime);    
         }
 

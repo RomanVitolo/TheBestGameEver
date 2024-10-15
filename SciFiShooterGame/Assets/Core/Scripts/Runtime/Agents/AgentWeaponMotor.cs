@@ -234,7 +234,6 @@ namespace Core.Scripts.Runtime.Agents
             _agent.AgentAim.Target(_agent.AgentAim.GetMouseHitInfo(Camera.main, 
                 _agent.AgentInputReader.AimInputValue, _agent.AgentMovement.AimLayerMask)) == null)  
          direction.y = 0;           
-        //_gunPoint.LookAt(_aim);        TODO: find a better place for it.
         
         return direction;
     }
@@ -242,22 +241,26 @@ namespace Core.Scripts.Runtime.Agents
     private void WeaponShoot()
     {      
         if (_currentWeapon is not null && _currentWeapon.WeaponDataConfiguration.CanShoot())
-        {               
-            GameObject newBullet = Instantiate(_bulletPrefab, _currentWeapon.WeaponDataConfiguration.GunPoint.position,
-                    Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
-        
+        {
+            GameObject newBullet = ObjectPool.Instance.GetObject(); 
+            //Instantiate(_bulletPrefab, _currentWeapon.WeaponDataConfiguration.GunPoint.position,
+            //Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
+                
+            newBullet.transform.position = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
+            newBullet.transform.rotation = 
+                Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward);
+            
             Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
             rbNewBullet.mass = 5f / _bulletSpeed;
             rbNewBullet.linearVelocity = BulletDirection() * _bulletSpeed;      
         
-            Destroy(newBullet, 3f);
             TriggerShootAnimation();
         }
         else  
             DoSomethingAndRefactorThis();  
     }
 
-    private static void DoSomethingAndRefactorThis() => Debug.Log("NEED MORE AMMO");  
+    private void DoSomethingAndRefactorThis() => Debug.Log("NEED MORE AMMO");  
     private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
 
     private void DropWeapon()

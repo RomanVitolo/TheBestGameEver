@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Core.Scripts.Runtime.Utilities;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Ammo
 {
@@ -9,8 +10,8 @@ namespace Core.Scripts.Runtime.Ammo
         private Rigidbody _rigidbody => GetComponent<Rigidbody>();
         private void OnCollisionEnter(Collision other)
         {
-            InstantiateImpactEffect(other);      
-            Destroy(gameObject);
+            InstantiateImpactEffect(other);
+            ObjectPool.Instance.ReturnObjectToPool(gameObject);
         }
 
         private void InstantiateImpactEffect(Collision other)
