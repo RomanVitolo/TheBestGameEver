@@ -16,8 +16,10 @@ MonoBehaviour:
   <WeaponInputSlot>k__BackingField: 2
   <WeaponFireRate>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
+  <WeaponReloadSpeed>k__BackingField: 1
+  <WeaponEquipmentSpeed>k__BackingField: 1
   <AnimationLayer>k__BackingField: 4
-  <GrabType>k__BackingField: 1
+  <EquipType>k__BackingField: 0
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 0
   <AmmoInMagazine>k__BackingField: 0

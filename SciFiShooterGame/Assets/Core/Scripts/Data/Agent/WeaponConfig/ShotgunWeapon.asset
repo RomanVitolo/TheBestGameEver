@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 5
   <WeaponInputSlot>k__BackingField: 1
-  <WeaponFireRate>k__BackingField: 0
+  <WeaponFireRate>k__BackingField: 3
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 1
   <WeaponEquipmentSpeed>k__BackingField: 1

@@ -35,6 +35,7 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField, Header("Weapon Settings")] public WeaponType WeaponType { get; private set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
+        private float _lastShootTime;
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
         [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
@@ -51,17 +52,25 @@ namespace Core.Scripts.Runtime.Weapons
 
         public void InitializeAmmo()
         {
+            _lastShootTime = 0;
             TotalReserveAmmo = InitialWeaponAmmo;
             if(InitialWeaponAmmo > MagazineCapacity)
                 AmmoInMagazine = MagazineCapacity;
-        } 
-        
-        public bool CanShoot() =>  HaveEnoughBullets(); 
+        }
+
+        public bool CanShoot()
+        {
+            if (HaveEnoughBullets() && ReadyToFire())
+            {
+                AmmoInMagazine--;
+                return true;
+            }
+            return false;
+        }
 
         private bool HaveEnoughBullets()
         {
             if (AmmoInMagazine <= 0) return false;
-            AmmoInMagazine--;
             return true;
         }
 
@@ -70,7 +79,17 @@ namespace Core.Scripts.Runtime.Weapons
             if (AmmoInMagazine == MagazineCapacity) return false;
             
             return TotalReserveAmmo > 0; 
-        }   
+        }
+
+        private bool ReadyToFire()
+        {
+            if (Time.time > _lastShootTime + 1 / WeaponFireRate)
+            {
+                _lastShootTime = Time.time;
+                return true;
+            }
+            return false;
+        }
 
         public void RefillAmmo()
         {

@@ -73,8 +73,12 @@ namespace Core.Scripts.Runtime.Agents
             return hitInfo;
         }
 
-        public void UpdateAimLaser(Transform gunPoint, Vector3 bulletDirection)
+        public void UpdateAimVisuals(Transform gunPoint, Vector3 bulletDirection, bool weaponIsReady)
         {
+            _aimLaser.enabled = weaponIsReady;
+
+            if (_aimLaser.enabled == false) return;
+            
             Transform gunPosition = gunPoint;
             Vector3 laserDirection = bulletDirection;
             

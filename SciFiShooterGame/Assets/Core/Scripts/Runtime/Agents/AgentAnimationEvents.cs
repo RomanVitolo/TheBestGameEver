@@ -11,7 +11,9 @@ namespace Core.Scripts.Runtime.Agents
         public void ReloadIsOver()
         {
             _agentWeaponMotor.MaximizeRigWeight();
-            _agentWeaponMotor.CurrentWeapon().WeaponDataConfiguration.RefillAmmo();      
+            _agentWeaponMotor.CurrentWeapon().WeaponDataConfiguration.RefillAmmo();    
+            
+            _agentWeaponMotor.SetWeaponReady(true);
         }
 
         public void ReturnRig()
@@ -20,7 +22,11 @@ namespace Core.Scripts.Runtime.Agents
             _agentWeaponMotor.MaximizeLeftHandWeight();    
         }
 
-        public void WeaponGrabIsOveR()=> _agentWeaponMotor.SetBusyGrabbingWeaponTo(false);      
+        public void WeaponEquippingIsOveR()
+        {
+            _agentWeaponMotor.SetWeaponReady(true);
+        }
+
     }
 }
 

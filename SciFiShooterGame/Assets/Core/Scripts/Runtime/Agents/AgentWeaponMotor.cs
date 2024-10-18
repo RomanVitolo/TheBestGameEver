@@ -24,7 +24,8 @@ namespace Core.Scripts.Runtime.Agents
         private Weapon _currentWeapon;
         private int _currentIndex;
         private const int _maxWeaponsSlotsAllowed = 3;
-
+        private bool _weaponReady;
+        
         public Weapon CurrentWeapon() => _currentWeapon;
 
         [Header("Left hand IK")]
@@ -39,7 +40,6 @@ namespace Core.Scripts.Runtime.Agents
         [SerializeField] private Rig _rig;
         [SerializeField] private float _rigWeightIncreaseRate;
         private bool _shouldIncrease_RigWeight;
-        private bool _isGrabbingWeapon;
 
         [Header("Ammo Settings")]
         [SerializeField] private GameObject _bulletPrefab;
@@ -75,10 +75,10 @@ namespace Core.Scripts.Runtime.Agents
         private void SubscribeAgentInput() 
         {
             _agent.AgentInputReader.NotifyCanShoot += WeaponShoot;
-            _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeapons;
-            _agent.AgentInputReader.NotifyMainWeaponSwitch += OnButtonPressed;
-            _agent.AgentInputReader.NotifySecondaryWeaponSwitch += OnButtonPressed;
-            _agent.AgentInputReader.NotifyMeleeWeaponSwitch += OnButtonPressed;
+            _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeaponsByGenericButtonPressed;
+            _agent.AgentInputReader.NotifyMainWeaponSwitch += EquipWeaponBySpecificButtonPressed;
+            _agent.AgentInputReader.NotifySecondaryWeaponSwitch += EquipWeaponBySpecificButtonPressed;
+            _agent.AgentInputReader.NotifyMeleeWeaponSwitch += EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;
             _agent.AgentInputReader.NotifyWhenWeaponDropped += DropWeapon;
         }
@@ -86,18 +86,18 @@ namespace Core.Scripts.Runtime.Agents
         private void UnsubscribeAgentInput() 
         {
             _agent.AgentInputReader.NotifyCanShoot -= WeaponShoot;
-            _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeapons;
-            _agent.AgentInputReader.NotifyMainWeaponSwitch -= OnButtonPressed;
-            _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= OnButtonPressed;
-            _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= OnButtonPressed;
+            _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeaponsByGenericButtonPressed;
+            _agent.AgentInputReader.NotifyMainWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
+            _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
+            _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
             _agent.AgentInputReader.NotifyWhenWeaponDropped -= DropWeapon;
         }
 
         private void OnWeaponReload()
         {
-            if (!_currentWeapon.WeaponDataConfiguration.CanReload()) return;
-            if (_isGrabbingWeapon) return;
+            SetWeaponReady(false);
+            if (!_currentWeapon.WeaponDataConfiguration.CanReload() && !_weaponReady) return;
 
             float reloadSpeed = _currentWeapon.WeaponDataConfiguration.WeaponReloadSpeed;
 
@@ -113,7 +113,8 @@ namespace Core.Scripts.Runtime.Agents
         {
             ControlAnimationRig();
 
-            _agent.AgentAim.UpdateAimLaser(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection());
+            _agent.AgentAim.UpdateAimVisuals(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection(), 
+                _weaponReady);
         }
 
         private void ControlAnimationRig()
@@ -144,14 +145,7 @@ namespace Core.Scripts.Runtime.Agents
             _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.EquipWeapon);
             _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipType, ((float)equipType));
             _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipSpeed, equipmentSpeed);
-
-            SetBusyGrabbingWeaponTo(true);
-        }
-
-        public void SetBusyGrabbingWeaponTo(bool isBusy)
-        {
-            _isGrabbingWeapon = isBusy;
-            _agent.AgentAnimator.Animator.SetBool(_weaponAnimations.BusyEquippingWeapon, _isGrabbingWeapon);
+            
         }
 
         private void AssignDefaultWeapon()
@@ -167,6 +161,7 @@ namespace Core.Scripts.Runtime.Agents
 
         private void WeaponConfig(Weapon weapon)
         {
+            SetWeaponReady(false);
             AttachLeftHand(weapon.transform);
             SwitchAnimationLayer((int)weapon.WeaponDataConfiguration.AnimationLayer);
             PlayWeaponEquipAnimation(weapon.WeaponDataConfiguration.EquipType, weapon.WeaponDataConfiguration.WeaponEquipmentSpeed);
@@ -174,8 +169,9 @@ namespace Core.Scripts.Runtime.Agents
             weapon.gameObject.SetActive(true);
         }
 
-        private void SwitchOffWeapons()
+        private void SwitchOffWeaponsByGenericButtonPressed() //Actually Mouse3
         {
+            SetWeaponReady(false);
             _agentWeaponsSlots[_currentIndex].gameObject.SetActive(false);
             _currentIndex = (_currentIndex + 1) % _agentWeaponsSlots.Count;
             _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
@@ -187,16 +183,16 @@ namespace Core.Scripts.Runtime.Agents
             _currentWeapon = _agentWeaponsSlots[_currentIndex];
         }
 
-        private void OnButtonPressed()
+        private void EquipWeaponBySpecificButtonPressed() // Actually 1,2,3 (buttons)
         {
             bool weaponFound = false;
-
+            
             foreach (var weapon in _agentWeaponsSlots)
             {
                 if (weapon.WeaponDataConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
                 {
                     weaponFound = true;
-
+                    SetWeaponReady(false);
                     _actualWeaponType = weapon.WeaponDataConfiguration.WeaponType;
                     WeaponConfig(weapon);
                     _currentIndex = weapon.WeaponDataConfiguration.WeaponInputSlot;
@@ -252,6 +248,8 @@ namespace Core.Scripts.Runtime.Agents
 
         private void WeaponShoot()
         {
+            if (_weaponReady == false) return;
+            
             if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.CanShoot())
             {
                 Bullet newBullet = _bulletPool.GetObject();
@@ -266,12 +264,12 @@ namespace Core.Scripts.Runtime.Agents
 
                 TriggerShootAnimation();
             }
-            else
+            else if(_currentWeapon.WeaponDataConfiguration.AmmoInMagazine == 0)
                 EmptyMagazine();
         }
 
         private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
-        private void TriggerShootAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
+        private void TriggerShootAnimation() => PlayFireAnimation();
 
         private void DropWeapon()
         {
@@ -285,6 +283,10 @@ namespace Core.Scripts.Runtime.Agents
             _currentWeapon.gameObject.SetActive(true);
             _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
         }
+
+        public void SetWeaponReady(bool ready) => _weaponReady = ready;
+        
+        private void PlayFireAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
 
         public void PickUpObject(WeaponType weaponType)
         {

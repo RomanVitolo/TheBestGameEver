@@ -303,9 +303,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Fire
     m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: BusyEquippingWeapon
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1810464206712922724}
   m_Solo: 0
@@ -458,9 +455,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Reload
     m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: BusyEquippingWeapon
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2675420680746605910}
   m_Solo: 0
@@ -538,12 +532,6 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   - m_Name: EquipWeapon
     m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: BusyEquippingWeapon
-    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
