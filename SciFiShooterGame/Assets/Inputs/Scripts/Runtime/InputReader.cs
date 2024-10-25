@@ -1,5 +1,4 @@
 using System;
-using GlobalInputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -44,6 +43,9 @@ namespace GlobalInputs
             if (!context.performed) return;  
             
             NotifyCanShoot?.Invoke();
+            
+            /*if (context.performed) CanShoot = true;
+            else if (context.canceled) CanShoot = false;*/
         }
 
         public void OnMovement(InputAction.CallbackContext context)
