@@ -15,7 +15,7 @@ namespace Core.Scripts.Runtime.Weapons
         Sword = 8
     }
 
-    public enum WeaponModeType
+    public enum FireModeType
     {
         Single,
         Burst,
@@ -40,7 +40,7 @@ namespace Core.Scripts.Runtime.Weapons
     public class WeaponDataSO : ScriptableObject
     {
         [field: SerializeField, Header("Weapon Settings")] public WeaponType WeaponType { get; private set; }
-        [field: SerializeField, Header("Weapon Settings")] public WeaponModeType WeaponMode { get; private set; }
+        [field: SerializeField, Header("Weapon Settings")] public FireModeType FireMode { get; private set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
         private float _lastShootTime;
