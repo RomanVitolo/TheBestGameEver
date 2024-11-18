@@ -36,7 +36,8 @@ namespace Core.Scripts.Runtime.Agents
             
             // Get necessary parameters for aim
             Vector3 movementValue = _agent.AgentInputReader.MovementValue;
-            RaycastHit mouseHitInfo = _agent.AgentAim.GetMouseHitInfo(_mainCamera, _agent.AgentInputReader.AimInputValue, _aimLayerMask);
+            RaycastHit mouseHitInfo = _agent.AgentAim.GetMouseHitInfo(_mainCamera, 
+                _agent.AgentInputReader.AimInputValue, _aimLayerMask);
 
             // Pass parameters to aim handler
             _aimHandler.HandleAim(movementValue, mouseHitInfo);

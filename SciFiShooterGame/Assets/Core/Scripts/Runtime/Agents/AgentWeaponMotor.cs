@@ -74,7 +74,6 @@ namespace Core.Scripts.Runtime.Agents
 
         private void SubscribeAgentInput() 
         {
-            _agent.AgentInputReader.NotifyCanShoot += WeaponShoot;
             _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeaponsByGenericButtonPressed;
             _agent.AgentInputReader.NotifyMainWeaponSwitch += EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifySecondaryWeaponSwitch += EquipWeaponBySpecificButtonPressed;
@@ -85,7 +84,6 @@ namespace Core.Scripts.Runtime.Agents
 
         private void UnsubscribeAgentInput() 
         {
-            _agent.AgentInputReader.NotifyCanShoot -= WeaponShoot;
             _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeaponsByGenericButtonPressed;
             _agent.AgentInputReader.NotifyMainWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
@@ -115,6 +113,9 @@ namespace Core.Scripts.Runtime.Agents
 
             _agent.AgentAim.UpdateAimVisuals(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection(), 
                 _weaponReady);
+
+            if (_agent.AgentInputReader.CanShoot)
+                WeaponShoot();
         }
 
         private void ControlAnimationRig()
@@ -248,9 +249,12 @@ namespace Core.Scripts.Runtime.Agents
 
         private void WeaponShoot()
         {
-            if (_weaponReady == false) return;
+            if (!_weaponReady) return;
+
+            if (_currentWeapon.WeaponDataConfiguration.FireMode == FireModeType.Single)
+                _agent.AgentInputReader.CanShoot = false;
             
-            if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.CanShoot())
+            if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.ReadyToShoot())
             {
                 Bullet newBullet = _bulletPool.GetObject();
 

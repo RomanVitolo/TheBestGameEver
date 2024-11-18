@@ -43,7 +43,7 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField, Header("Weapon Settings")] public FireModeType FireMode { get; private set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
-        private float _lastShootTime;
+        public float _lastShootTime;
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
         [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
@@ -66,7 +66,7 @@ namespace Core.Scripts.Runtime.Weapons
                 AmmoInMagazine = MagazineCapacity;
         }
 
-        public bool CanShoot()
+        public bool ReadyToShoot()
         {
             if (HaveEnoughBullets() && ReadyToFire())
             {

@@ -10,10 +10,9 @@ namespace GlobalInputs
         public Vector2 MovementValue { get; private set; }
         public Vector2 AimInputValue { get; private set; }
         public bool IsRunning { get; private set; }
-        public bool CanShoot { get; private set; }
-        public int WeaponSlotLocation { get; set; }
-
-        public event Action NotifyCanShoot;
+        public int WeaponSlotLocation { get; private set; }
+        public bool CanShoot { get;  set; }
+        
         public event Action NotifyWeaponSwitch;
         public event Action NotifyMainWeaponSwitch;
         public event Action NotifySecondaryWeaponSwitch;
@@ -41,12 +40,8 @@ namespace GlobalInputs
     
         public void OnFire(InputAction.CallbackContext context)
         {
-            if (!context.performed) return;  
-            
-            NotifyCanShoot?.Invoke();
-            
-            /*if (context.performed) CanShoot = true;
-            else if (context.canceled) CanShoot = false;*/
+            if (context.performed) CanShoot = true;
+            else if (context.canceled) CanShoot = false;
         }
 
         public void OnMovement(InputAction.CallbackContext context)
