@@ -16,7 +16,6 @@ MonoBehaviour:
   <FireMode>k__BackingField: 2
   <WeaponInputSlot>k__BackingField: 0
   <WeaponFireRate>k__BackingField: 5
-  _lastShootTime: 6.0327
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 2
   <WeaponEquipmentSpeed>k__BackingField: 2
@@ -24,7 +23,10 @@ MonoBehaviour:
   <EquipType>k__BackingField: 0
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 225
+  <AmmoInMagazine>k__BackingField: 161
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350
   <InitialWeaponAmmo>k__BackingField: 350
+  <BaseSpread>k__BackingField: 1
+  <MaximumSpread>k__BackingField: 10
+  <SpreadIncreaseRate>k__BackingField: 0.15

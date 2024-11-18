@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.Weapons
 {
@@ -43,7 +44,7 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField, Header("Weapon Settings")] public FireModeType FireMode { get; private set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; } 
         [field: SerializeField] public float WeaponFireRate { get; set; }
-        public float _lastShootTime;
+        private float _lastShootTime;
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
         [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
@@ -55,6 +56,12 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public int MagazineCapacity { get; set; }
         [field: SerializeField] public int TotalReserveAmmo { get; private set; }
         [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
+        [field: SerializeField, Header("Spread ")] public float BaseRecoil { get; private set; }
+        [field: SerializeField] public float MaximumRecoil { get; set; }
+        [field: SerializeField] public float RecoilIncreaseRate { get; set; }
+        private float _currentRecoil = 1f;
+        private float _lastRecoilUpdateTime;
+        private const float const_RecoilCoolDown = 1f;
         
         public Transform GunPoint { get; set; }
 
@@ -114,5 +121,29 @@ namespace Core.Scripts.Runtime.Weapons
             if (TotalReserveAmmo < 0)
                 TotalReserveAmmo = 0;           
         }         
+        
+        public Vector3 ApplyRecoil(Vector3 originalDirection)
+        {
+            UpdateRecoil();
+            
+            float randomizedValue = Random.Range(-_currentRecoil, _currentRecoil);
+            
+            Quaternion recoilRotation = Quaternion.Euler(randomizedValue, randomizedValue, randomizedValue);
+            
+            return recoilRotation * originalDirection;
+        }
+
+        private void UpdateRecoil()
+        {
+            if (Time.time > _lastRecoilUpdateTime + const_RecoilCoolDown)
+                _currentRecoil = BaseRecoil;
+            else
+             IncreaseRecoil();
+            
+            _lastRecoilUpdateTime = Time.time;
+        }
+
+        private void IncreaseRecoil() => _currentRecoil = 
+            Mathf.Clamp(_currentRecoil + RecoilIncreaseRate, BaseRecoil, MaximumRecoil);
     }
 }

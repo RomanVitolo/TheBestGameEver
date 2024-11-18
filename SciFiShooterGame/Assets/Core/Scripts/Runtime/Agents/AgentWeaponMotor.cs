@@ -263,8 +263,11 @@ namespace Core.Scripts.Runtime.Agents
                     Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
 
                 Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
+                
+                Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(BulletDirection());
+                
                 rbNewBullet.mass = 5f / _bulletSpeed;
-                rbNewBullet.linearVelocity = BulletDirection() * _bulletSpeed;
+                rbNewBullet.linearVelocity = bulletDirection * _bulletSpeed;
 
                 TriggerShootAnimation();
             }
