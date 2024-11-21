@@ -15,18 +15,19 @@ MonoBehaviour:
   <WeaponType>k__BackingField: 3
   <FireMode>k__BackingField: 2
   <WeaponInputSlot>k__BackingField: 0
-  <WeaponFireRate>k__BackingField: 5
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 2
   <WeaponEquipmentSpeed>k__BackingField: 2
   <AnimationLayer>k__BackingField: 3
   <EquipType>k__BackingField: 0
+  <WeaponFireMode>k__BackingField: {fileID: 11400000, guid: f4fb9e0acb9e3ac4e92dc3c485bc1658,
+    type: 2}
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 161
+  <AmmoInMagazine>k__BackingField: 225
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350
   <InitialWeaponAmmo>k__BackingField: 350
-  <BaseSpread>k__BackingField: 1
-  <MaximumSpread>k__BackingField: 10
-  <SpreadIncreaseRate>k__BackingField: 0.15
+  <BaseRecoil>k__BackingField: 0
+  <MaximumRecoil>k__BackingField: 2
+  <RecoilIncreaseRate>k__BackingField: 0.15

@@ -1,70 +1,37 @@
-﻿using UnityEngine;
-using UnityEngine.Serialization;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Weapons
 {
-    public enum WeaponType
-    {
-        None = 0,
-        Pistol = 1,
-        SubMachine = 2,
-        Rifle = 3,
-        Sniper = 4,
-        Shotgun = 5,
-        Axe = 6,
-        Hammer = 7,
-        Sword = 8
-    }
-
-    public enum FireModeType
-    {
-        Single,
-        Burst,
-        Auto
-    }
-
-    public enum EquipType
-    {
-       SideGrab,
-       BackGrab
-    }
-
-    public enum WeaponAnimationLayerType
-    {    
-        CommonHold = 1,
-        LowHold = 2,
-        HighHold = 3,
-        MeleeHold = 4,
-    }
     
-    [CreateAssetMenu(menuName = "Core/Create AgentWeapon", fileName = "AgentWeapon")]
+    [CreateAssetMenu(menuName = "Core/Weapon Settings/Create AgentWeapon", fileName = "AgentWeapon")]
     public class WeaponDataSO : ScriptableObject
     {
-        [field: SerializeField, Header("Weapon Settings")] public WeaponType WeaponType { get; private set; }
-        [field: SerializeField, Header("Weapon Settings")] public FireModeType FireMode { get; private set; }
-        [field: SerializeField] public int WeaponInputSlot { get; set; } 
-        [field: SerializeField] public float WeaponFireRate { get; set; }
-        private float _lastShootTime;
+        public Transform GunPoint { get; set; }
+        [field: SerializeField, Header("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }
+        [field: SerializeField] public WeaponEnums.FireModeType FireMode { get; private set; }
+        [field: SerializeField] public int WeaponInputSlot { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
         [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
-        [field: SerializeField, Header("Animation Layer")] public WeaponAnimationLayerType AnimationLayer { get; private set; }     
-        [field: SerializeField] public EquipType EquipType { get; private set; }
+        [field: SerializeField, Header("Animation Layer")] public WeaponEnums.WeaponAnimationLayerType AnimationLayer { get; private set; }     
+        [field: SerializeField] public WeaponEnums.EquipType EquipType { get; private set; }
+        [field: SerializeField, Header("Weapon Fire Mode Settings")] public WeaponFireModeHolderSO WeaponFireMode { get; private set; }
         [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
         [field: SerializeField] public float BulletVelocity { get; set; } 
         [field: SerializeField] public int AmmoInMagazine { get; set; }
         [field: SerializeField] public int MagazineCapacity { get; set; }
         [field: SerializeField] public int TotalReserveAmmo { get; private set; }
         [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
-        [field: SerializeField, Header("Spread ")] public float BaseRecoil { get; private set; }
+        [field: SerializeField, Header("Weapon Recoil ")] public float BaseRecoil { get; private set; }
         [field: SerializeField] public float MaximumRecoil { get; set; }
         [field: SerializeField] public float RecoilIncreaseRate { get; set; }
         private float _currentRecoil = 1f;
         private float _lastRecoilUpdateTime;
         private const float const_RecoilCoolDown = 1f;
         
-        public Transform GunPoint { get; set; }
 
+        private float _lastShootTime;
         public void InitializeAmmo()
         {
             _lastShootTime = 0;
@@ -75,12 +42,9 @@ namespace Core.Scripts.Runtime.Weapons
 
         public bool ReadyToShoot()
         {
-            if (HaveEnoughBullets() && ReadyToFire())
-            {
-                AmmoInMagazine--;
-                return true;
-            }
-            return false;
+            if (!HaveEnoughBullets() || !ReadyToFire()) return false;
+            AmmoInMagazine--;
+            return true;
         }
 
         private bool HaveEnoughBullets()
@@ -98,18 +62,20 @@ namespace Core.Scripts.Runtime.Weapons
 
         private bool ReadyToFire()
         {
-            if (Time.time > _lastShootTime + 1 / WeaponFireRate)
+            foreach (var weaponFireRate in WeaponFireMode.FireModeTypesList.
+                         Where(weaponFireRate => weaponFireRate.FireModeType == FireMode).
+                         Where(weaponFireRate => Time.time > _lastShootTime + 1 / weaponFireRate.WeaponFireRate))
             {
-                _lastShootTime = Time.time;
+                _lastShootTime = Time.time; 
                 return true;
             }
+
             return false;
         }
+           
 
         public void RefillAmmo()
         {
-            //TotalReserveAmmo += AmmoInMagazine;
-            
             int ammoToReload = MagazineCapacity;
 
             if (ammoToReload > TotalReserveAmmo)

@@ -2,9 +2,10 @@
 
 namespace Core.Scripts.Runtime.Weapons
 {
-    [CreateAssetMenu(fileName = "FILENAME", menuName = "MENUNAME", order = 0)]
-    public class WeaponFireModeType : ScriptableObject
+    public abstract class WeaponFireModeType : ScriptableObject
     {
-        
+        [SerializeField] protected int bulletsPerShot;
+        [SerializeField] protected float fireRate;
+        [SerializeField] protected float fireDelay;
     }
 }

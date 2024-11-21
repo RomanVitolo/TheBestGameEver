@@ -3,6 +3,7 @@ using Core.Scripts.Runtime.Items;
 using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,13 +11,13 @@ using UnityEngine.Animations.Rigging;
 
 namespace Core.Scripts.Runtime.Agents
 {
-    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponType>, UtilityEvent
+    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, UtilityEvent
     {
         public event Action NotifyAction;
         private Agent _agent;
 
         [Header("Actual Weapon Type")]
-        [SerializeField] private WeaponType _actualWeaponType;
+        [SerializeField] private WeaponEnums.WeaponType _actualWeaponType;
 
         [Header("Weapon Settings")]
         private Weapon[] _totalWeaponsHolder;
@@ -137,7 +138,7 @@ namespace Core.Scripts.Runtime.Agents
             }
         }
 
-        private void PlayWeaponEquipAnimation(EquipType equipType, float currentWeapon)
+        private void PlayWeaponEquipAnimation(WeaponEnums.EquipType equipType, float currentWeapon)
         {
             float equipmentSpeed = currentWeapon;
 
@@ -251,28 +252,66 @@ namespace Core.Scripts.Runtime.Agents
         {
             if (!_weaponReady) return;
 
-            if (_currentWeapon.WeaponDataConfiguration.FireMode == FireModeType.Single)
+            if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Single)
                 _agent.AgentInputReader.CanShoot = false;
             
             if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.ReadyToShoot())
             {
-                Bullet newBullet = _bulletPool.GetObject();
-
-                newBullet.gameObject.transform.SetPositionAndRotation(
-                    _currentWeapon.WeaponDataConfiguration.GunPoint.position,
-                    Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
-
-                Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
-                
-                Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(BulletDirection());
-                
-                rbNewBullet.mass = 5f / _bulletSpeed;
-                rbNewBullet.linearVelocity = bulletDirection * _bulletSpeed;
-
                 TriggerShootAnimation();
+
+                if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Burst)
+                {
+                    StartCoroutine(BurstFireMode());
+                    return;
+                }
+                if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Auto)
+                {
+                    FireSingleBullet();
+                }
+                else
+                {
+                    FireSingleBullet();
+                }
             }
             else if(_currentWeapon.WeaponDataConfiguration.AmmoInMagazine == 0)
                 EmptyMagazine();
+        }
+
+        private void FireSingleBullet()
+        {
+            Bullet newBullet = _bulletPool.GetObject();
+
+            newBullet.gameObject.transform.SetPositionAndRotation(
+                _currentWeapon.WeaponDataConfiguration.GunPoint.position,
+                Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
+
+            Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
+                
+            Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(BulletDirection());
+                
+            rbNewBullet.mass = 5f / _bulletSpeed;
+            rbNewBullet.linearVelocity = bulletDirection * _bulletSpeed;
+        }
+        
+        
+        
+        private IEnumerator BurstFireMode()
+        {
+            SetWeaponReady(false);
+            
+            foreach (var type in _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList
+                         .Where(type => type.FireModeType 
+                                        == _currentWeapon.WeaponDataConfiguration.FireMode))
+            {
+                for (int i = 1; i <= type.BulletsPerShotInBurstMode(); i++)
+                {
+                    FireSingleBullet();
+                    yield return new WaitForSeconds(type.BurstModeDelay());
+                    
+                    if(i >= type.BulletsPerShotInBurstMode())
+                        SetWeaponReady(true);
+                }
+            }
         }
 
         private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
@@ -295,7 +334,7 @@ namespace Core.Scripts.Runtime.Agents
         
         private void PlayFireAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
 
-        public void PickUpObject(WeaponType weaponType)
+        public void PickUpObject(WeaponEnums.WeaponType weaponType)
         {
             if (_agentWeaponsSlots.Count >= _maxWeaponsSlotsAllowed && _agentWeaponsSlots.Exists(
                     w => w.WeaponDataConfiguration.WeaponType != weaponType))

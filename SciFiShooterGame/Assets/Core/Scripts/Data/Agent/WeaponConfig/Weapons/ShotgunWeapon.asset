@@ -13,16 +13,22 @@ MonoBehaviour:
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 5
+  <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 1
-  <WeaponFireRate>k__BackingField: 3
+  <WeaponFireRate>k__BackingField: 2.7
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 1
   <WeaponEquipmentSpeed>k__BackingField: 1
   <AnimationLayer>k__BackingField: 2
   <EquipType>k__BackingField: 0
-  <BulletMass>k__BackingField: 0
+  <BurstMode>k__BackingField: {fileID: 11400000, guid: 011a860d552f99e42ac42c0d970df52a,
+    type: 2}
+  <BulletMass>k__BackingField: 5
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 2
-  <MagazineCapacity>k__BackingField: 8
-  <TotalReserveAmmo>k__BackingField: 32
-  <InitialWeaponAmmo>k__BackingField: 32
+  <AmmoInMagazine>k__BackingField: 5
+  <MagazineCapacity>k__BackingField: 15
+  <TotalReserveAmmo>k__BackingField: 60
+  <InitialWeaponAmmo>k__BackingField: 60
+  <BaseRecoil>k__BackingField: 8
+  <MaximumRecoil>k__BackingField: 20
+  <RecoilIncreaseRate>k__BackingField: 0.15

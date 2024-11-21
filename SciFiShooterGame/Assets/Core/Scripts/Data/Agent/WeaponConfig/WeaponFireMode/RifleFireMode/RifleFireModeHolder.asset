@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a42163f515a64c13885ac11682ed74af, type: 3}
+  m_Name: RifleFireModeHolder
+  m_EditorClassIdentifier: 
+  <FireModeTypesList>k__BackingField:
+  - {fileID: 11400000, guid: 7770986f59f4c2c49b37b7d97eba6d63, type: 2}
+  - {fileID: 11400000, guid: 67b6a1be3199d9b45946bd50d841fc2a, type: 2}
+  - {fileID: 11400000, guid: b7761eb7be51b994691e2a3dd283007c, type: 2}

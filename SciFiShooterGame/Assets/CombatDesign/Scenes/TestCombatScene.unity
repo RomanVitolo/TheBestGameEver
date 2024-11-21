@@ -5841,8 +5841,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _aimLaser: {fileID: 7593822053412250590}
   <Aim>k__BackingField: {fileID: 1831787738}
-  _isAimingPrecisely: 1
-  _isLockingToTarget: 1
+  _isAimingPrecisely: 0
+  _isLockingToTarget: 0
   _cameraTarget: {fileID: 1088426124}
   _minCameraDistance: 1
   _maxCameraDistance: 3

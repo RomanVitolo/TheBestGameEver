@@ -6,7 +6,7 @@ namespace Core.Scripts.Runtime.Items
 {
     public class WeaponPickUp : MonoBehaviour
     {
-        [SerializeField] private WeaponType _weaponId; 
+        [SerializeField] private WeaponEnums.WeaponType _weaponId; 
 
         private void DestroyComponent()
         {
@@ -18,7 +18,7 @@ namespace Core.Scripts.Runtime.Items
             if (other == null) return;        
            
             var destroyable = other.GetComponentInChildren<UtilityEvent>();
-            var itemPickUp = other.GetComponentInChildren<IItemPickUP<WeaponType>>();
+            var itemPickUp = other.GetComponentInChildren<IItemPickUP<WeaponEnums.WeaponType>>();
 
             if (destroyable == null || itemPickUp == null) return;  
             
