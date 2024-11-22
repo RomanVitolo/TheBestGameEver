@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
   <WeaponType>k__BackingField: 3
-  <FireMode>k__BackingField: 2
+  <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 0
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 2
@@ -24,7 +24,7 @@ MonoBehaviour:
     type: 2}
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 225
+  <AmmoInMagazine>k__BackingField: 249
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350
   <InitialWeaponAmmo>k__BackingField: 350

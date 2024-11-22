@@ -9,7 +9,7 @@ namespace Core.Scripts.Runtime.Weapons
     {
         public Transform GunPoint { get; set; }
         [field: SerializeField, Header("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }
-        [field: SerializeField] public WeaponEnums.FireModeType FireMode { get; private set; }
+        [field: SerializeField] public WeaponEnums.FireModeType FireMode { get; set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
@@ -43,7 +43,7 @@ namespace Core.Scripts.Runtime.Weapons
         public bool ReadyToShoot()
         {
             if (!HaveEnoughBullets() || !ReadyToFire()) return false;
-            AmmoInMagazine--;
+            //AmmoInMagazine--;
             return true;
         }
 
@@ -111,5 +111,16 @@ namespace Core.Scripts.Runtime.Weapons
 
         private void IncreaseRecoil() => _currentRecoil = 
             Mathf.Clamp(_currentRecoil + RecoilIncreaseRate, BaseRecoil, MaximumRecoil);
+
+        public bool HasThisWeaponFireMode()
+        {
+            bool isActiveOrNot = false;
+            foreach (var fireMode in WeaponFireMode.FireModeTypesList)
+            {
+                isActiveOrNot = fireMode.HasThisModeAvailable;
+            }
+
+            return isActiveOrNot;
+        }
     }
 }

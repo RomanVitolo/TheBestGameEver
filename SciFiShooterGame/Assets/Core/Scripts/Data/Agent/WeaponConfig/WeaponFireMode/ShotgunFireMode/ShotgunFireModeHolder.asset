@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b19e1c19ef474ac58c274536927825dd, type: 3}
-  m_Name: SingleMode
+  m_Script: {fileID: 11500000, guid: a42163f515a64c13885ac11682ed74af, type: 3}
+  m_Name: ShotgunFireModeHolder
   m_EditorClassIdentifier: 
-  bulletsPerShot: 1
-  fireRate: 1.5
-  fireDelay: 0.1
-  <HasThisModeAvailable>k__BackingField: 1
-  <FireModeType>k__BackingField: 0
+  <FireModeTypesList>k__BackingField:
+  - {fileID: 11400000, guid: b24f9f57291fc484381842f8b58712db, type: 2}
+  - {fileID: 11400000, guid: 33ee84db60083524796978d1e9e6f2aa, type: 2}

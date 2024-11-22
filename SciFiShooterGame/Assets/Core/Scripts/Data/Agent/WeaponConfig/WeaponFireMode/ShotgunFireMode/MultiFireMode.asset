@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b19e1c19ef474ac58c274536927825dd, type: 3}
-  m_Name: SingleMode
+  m_Name: MultiFireMode
   m_EditorClassIdentifier: 
-  bulletsPerShot: 1
-  fireRate: 1.5
-  fireDelay: 0.1
+  bulletsPerShot: 6
+  fireRate: 1
+  fireDelay: 0
   <HasThisModeAvailable>k__BackingField: 1
-  <FireModeType>k__BackingField: 0
+  <FireModeType>k__BackingField: 3

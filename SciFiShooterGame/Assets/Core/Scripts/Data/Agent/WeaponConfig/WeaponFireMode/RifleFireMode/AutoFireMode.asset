@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b19e1c19ef474ac58c274536927825dd, type: 3}
   m_Name: AutoFireMode
   m_EditorClassIdentifier: 
-  bulletsPerShot: 0
+  bulletsPerShot: 1
   fireRate: 5
-  fireDelay: 0
-  <HasThisModeAvailable>k__BackingField: 0
-  <FireModeActive>k__BackingField: 0
+  fireDelay: 0.1
+  <HasThisModeAvailable>k__BackingField: 1
   <FireModeType>k__BackingField: 2

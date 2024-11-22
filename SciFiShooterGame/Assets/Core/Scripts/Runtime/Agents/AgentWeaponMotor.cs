@@ -26,6 +26,7 @@ namespace Core.Scripts.Runtime.Agents
         private int _currentIndex;
         private const int _maxWeaponsSlotsAllowed = 3;
         private bool _weaponReady;
+        private int weaponIndex = 1;
         
         public Weapon CurrentWeapon() => _currentWeapon;
 
@@ -81,6 +82,7 @@ namespace Core.Scripts.Runtime.Agents
             _agent.AgentInputReader.NotifyMeleeWeaponSwitch += EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifyWeaponReload += OnWeaponReload;
             _agent.AgentInputReader.NotifyWhenWeaponDropped += DropWeapon;
+            _agent.AgentInputReader.NotifyWhenWeaponFireModeChanged += SwitchWeaponFireMode;
         }
 
         private void UnsubscribeAgentInput() 
@@ -91,6 +93,7 @@ namespace Core.Scripts.Runtime.Agents
             _agent.AgentInputReader.NotifyMeleeWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifyWeaponReload -= OnWeaponReload;
             _agent.AgentInputReader.NotifyWhenWeaponDropped -= DropWeapon;
+            _agent.AgentInputReader.NotifyWhenWeaponFireModeChanged -= SwitchWeaponFireMode;
         }
 
         private void OnWeaponReload()
@@ -155,7 +158,9 @@ namespace Core.Scripts.Runtime.Agents
             foreach (var weapon in _agentWeaponsSlots)
             {
                 if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)
+                {
                     WeaponConfig(weapon);
+                }
                 else
                     weapon.gameObject.SetActive(false);
             }
@@ -183,12 +188,20 @@ namespace Core.Scripts.Runtime.Agents
             PlayWeaponEquipAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.EquipType,
                 _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponEquipmentSpeed);
             _currentWeapon = _agentWeaponsSlots[_currentIndex];
+            weaponIndex = 0;
+        }
+
+        private void SwitchWeaponFireMode()
+        {
+            _currentWeapon.WeaponDataConfiguration.FireMode = 
+                _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList[weaponIndex].FireModeType;
+            weaponIndex = (weaponIndex +1) % _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList.Count;
         }
 
         private void EquipWeaponBySpecificButtonPressed() // Actually 1,2,3 (buttons)
         {
             bool weaponFound = false;
-            
+            weaponIndex = 0;
             foreach (var weapon in _agentWeaponsSlots)
             {
                 if (weapon.WeaponDataConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
@@ -251,7 +264,7 @@ namespace Core.Scripts.Runtime.Agents
         private void WeaponShoot()
         {
             if (!_weaponReady) return;
-
+            
             if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Single)
                 _agent.AgentInputReader.CanShoot = false;
             
@@ -259,26 +272,17 @@ namespace Core.Scripts.Runtime.Agents
             {
                 TriggerShootAnimation();
 
-                if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Burst)
-                {
-                    StartCoroutine(BurstFireMode());
-                    return;
-                }
-                if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Auto)
-                {
-                    FireSingleBullet();
-                }
-                else
-                {
-                    FireSingleBullet();
-                }
+                var fireModeSystem = new FireModeSystem();
+                fireModeSystem.HandleFireMode(this);
             }
             else if(_currentWeapon.WeaponDataConfiguration.AmmoInMagazine == 0)
                 EmptyMagazine();
         }
 
-        private void FireSingleBullet()
+        public void FireSingleBullet()
         {
+            _currentWeapon.WeaponDataConfiguration.AmmoInMagazine--;
+            
             Bullet newBullet = _bulletPool.GetObject();
 
             newBullet.gameObject.transform.SetPositionAndRotation(
@@ -295,7 +299,7 @@ namespace Core.Scripts.Runtime.Agents
         
         
         
-        private IEnumerator BurstFireMode()
+        public IEnumerator BurstFireMode()
         {
             SetWeaponReady(false);
             

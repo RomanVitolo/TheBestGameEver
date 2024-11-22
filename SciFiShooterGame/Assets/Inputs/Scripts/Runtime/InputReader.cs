@@ -20,7 +20,7 @@ namespace GlobalInputs
         public event Action NotifyThrowableWeaponSwitch;
         public event Action NotifyWeaponReload;
         public event Action NotifyWhenWeaponDropped;
-        public event Action NotifyWhenFireModeChanged;
+        public event Action NotifyWhenWeaponFireModeChanged;
         
     
         private Controls _controls;
@@ -121,7 +121,7 @@ namespace GlobalInputs
         {
             if (!context.performed) return;
             
-            NotifyWhenFireModeChanged?.Invoke();
+            NotifyWhenWeaponFireModeChanged?.Invoke();
         }
     }
 }
