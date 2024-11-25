@@ -15,14 +15,13 @@ MonoBehaviour:
   <WeaponType>k__BackingField: 4
   <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 0
-  <WeaponFireRate>k__BackingField: 0
+  <WeaponDistance>k__BackingField: 4
   <WeaponDurability>k__BackingField: 0
   <WeaponReloadSpeed>k__BackingField: 1
   <WeaponEquipmentSpeed>k__BackingField: 1
   <AnimationLayer>k__BackingField: 3
   <EquipType>k__BackingField: 0
-  <BurstMode>k__BackingField: {fileID: 11400000, guid: 011a860d552f99e42ac42c0d970df52a,
-    type: 2}
+  <WeaponFireMode>k__BackingField: {fileID: 0}
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 0
   <AmmoInMagazine>k__BackingField: 0

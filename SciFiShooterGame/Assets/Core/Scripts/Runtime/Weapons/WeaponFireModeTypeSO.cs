@@ -2,7 +2,7 @@
 
 namespace Core.Scripts.Runtime.Weapons
 {
-    public abstract class WeaponFireModeType : ScriptableObject
+    public abstract class WeaponFireModeTypeSO : ScriptableObject
     {
         [SerializeField] protected int bulletsPerShot;
         [SerializeField] protected float fireRate;

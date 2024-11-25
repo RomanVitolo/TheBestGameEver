@@ -7,10 +7,12 @@ namespace Core.Scripts.Runtime.Weapons
     [CreateAssetMenu(menuName = "Core/Weapon Settings/Create AgentWeapon", fileName = "AgentWeapon")]
     public class WeaponDataSO : ScriptableObject
     {
+        [field: SerializeField] public float CameraDistance { get; set; }
         public Transform GunPoint { get; set; }
         [field: SerializeField, Header("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }
         [field: SerializeField] public WeaponEnums.FireModeType FireMode { get; set; }
         [field: SerializeField] public int WeaponInputSlot { get; set; }
+        [field: SerializeField, Range(2,12)] public float WeaponDistance { get; set; }
         [field: SerializeField] public int WeaponDurability { get; set; }
         [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
         [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
@@ -18,6 +20,8 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField] public WeaponEnums.EquipType EquipType { get; private set; }
         [field: SerializeField, Header("Weapon Fire Mode Settings")] public WeaponFireModeHolderSO WeaponFireMode { get; private set; }
         [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
+        
+        [field: SerializeField] public GameObject BulletPrefab { get; private set; }
         [field: SerializeField] public float BulletVelocity { get; set; } 
         [field: SerializeField] public int AmmoInMagazine { get; set; }
         [field: SerializeField] public int MagazineCapacity { get; set; }

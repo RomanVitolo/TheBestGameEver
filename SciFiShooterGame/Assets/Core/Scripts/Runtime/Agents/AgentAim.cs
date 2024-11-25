@@ -73,7 +73,7 @@ namespace Core.Scripts.Runtime.Agents
             return hitInfo;
         }
 
-        public void UpdateAimVisuals(Transform gunPoint, Vector3 bulletDirection, bool weaponIsReady)
+        public void UpdateAimVisuals(Transform gunPoint, Vector3 bulletDirection, bool weaponIsReady, float weaponDistance)
         {
             _aimLaser.enabled = weaponIsReady;
 
@@ -83,7 +83,7 @@ namespace Core.Scripts.Runtime.Agents
             Vector3 laserDirection = bulletDirection;
             
             float laserTipLenght = .5f;
-            float gunDistance = 4f;        
+            float gunDistance = weaponDistance;        
             
             Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
 

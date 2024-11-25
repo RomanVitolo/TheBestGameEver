@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
+  <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 3
   <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 0
-  <WeaponDurability>k__BackingField: 0
+  <WeaponDistance>k__BackingField: 4
+  <WeaponDurability>k__BackingField: 100
   <WeaponReloadSpeed>k__BackingField: 2
   <WeaponEquipmentSpeed>k__BackingField: 2
   <AnimationLayer>k__BackingField: 3
@@ -24,7 +26,7 @@ MonoBehaviour:
     type: 2}
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 249
+  <AmmoInMagazine>k__BackingField: 250
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350
   <InitialWeaponAmmo>k__BackingField: 350

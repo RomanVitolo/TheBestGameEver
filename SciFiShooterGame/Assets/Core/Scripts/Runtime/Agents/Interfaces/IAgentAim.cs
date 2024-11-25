@@ -10,6 +10,6 @@ namespace Core.Scripts.Runtime.Agents.Interfaces
         public Transform Target(RaycastHit targetTransform);
         public bool CanAimPrecisely();
         public RaycastHit GetMouseHitInfo(Camera agentCamera, Vector2 InputAim, LayerMask aimLayerMask);
-        public void UpdateAimVisuals(Transform gunPoint, Vector3 bulletDirection, bool weaponIsReady);
+        public void UpdateAimVisuals(Transform gunPoint, Vector3 bulletDirection, bool weaponIsReady, float weaponDistance);
     }
 }

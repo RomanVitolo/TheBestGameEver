@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Scripts.Runtime.CameraSystem;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -44,10 +45,9 @@ namespace Core.Scripts.Runtime.Agents
         private bool _shouldIncrease_RigWeight;
 
         [Header("Ammo Settings")]
-        [SerializeField] private GameObject _bulletPrefab;
         [SerializeField] private float _bulletSpeed;
         [SerializeField] private BulletPool _bulletPool;
-
+       
         private void Awake()
         {
             var getWeapons = GetComponentsInChildren<Weapon>(true);
@@ -116,7 +116,7 @@ namespace Core.Scripts.Runtime.Agents
             ControlAnimationRig();
 
             _agent.AgentAim.UpdateAimVisuals(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection(), 
-                _weaponReady);
+                _weaponReady, _currentWeapon.WeaponDataConfiguration.WeaponDistance);
 
             if (_agent.AgentInputReader.CanShoot)
                 WeaponShoot();
@@ -182,6 +182,7 @@ namespace Core.Scripts.Runtime.Agents
             _agentWeaponsSlots[_currentIndex].gameObject.SetActive(false);
             _currentIndex = (_currentIndex + 1) % _agentWeaponsSlots.Count;
             _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
+            CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
             _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
             AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
             SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
@@ -224,6 +225,7 @@ namespace Core.Scripts.Runtime.Agents
             if (_currentWeapon != null)
             {
                 _currentWeapon.gameObject.SetActive(true);
+                CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
                 _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
             }
             Debug.Log("Selected weapon not found in the list, keeping current weapon.");
@@ -290,14 +292,15 @@ namespace Core.Scripts.Runtime.Agents
                 Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
 
             Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
+
+            var bullet = newBullet.GetComponent<Bullet>();
+            bullet.BulletSetup(_currentWeapon.WeaponDataConfiguration.WeaponDistance);
                 
             Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(BulletDirection());
                 
             rbNewBullet.mass = 5f / _bulletSpeed;
             rbNewBullet.linearVelocity = bulletDirection * _bulletSpeed;
         }
-        
-        
         
         public IEnumerator BurstFireMode()
         {

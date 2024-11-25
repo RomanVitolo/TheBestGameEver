@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
+  <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 5
   <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 1
-  <WeaponDurability>k__BackingField: 0
+  <WeaponDistance>k__BackingField: 2.22
+  <WeaponDurability>k__BackingField: 100
   <WeaponReloadSpeed>k__BackingField: 1
   <WeaponEquipmentSpeed>k__BackingField: 1
   <AnimationLayer>k__BackingField: 2

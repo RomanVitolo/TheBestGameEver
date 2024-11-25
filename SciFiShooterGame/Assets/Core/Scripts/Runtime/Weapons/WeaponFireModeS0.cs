@@ -3,8 +3,9 @@
 namespace Core.Scripts.Runtime.Weapons
 {
     [CreateAssetMenu(menuName = "Core/Weapon Settings/Create FireModeSettings", fileName = "WeaponFireModeType")]
-    public class WeaponFireModeS0 : WeaponFireModeType
+    public class WeaponFireModeS0 : WeaponFireModeTypeSO
     {
+       
         [field: SerializeField] public bool HasThisModeAvailable { get; private set; }
         [field: SerializeField] public WeaponEnums.FireModeType FireModeType { get; private set; }
         
