@@ -2,7 +2,7 @@
 
 namespace Core.Scripts.Runtime.Utilities
 {
-    public interface UtilityEvent
+    internal interface IUtilityEvent
     {
         public event Action NotifyAction;
     }

@@ -12,7 +12,7 @@ using UnityEngine.Animations.Rigging;
 
 namespace Core.Scripts.Runtime.Agents
 {
-    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, UtilityEvent
+    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, IUtilityEvent
     {
         public event Action NotifyAction;
         private Agent _agent;
