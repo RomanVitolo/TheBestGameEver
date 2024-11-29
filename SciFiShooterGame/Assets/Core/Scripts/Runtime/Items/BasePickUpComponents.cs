@@ -1,6 +1,4 @@
-﻿using Core.Scripts.Runtime.Utilities;
-using Core.Scripts.Runtime.Weapons;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Core.Scripts.Runtime.Items
 {

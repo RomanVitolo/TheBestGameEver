@@ -8,14 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Scripts.Runtime.CameraSystem;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 namespace Core.Scripts.Runtime.Agents
 {
     public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, IUtilityEvent
     {
         public event Action NotifyAction;
+        
         private Agent _agent;
+        private WeaponAnimations _weaponAnimations;
 
         [Header("Actual Weapon Type")]
         [SerializeField] private WeaponEnums.WeaponType _actualWeaponType;
@@ -31,23 +32,10 @@ namespace Core.Scripts.Runtime.Agents
         
         public Weapon CurrentWeapon() => _currentWeapon;
 
-        [Header("Left hand IK")]
-        [SerializeField] private TwoBoneIKConstraint _leftHandIK;
-        [SerializeField] private Transform _leftHandIK_Target;
-        [SerializeField] private float _leftHandIKWeightIncreaseRate;
-        private WeaponAnimations _weaponAnimations;
-        private Transform _assignLeftHandCurrentWeapon;
-        private bool _shouldIncrease_LeftHandIKWeight;
-
-        [Header("Rig")]
-        [SerializeField] private Rig _rig;
-        [SerializeField] private float _rigWeightIncreaseRate;
-        private bool _shouldIncrease_RigWeight;
-
         [Header("Ammo Settings")]
         [SerializeField] private float _bulletSpeed;
         [SerializeField] private BulletPool _bulletPool;
-       
+        
         private void Awake()
         {
             var getWeapons = GetComponentsInChildren<Weapon>(true);
@@ -55,11 +43,9 @@ namespace Core.Scripts.Runtime.Agents
             {
                 _agentWeaponsSlots.Add(weapon);
             }
-
             _agent = GetComponentInParent<Agent>();
-            _rig ??= FindAnyObjectByType<Rig>();
+            _weaponAnimations = GetComponent<WeaponAnimations>();
             _bulletPool ??= FindAnyObjectByType<BulletPool>();
-            _weaponAnimations = new WeaponAnimations();
         }
 
         private void Start()
@@ -69,11 +55,8 @@ namespace Core.Scripts.Runtime.Agents
             AssignDefaultWeapon();
         }
 
-        private void OnDestroy()
-        {
-            UnsubscribeAgentInput();
-        }
-
+        private void OnDestroy() => UnsubscribeAgentInput();
+        
         private void SubscribeAgentInput() 
         {
             _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeaponsByGenericButtonPressed;
@@ -101,56 +84,16 @@ namespace Core.Scripts.Runtime.Agents
             SetWeaponReady(false);
             if (!_currentWeapon.WeaponDataConfiguration.CanReload() && !_weaponReady) return;
 
-            float reloadSpeed = _currentWeapon.WeaponDataConfiguration.WeaponReloadSpeed;
-
-            _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Reload);
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.WeaponReloadSpeed, reloadSpeed);
-            ReduceRigWeight();
+            _weaponAnimations.WeaponReloadAnimation(_currentWeapon.WeaponDataConfiguration.WeaponReloadSpeed);
         }
-        private void ReduceRigWeight() => _rig.weight = 0.15f;
-        public void MaximizeRigWeight() => _shouldIncrease_RigWeight = true;
-        public void MaximizeLeftHandWeight() => _shouldIncrease_LeftHandIKWeight = true;
-
+        
         private void Update()
         {
-            ControlAnimationRig();
-
             _agent.AgentAim.UpdateAimVisuals(_currentWeapon.WeaponDataConfiguration.GunPoint, BulletDirection(), 
                 _weaponReady, _currentWeapon.WeaponDataConfiguration.WeaponDistance);
 
             if (_agent.AgentInputReader.CanShoot)
                 WeaponShoot();
-        }
-
-        private void ControlAnimationRig()
-        {
-            if (_shouldIncrease_RigWeight)
-            {
-                _rig.weight += _rigWeightIncreaseRate * Time.deltaTime;
-
-                if (_rig.weight >= 1)
-                    _shouldIncrease_RigWeight = false;
-            }
-
-            if (!_shouldIncrease_LeftHandIKWeight) return;
-            _leftHandIK.weight += _leftHandIKWeightIncreaseRate * Time.deltaTime;
-
-            if (_leftHandIK.weight >= 1)
-            {
-                _shouldIncrease_LeftHandIKWeight = false;
-            }
-        }
-
-        private void PlayWeaponEquipAnimation(WeaponEnums.EquipType equipType, float currentWeapon)
-        {
-            float equipmentSpeed = currentWeapon;
-
-            _leftHandIK.weight = 0;
-            ReduceRigWeight();
-            _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.EquipWeapon);
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipType, ((float)equipType));
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimations.EquipSpeed, equipmentSpeed);
-            
         }
 
         private void AssignDefaultWeapon()
@@ -169,9 +112,10 @@ namespace Core.Scripts.Runtime.Agents
         private void WeaponConfig(Weapon weapon)
         {
             SetWeaponReady(false);
-            AttachLeftHand(weapon.transform);
-            SwitchAnimationLayer((int)weapon.WeaponDataConfiguration.AnimationLayer);
-            PlayWeaponEquipAnimation(weapon.WeaponDataConfiguration.EquipType, weapon.WeaponDataConfiguration.WeaponEquipmentSpeed);
+            _weaponAnimations.AttachLeftHand(weapon.transform);
+            _weaponAnimations.SwitchAnimationLayer((int)weapon.WeaponDataConfiguration.AnimationLayer);
+            _weaponAnimations.PlayWeaponEquipAnimation(weapon.WeaponDataConfiguration.EquipType,
+                weapon.WeaponDataConfiguration.WeaponEquipmentSpeed);
             _currentWeapon = weapon;
             weapon.gameObject.SetActive(true);
         }
@@ -184,9 +128,9 @@ namespace Core.Scripts.Runtime.Agents
             _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
             CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
             _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
-            AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
-            SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
-            PlayWeaponEquipAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.EquipType,
+            _weaponAnimations.AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
+            _weaponAnimations.SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
+            _weaponAnimations.PlayWeaponEquipAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.EquipType,
                 _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponEquipmentSpeed);
             _currentWeapon = _agentWeaponsSlots[_currentIndex];
             weaponIndex = 0;
@@ -231,24 +175,6 @@ namespace Core.Scripts.Runtime.Agents
             Debug.Log("Selected weapon not found in the list, keeping current weapon.");
         }
 
-        private void AttachLeftHand(Transform weaponTransform)
-        {
-            _assignLeftHandCurrentWeapon = weaponTransform;
-
-            Transform targetTransform =
-                _assignLeftHandCurrentWeapon.GetComponentInChildren<LeftHandTargetTransform>().transform;
-            _leftHandIK_Target.localPosition = targetTransform.localPosition;
-            _leftHandIK_Target.localRotation = targetTransform.localRotation;
-        }
-
-        private void SwitchAnimationLayer(int layerIndex)
-        {
-            for (int i = 0; i < _agent.AgentAnimator.Animator.layerCount; i++)
-                _agent.AgentAnimator.Animator.SetLayerWeight(i, 0);
-
-            _agent.AgentAnimator.Animator.SetLayerWeight(layerIndex, 1);
-        }
-
         private Vector3 BulletDirection()
         {
             Transform aim = _agent.AgentAim.Aim;
@@ -272,7 +198,7 @@ namespace Core.Scripts.Runtime.Agents
             
             if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.ReadyToShoot())
             {
-                TriggerShootAnimation();
+                _weaponAnimations.TriggerShootAnimation();
 
                 var fireModeSystem = new FireModeSystem();
                 fireModeSystem.HandleFireMode(this);
@@ -322,7 +248,6 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
-        private void TriggerShootAnimation() => PlayFireAnimation();
 
         private void DropWeapon()
         {
@@ -338,8 +263,6 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
-        
-        private void PlayFireAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimations.Fire);
 
         public void PickUpObject(WeaponEnums.WeaponType weaponType)
         {

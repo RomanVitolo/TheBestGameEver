@@ -4589,16 +4589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actualWeaponType: 3
   _agentWeaponsSlots: []
-  _leftHandIK: {fileID: 1981842968614199850}
-  _leftHandIK_Target: {fileID: 5248138778038715764}
-  _leftHandIKWeightIncreaseRate: 3
-  _rig: {fileID: 8253734864417572425}
-  _rigWeightIncreaseRate: 3
-  _bulletPrefab: {fileID: 4464807424448350656, guid: 30c006fd80da1054cbde419f13b1b8ed,
-    type: 3}
   _bulletSpeed: 20
   _bulletPool: {fileID: 111679361}
-  _bulletPoolImpact: {fileID: 269604762}
 --- !u!1 &3318453805008592180
 GameObject:
   m_ObjectHideFlags: 0
@@ -5579,6 +5571,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7593822053412250589}
   - component: {fileID: 3286429417006032427}
+  - component: {fileID: 7593822053412250591}
   - component: {fileID: 7593822053412250590}
   m_Layer: 0
   m_Name: WeaponSlotHolder
@@ -5906,8 +5899,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _aimLaser: {fileID: 7593822053412250590}
   <Aim>k__BackingField: {fileID: 1831787738}
-  _isAimingPrecisely: 0
-  _isLockingToTarget: 0
+  _isAimingPrecisely: 1
+  _isLockingToTarget: 1
   _cameraTarget: {fileID: 1088426124}
   _minCameraDistance: 1
   _maxCameraDistance: 3
@@ -6156,6 +6149,23 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &7593822053412250591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6483764934734895283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ecb344825a6404f94f117a9f92c4476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rig: {fileID: 8253734864417572425}
+  _rigWeightIncreaseRate: 3
+  _leftHandIK_Target: {fileID: 5248138778038715764}
+  _leftHandIK: {fileID: 1981842968614199850}
+  _leftHandIKWeightIncreaseRate: 3
 --- !u!4 &7601593699305957984
 Transform:
   m_ObjectHideFlags: 0

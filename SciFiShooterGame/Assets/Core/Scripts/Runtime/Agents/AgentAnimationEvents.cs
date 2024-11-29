@@ -1,3 +1,4 @@
+using Core.Scripts.Runtime.Weapons;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
@@ -5,12 +6,17 @@ namespace Core.Scripts.Runtime.Agents
     public class AgentAnimationEvents : MonoBehaviour
     {
         private AgentWeaponMotor _agentWeaponMotor;
+        private WeaponAnimations _weaponAnimations;
 
-        private void Start() => _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>(); 
+        private void Start()
+        {
+            _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>(); 
+            _weaponAnimations = GetComponentInChildren<WeaponAnimations>(); 
+        } 
        
         public void ReloadIsOver()
         {
-            _agentWeaponMotor.MaximizeRigWeight();
+            _weaponAnimations.MaximizeRigWeight();
             _agentWeaponMotor.CurrentWeapon().WeaponDataConfiguration.RefillAmmo();    
             
             _agentWeaponMotor.SetWeaponReady(true);
@@ -18,8 +24,8 @@ namespace Core.Scripts.Runtime.Agents
 
         public void ReturnRig()
         {
-            _agentWeaponMotor.MaximizeRigWeight();
-            _agentWeaponMotor.MaximizeLeftHandWeight();    
+            _weaponAnimations.MaximizeRigWeight();
+            _weaponAnimations.MaximizeLeftHandWeight();    
         }
 
         public void WeaponEquippingIsOveR()
