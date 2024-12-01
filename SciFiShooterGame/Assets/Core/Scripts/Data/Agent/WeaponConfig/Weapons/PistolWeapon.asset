@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: PistolWeapon
   m_EditorClassIdentifier: 
+  <WeaponName>k__BackingField: Pistol
+  <CameraDistance>k__BackingField: 0
   <WeaponType>k__BackingField: 1
   <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 1
@@ -23,6 +25,7 @@ MonoBehaviour:
   <EquipType>k__BackingField: 0
   <WeaponFireMode>k__BackingField: {fileID: 0}
   <BulletMass>k__BackingField: 0
+  <BulletPrefab>k__BackingField: {fileID: 0}
   <BulletVelocity>k__BackingField: 0
   <AmmoInMagazine>k__BackingField: 0
   <MagazineCapacity>k__BackingField: 0

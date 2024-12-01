@@ -7,6 +7,7 @@ namespace Core.Scripts.Runtime.Weapons
     [CreateAssetMenu(menuName = "Core/Weapon Settings/Create AgentWeapon", fileName = "AgentWeapon")]
     public class WeaponDataSO : ScriptableObject
     {
+        [field: SerializeField] public string WeaponName { get; set; }
         [field: SerializeField] public float CameraDistance { get; set; }
         public Transform GunPoint { get; set; }
         [field: SerializeField, Header("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }

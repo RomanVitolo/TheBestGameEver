@@ -1,4 +1,5 @@
-﻿using Core.Scripts.Runtime.Utilities;
+﻿using System;
+using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapons;
 using UnityEngine;
 
@@ -15,7 +16,6 @@ namespace Core.Scripts.Runtime.Items
 
         private void PickUpBehaviour(Collider other)
         {
-            
             var destroyable = other.GetComponentInChildren<IUtilityEvent>();
             var itemPickUp = other.GetComponentInChildren<IItemPickUP<WeaponEnums.WeaponType>>();
 

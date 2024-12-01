@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
+  <WeaponName>k__BackingField: Shoutgun
   <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 5
   <FireMode>k__BackingField: 0
@@ -25,6 +26,7 @@ MonoBehaviour:
   <WeaponFireMode>k__BackingField: {fileID: 11400000, guid: 45b0d8d322de1ae4c8cbf9793dbc6aec,
     type: 2}
   <BulletMass>k__BackingField: 5
+  <BulletPrefab>k__BackingField: {fileID: 0}
   <BulletVelocity>k__BackingField: 20
   <AmmoInMagazine>k__BackingField: 15
   <MagazineCapacity>k__BackingField: 15

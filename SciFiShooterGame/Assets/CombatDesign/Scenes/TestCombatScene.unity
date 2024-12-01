@@ -1688,6 +1688,7 @@ GameObject:
   - component: {fileID: 858860938}
   - component: {fileID: 858860937}
   - component: {fileID: 858860940}
+  - component: {fileID: 858860942}
   - component: {fileID: 858860941}
   m_Layer: 0
   m_Name: Weapon_Shotgun_1
@@ -1779,6 +1780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponId: 5
+  _weapon: {fileID: 858860942}
 --- !u!65 &858860941
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1800,6 +1802,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0737437, y: 0.30676138, z: 1.0520375}
   m_Center: {x: 0, y: 0.047709696, z: 0.19097298}
+--- !u!114 &858860942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858860935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73007cfe5c3840089210c1f7ed398bfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weaponGunPoint: {fileID: 329253156}
+  <WeaponDataConfiguration>k__BackingField: {fileID: 11400000, guid: 66533be63ab59094da126f41e0826a34,
+    type: 2}
 --- !u!1 &922258502
 GameObject:
   m_ObjectHideFlags: 0
@@ -4589,8 +4606,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actualWeaponType: 3
   _agentWeaponsSlots: []
-  _bulletSpeed: 20
-  _bulletPool: {fileID: 111679361}
 --- !u!1 &3318453805008592180
 GameObject:
   m_ObjectHideFlags: 0
@@ -5572,6 +5587,7 @@ GameObject:
   - component: {fileID: 7593822053412250589}
   - component: {fileID: 3286429417006032427}
   - component: {fileID: 7593822053412250591}
+  - component: {fileID: 7593822053412250592}
   - component: {fileID: 7593822053412250590}
   m_Layer: 0
   m_Name: WeaponSlotHolder
@@ -6166,6 +6182,19 @@ MonoBehaviour:
   _leftHandIK_Target: {fileID: 5248138778038715764}
   _leftHandIK: {fileID: 1981842968614199850}
   _leftHandIKWeightIncreaseRate: 3
+--- !u!114 &7593822053412250592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6483764934734895283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8771c5246b5a4032bb279669fd8af9e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BulletSpeed>k__BackingField: 20
 --- !u!4 &7601593699305957984
 Transform:
   m_ObjectHideFlags: 0

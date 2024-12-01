@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: RifleWeapon
   m_EditorClassIdentifier: 
+  <WeaponName>k__BackingField: Rifle
   <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 3
   <FireMode>k__BackingField: 0
@@ -25,6 +26,8 @@ MonoBehaviour:
   <WeaponFireMode>k__BackingField: {fileID: 11400000, guid: f4fb9e0acb9e3ac4e92dc3c485bc1658,
     type: 2}
   <BulletMass>k__BackingField: 0
+  <BulletPrefab>k__BackingField: {fileID: 4464807424448350656, guid: 30c006fd80da1054cbde419f13b1b8ed,
+    type: 3}
   <BulletVelocity>k__BackingField: 20
   <AmmoInMagazine>k__BackingField: 250
   <MagazineCapacity>k__BackingField: 250
