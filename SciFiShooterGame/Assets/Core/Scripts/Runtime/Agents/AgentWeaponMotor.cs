@@ -99,9 +99,7 @@ namespace Core.Scripts.Runtime.Agents
             foreach (var weapon in _agentWeaponsSlots)
             {
                 if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)
-                {
                     WeaponConfig(weapon);
-                }
                 else
                     weapon.gameObject.SetActive(false);
             }
@@ -245,6 +243,7 @@ namespace Core.Scripts.Runtime.Agents
             _actualWeaponType = _currentWeapon.WeaponDataConfiguration.WeaponType;
             _currentWeapon.gameObject.SetActive(true);
             _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
+            SetWeaponReady(true);
         }
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
