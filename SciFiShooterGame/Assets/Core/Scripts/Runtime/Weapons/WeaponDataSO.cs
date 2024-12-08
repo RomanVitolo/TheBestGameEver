@@ -1,41 +1,50 @@
 ﻿using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Weapons
 {
     
     [CreateAssetMenu(menuName = "Core/Weapon Settings/Create AgentWeapon", fileName = "AgentWeapon")]
-    public class WeaponDataSO : ScriptableObject
+    [InlineEditor]
+    public class WeaponDataSO : SerializedScriptableObject
     {
         [field: SerializeField] public string WeaponName { get; set; }
         [field: SerializeField] public float CameraDistance { get; set; }
         public Transform GunPoint { get; set; }
-        [field: SerializeField, Header("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }
-        [field: SerializeField] public WeaponEnums.FireModeType FireMode { get; set; }
-        [field: SerializeField] public int WeaponInputSlot { get; set; }
-        [field: SerializeField, Range(2,12)] public float WeaponDistance { get; set; }
-        [field: SerializeField] public int WeaponDurability { get; set; }
-        [field: SerializeField, Range(1,5)] public float WeaponReloadSpeed { get; private set; }
-        [field: SerializeField, Range(1,5)] public float WeaponEquipmentSpeed { get; private set; }
-        [field: SerializeField, Header("Animation Layer")] public WeaponEnums.WeaponAnimationLayerType AnimationLayer { get; private set; }     
-        [field: SerializeField] public WeaponEnums.EquipType EquipType { get; private set; }
-        [field: SerializeField, Header("Weapon Fire Mode Settings")] public WeaponFireModeHolderSO WeaponFireMode { get; private set; }
-        [field: SerializeField, Header("Ammo Settings")] public float BulletMass { get; private set; }     
+        [field: SerializeField, BoxGroup("Weapon Settings")] public WeaponEnums.WeaponType WeaponType { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Settings")] public WeaponEnums.FireModeType FireMode { get; set; }
+        [field: SerializeField, BoxGroup("Weapon Settings")] public int WeaponInputSlot { get; set; }
+        [field: SerializeField, Range(2,12), BoxGroup("Weapon Settings")] public float WeaponDistance { get; set; }
+        [field: SerializeField, BoxGroup("Weapon Settings"), Range(0,100)] public int WeaponDurability { get; set; }
+        [field: SerializeField, Range(1,5), BoxGroup("Weapon Settings")] public float WeaponReloadSpeed { get; private set; }
+        [field: SerializeField, Range(1,5), BoxGroup("Weapon Settings")] public float WeaponEquipmentSpeed { get; private set; }
+        [field: SerializeField, BoxGroup("Animation Layer Settings")] public WeaponEnums.WeaponAnimationLayerType AnimationLayer { get; private set; }     
+        [field: SerializeField, BoxGroup("Animation Layer Settings")] public WeaponEnums.EquipType EquipType { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Fire Mode Data"), InlineEditor]
+        public WeaponFireModeHolderSO WeaponFireMode { get; private set; }
         
-        [field: SerializeField] public GameObject BulletPrefab { get; private set; }
-        [field: SerializeField] public float BulletVelocity { get; set; } 
-        [field: SerializeField] public int AmmoInMagazine { get; set; }
-        [field: SerializeField] public int MagazineCapacity { get; set; }
-        [field: SerializeField] public int TotalReserveAmmo { get; private set; }
-        [field: SerializeField] public int InitialWeaponAmmo { get; private set; }
-        [field: SerializeField, Header("Weapon Recoil ")] public float BaseRecoil { get; private set; }
-        [field: SerializeField] public float MaximumRecoil { get; set; }
-        [field: SerializeField] public float RecoilIncreaseRate { get; set; }
+        
+        [field: SerializeField, BoxGroup("Ammo Settings"), PreviewField(100), HideLabel] 
+        public GameObject BulletPrefab { get; private set; }
+        [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(0.3f,0.5f,1f)] 
+        public WeaponEnums.WeaponAmmoType AmmoType { get; private set; }
+        [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(0.8f,0.4f,0.4f)] 
+        public float BulletMass { get; private set; }     
+        [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(1f,1f,0f)] 
+        public float BulletVelocity { get; set; } 
+        
+        
+        [field: SerializeField, BoxGroup("Weapon Magazine")] public int AmmoInMagazine { get; set; }
+        [field: SerializeField, BoxGroup("Weapon Magazine")] public int MagazineCapacity { get; set; }
+        [field: SerializeField, BoxGroup("Weapon Magazine")] public int TotalReserveAmmo { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Magazine")] public int InitialWeaponAmmo { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Recoil")] public float BaseRecoil { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Recoil")] public float MaximumRecoil { get; set; }
+        [field: SerializeField, BoxGroup("Weapon Recoil"), Range(0, 1)] public float RecoilIncreaseRate { get; set; }
         private float _currentRecoil = 1f;
         private float _lastRecoilUpdateTime;
         private const float const_RecoilCoolDown = 1f;
-        
-
         private float _lastShootTime;
         public void InitializeAmmo()
         {
@@ -51,7 +60,8 @@ namespace Core.Scripts.Runtime.Weapons
             //AmmoInMagazine--;
             return true;
         }
-
+        
+        [Button(ButtonSizes.Large), GUIColor(1f,1f,0f)]
         private bool HaveEnoughBullets()
         {
             if (AmmoInMagazine <= 0) return false;

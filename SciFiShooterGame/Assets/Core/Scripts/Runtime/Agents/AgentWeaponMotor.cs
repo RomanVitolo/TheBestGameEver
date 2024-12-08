@@ -1,8 +1,5 @@
 using Core.Scripts.Runtime.Ammo;
-using Core.Scripts.Runtime.Items;
-using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapons;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +8,8 @@ using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
 {
-    public class AgentWeaponMotor : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, IUtilityEvent
+    public class AgentWeaponMotor : MonoBehaviour
     {
-        public event Action NotifyAction;
-        
         private Agent _agent;
         private WeaponAnimations _weaponAnimations;
         private WeaponBulletMovement _weaponBulletMovement;
@@ -23,11 +18,11 @@ namespace Core.Scripts.Runtime.Agents
         [SerializeField] private WeaponEnums.WeaponType _actualWeaponType;
 
         [Header("Weapon Settings")]
-        private Weapon[] _totalWeaponsHolder;
-        [SerializeField] private List<Weapon> _agentWeaponsSlots = new List<Weapon>();
+        [SerializeField] private AgentWeaponDrop _agentWeaponDrop;
+        public List<Weapon> AgentWeaponsSlot = new List<Weapon>();
+        public Weapon[] TotalWeaponsHolder;
         private Weapon _currentWeapon;
         private int _currentIndex;
-        private const int _maxWeaponsSlotsAllowed = 3;
         private bool _weaponReady;
         private int weaponIndex = 1;
         
@@ -38,16 +33,19 @@ namespace Core.Scripts.Runtime.Agents
             var getWeapons = GetComponentsInChildren<Weapon>(true);
             foreach (var weapon in getWeapons)
             {
-                _agentWeaponsSlots.Add(weapon);
+                AgentWeaponsSlot.Add(weapon);
             }
+            
             _agent = GetComponentInParent<Agent>();
             _weaponBulletMovement = GetComponent<WeaponBulletMovement>();
             _weaponAnimations = GetComponent<WeaponAnimations>();
+            if (_agentWeaponDrop != null)
+                _agentWeaponDrop = GetComponent<AgentWeaponDrop>();
         }
 
         private void Start()
         {
-            _totalWeaponsHolder = _agentWeaponsSlots.ToArray();
+            TotalWeaponsHolder = AgentWeaponsSlot.ToArray();
             SubscribeAgentInput();
             AssignDefaultWeapon();
         }
@@ -96,7 +94,7 @@ namespace Core.Scripts.Runtime.Agents
 
         private void AssignDefaultWeapon()
         {
-            foreach (var weapon in _agentWeaponsSlots)
+            foreach (var weapon in AgentWeaponsSlot)
             {
                 if (weapon.WeaponDataConfiguration.WeaponType == _actualWeaponType)
                     WeaponConfig(weapon);
@@ -119,16 +117,16 @@ namespace Core.Scripts.Runtime.Agents
         private void SwitchOffWeaponsByGenericButtonPressed() //Actually Mouse3
         {
             SetWeaponReady(false);
-            _agentWeaponsSlots[_currentIndex].gameObject.SetActive(false);
-            _currentIndex = (_currentIndex + 1) % _agentWeaponsSlots.Count;
-            _agentWeaponsSlots[_currentIndex].gameObject.SetActive(true);
+            AgentWeaponsSlot[_currentIndex].gameObject.SetActive(false);
+            _currentIndex = (_currentIndex + 1) % AgentWeaponsSlot.Count;
+            AgentWeaponsSlot[_currentIndex].gameObject.SetActive(true);
             //CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
-            _actualWeaponType = _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponType;
-            _weaponAnimations.AttachLeftHand(_agentWeaponsSlots[_currentIndex].gameObject.transform);
-            _weaponAnimations.SwitchAnimationLayer((int)_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.AnimationLayer);
-            _weaponAnimations.PlayWeaponEquipAnimation(_agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.EquipType,
-                _agentWeaponsSlots[_currentIndex].WeaponDataConfiguration.WeaponEquipmentSpeed);
-            _currentWeapon = _agentWeaponsSlots[_currentIndex];
+            _actualWeaponType = AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.WeaponType;
+            _weaponAnimations.AttachLeftHand(AgentWeaponsSlot[_currentIndex].gameObject.transform);
+            _weaponAnimations.SwitchAnimationLayer((int)AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.AnimationLayer);
+            _weaponAnimations.PlayWeaponEquipAnimation(AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.EquipType,
+                AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.WeaponEquipmentSpeed);
+            _currentWeapon = AgentWeaponsSlot[_currentIndex];
             weaponIndex = 0;
         }
 
@@ -143,7 +141,7 @@ namespace Core.Scripts.Runtime.Agents
         {
             bool weaponFound = false;
             weaponIndex = 0;
-            foreach (var weapon in _agentWeaponsSlots)
+            foreach (var weapon in AgentWeaponsSlot)
             {
                 if (weapon.WeaponDataConfiguration.WeaponInputSlot == _agent.AgentInputReader.WeaponSlotLocation)
                 {
@@ -231,40 +229,13 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
-
+        
         private void DropWeapon()
         {
-            if (_agentWeaponsSlots.Count <= 1) return;
-
-            _agentWeaponsSlots.Remove(_currentWeapon);
-            _currentWeapon.gameObject.SetActive(false);
-            _currentWeapon = _agentWeaponsSlots[^1];
-            if (_currentWeapon == null) return;
-            _actualWeaponType = _currentWeapon.WeaponDataConfiguration.WeaponType;
-            _currentWeapon.gameObject.SetActive(true);
-            _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
+            _agentWeaponDrop.DropWeapon(AgentWeaponsSlot, _currentWeapon, _actualWeaponType, _currentIndex);
             SetWeaponReady(true);
         }
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
-
-        public void PickUpObject(WeaponEnums.WeaponType weaponType)
-        {
-            if (_agentWeaponsSlots.Count >= _maxWeaponsSlotsAllowed)
-                return;
-            foreach (var weapon in _agentWeaponsSlots)
-            {
-                if (weapon.WeaponDataConfiguration.WeaponType == weaponType || _agentWeaponsSlots.Exists(w => 
-                        w.WeaponDataConfiguration.WeaponType == weaponType))
-                    return;
-                foreach (var newWeapon in _totalWeaponsHolder.
-                             Where(newWeapon => newWeapon.WeaponDataConfiguration.WeaponType == weaponType))
-                {
-                    NotifyAction?.Invoke();
-                    _agentWeaponsSlots.Add(newWeapon);
-                    return;
-                }
-            }
-        }
     }
 }

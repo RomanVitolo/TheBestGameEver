@@ -36,5 +36,13 @@
             HighHold = 3,
             MeleeHold = 4,
         }
+
+        public enum WeaponAmmoType
+        {
+            PistolBullet,
+            SubMachineBullet,
+            ShotgunBullet,
+            RifleBullet,
+        }
     }
 }
