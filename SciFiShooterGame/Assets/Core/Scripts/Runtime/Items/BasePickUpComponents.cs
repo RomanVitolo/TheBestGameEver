@@ -1,20 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Core.Scripts.Runtime.Utilities;
 using DG.Tweening;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Items
 {
-    public abstract class BasePickUpComponents : MonoBehaviour
+    internal abstract class BasePickUpComponents : MonoBehaviour
     {
+        [SerializeField] protected string _itemId;
         [SerializeField] protected Material _componentMaterial;
-        [SerializeField] protected  float _animationDuration = 2f;
+        [SerializeField] protected float _animationDuration = 2f;
+        
+        protected INotifyEvent onPickUp;
+        protected MeshRenderer itemMeshRenderer;
         
         private Tween rotationTween;
 
-        protected void LoadItemEffect(MeshRenderer renderer, Transform itemTransform)
+        protected virtual void LoadItemEffect(MeshRenderer meshRenderer, Transform itemTransform)
         {
-            renderer = GetComponent<MeshRenderer>();
-            renderer.material = _componentMaterial;
+            itemMeshRenderer = GetComponent<MeshRenderer>();
+            itemMeshRenderer.material = _componentMaterial;
 
             if (itemTransform  != null)
             {
@@ -30,11 +36,34 @@ namespace Core.Scripts.Runtime.Items
             rotationTween.Kill(); 
             rotationTween = null;
         }
+        
+        private INotifyEvent SelectNotifyEventComponent(IEnumerable<INotifyEvent> components)
+        {
+            return components.FirstOrDefault(component => component.ItemId == _itemId);
+        }
+        
+        protected virtual void PickUpBehaviour(Collider other)
+        {
+            var notifyEventComponents = other.GetComponentsInChildren<MonoBehaviour>()
+                .OfType<INotifyEvent>()
+                .ToList();
 
-        protected virtual void DestroyComponent()
+            if (!notifyEventComponents.Any())
+            {
+                Debug.Log("No INotifyEvent components found.");
+                return;
+            }
+
+            onPickUp = SelectNotifyEventComponent(notifyEventComponents);
+
+            if (onPickUp != null) return;
+            Debug.Log($"No component with ID '{_itemId}' found.");
+            return;
+        }
+        
+        protected void DestroyComponent()
         {
             Destroy(this.gameObject);
         }
-        
     }
 }

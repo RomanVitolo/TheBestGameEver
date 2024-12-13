@@ -1,4 +1,3 @@
-using System;
 using Core.Scripts.Runtime.Utilities;
 using Unity.Cinemachine;
 using UnityEngine;

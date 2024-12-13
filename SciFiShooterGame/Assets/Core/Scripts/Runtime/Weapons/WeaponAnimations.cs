@@ -2,7 +2,6 @@
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.Weapons
 {

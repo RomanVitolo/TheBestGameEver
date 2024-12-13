@@ -32,18 +32,17 @@ namespace Core.Scripts.Runtime.Agents
 
         private void Update()
         {
-            _movementHandler.HandleMovement();
-            
-            // Get necessary parameters for aim
             Vector3 movementValue = _agent.AgentInputReader.MovementValue;
+            
+            _movementHandler.HandleMovement();
+            _animationHandler.UpdateAnimation();
+            
             RaycastHit mouseHitInfo = _agent.AgentAim.GetMouseHitInfo(_mainCamera, 
                 _agent.AgentInputReader.AimInputValue, _aimLayerMask);
-
-            // Pass parameters to aim handler
+            
             _aimHandler.HandleAim(movementValue, mouseHitInfo);
             
             _rotationHandler.ApplyRotation(mouseHitInfo);
-            _animationHandler.UpdateAnimation();
         }
 
         private void InitializeHandlers()

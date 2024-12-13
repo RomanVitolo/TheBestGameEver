@@ -28,7 +28,7 @@ namespace Core.Scripts.Runtime.Movement
 
             _speed = _agent.AgentInputReader.IsRunning ? _runSpeed : _walkSpeed;
 
-            if (movementDirection.magnitude > 0)
+            if (movementDirection.magnitude > 0f)
             {
                 _agent.CharacterController.Move(movementDirection * (_speed * Time.deltaTime));
             }

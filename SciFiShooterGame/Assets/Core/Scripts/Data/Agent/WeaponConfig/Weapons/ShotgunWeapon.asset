@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: ShotgunWeapon
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   <WeaponName>k__BackingField: Shoutgun
   <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 5
@@ -25,12 +34,13 @@ MonoBehaviour:
   <EquipType>k__BackingField: 0
   <WeaponFireMode>k__BackingField: {fileID: 11400000, guid: 45b0d8d322de1ae4c8cbf9793dbc6aec,
     type: 2}
-  <BulletMass>k__BackingField: 5
   <BulletPrefab>k__BackingField: {fileID: 0}
+  <AmmoType>k__BackingField: 2
+  <BulletMass>k__BackingField: 5
   <BulletVelocity>k__BackingField: 20
   <AmmoInMagazine>k__BackingField: 15
   <MagazineCapacity>k__BackingField: 15
-  <TotalReserveAmmo>k__BackingField: 60
+  <TotalReserveAmmo>k__BackingField: 110
   <InitialWeaponAmmo>k__BackingField: 60
   <BaseRecoil>k__BackingField: 15
   <MaximumRecoil>k__BackingField: 15

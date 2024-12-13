@@ -37,7 +37,7 @@ namespace Core.Scripts.Runtime.Weapons
         
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int AmmoInMagazine { get; set; }
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int MagazineCapacity { get; set; }
-        [field: SerializeField, BoxGroup("Weapon Magazine")] public int TotalReserveAmmo { get; private set; }
+        [field: SerializeField, BoxGroup("Weapon Magazine")] public int TotalReserveAmmo { get;  set; }
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int InitialWeaponAmmo { get; private set; }
         [field: SerializeField, BoxGroup("Weapon Recoil")] public float BaseRecoil { get; private set; }
         [field: SerializeField, BoxGroup("Weapon Recoil")] public float MaximumRecoil { get; set; }
@@ -48,6 +48,7 @@ namespace Core.Scripts.Runtime.Weapons
         private float _lastShootTime;
         public void InitializeAmmo()
         {
+            TotalReserveAmmo = 0;
             _lastShootTime = 0;
             TotalReserveAmmo = InitialWeaponAmmo;
             if(InitialWeaponAmmo > MagazineCapacity)

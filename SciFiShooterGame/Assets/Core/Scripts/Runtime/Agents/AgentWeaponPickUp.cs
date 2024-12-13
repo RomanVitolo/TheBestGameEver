@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Core.Scripts.Runtime.Items;
 using Core.Scripts.Runtime.Utilities;
 using Core.Scripts.Runtime.Weapons;
@@ -7,19 +6,19 @@ using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
 {
-    public class AgentWeaponPickUp : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, NotifyEvent
+    public class AgentWeaponPickUp : MonoBehaviour, IItemPickUP<WeaponEnums.WeaponType>, INotifyEvent
     {
-        public event Action NotifyAction;
-        
+        public NotifyAction NotifyItemAction { get; set; }
+        [SerializeField] private string _id;
         [SerializeField] private AgentWeaponMotor _weaponMotor;
+        public string ItemId => _id;
+        
         private const int c_maxWeaponsSlotsAllowed = 3;
         private void Awake()
         {
-            if (_weaponMotor == null)
-                _weaponMotor = GetComponent<AgentWeaponMotor>();
+            _weaponMotor ??= GetComponent<AgentWeaponMotor>();
         }
-
-        public void PickUpObject(WeaponEnums.WeaponType weaponType)
+        public void PickUpObject(WeaponEnums.WeaponType weaponType, int? value = null)
         {
             if (_weaponMotor.AgentWeaponsSlot.Count >= c_maxWeaponsSlotsAllowed)
                 return;
@@ -31,7 +30,7 @@ namespace Core.Scripts.Runtime.Agents
                 foreach (var newWeapon in _weaponMotor.TotalWeaponsHolder.
                              Where(newWeapon => newWeapon.WeaponDataConfiguration.WeaponType == weaponType))
                 {
-                    NotifyAction?.Invoke();
+                    NotifyItemAction?.Invoke();
                     _weaponMotor.AgentWeaponsSlot.Add(newWeapon);
                     return;
                 }

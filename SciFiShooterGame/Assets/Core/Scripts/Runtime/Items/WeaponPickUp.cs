@@ -7,27 +7,25 @@ namespace Core.Scripts.Runtime.Items
     internal class WeaponPickUp : BasePickUpComponents
     {
         [SerializeField] private WeaponEnums.WeaponType _weaponId;
-        private MeshRenderer _weaponRender;
 
-        protected void Awake() => LoadItemEffect(_weaponRender, this.transform);
+        protected void Awake() => LoadItemEffect(itemMeshRenderer, this.transform);
 
         private void OnTriggerEnter(Collider other) => PickUpBehaviour(other);
 
-        private void PickUpBehaviour(Collider other)
+        protected override void PickUpBehaviour(Collider other)
         {
-            var destroyable = other.GetComponentInChildren<NotifyEvent>();
             var itemPickUp = other.GetComponentInChildren<IItemPickUP<WeaponEnums.WeaponType>>();
-
-            if (destroyable is null && itemPickUp is null) return;
+            base.PickUpBehaviour(other);
+            
             KillItemEffect(this.transform);
-            OnDestroyObject(destroyable, itemPickUp);
+            OnDestroyObject(onPickUp, itemPickUp);
         }
 
-        private void OnDestroyObject(NotifyEvent destroyable, IItemPickUP<WeaponEnums.WeaponType> itemPickUp)
+        private void OnDestroyObject(INotifyEvent destroyable, IItemPickUP<WeaponEnums.WeaponType> itemPickUp)
         {
-            destroyable.NotifyAction += DestroyComponent;
+            destroyable.NotifyItemAction += DestroyComponent;
             itemPickUp.PickUpObject(_weaponId);                   
-            destroyable.NotifyAction -= DestroyComponent;
+            destroyable.NotifyItemAction -= DestroyComponent;
         }
     }       
 }

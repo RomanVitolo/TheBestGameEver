@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Scripts.Runtime.Utilities;
+﻿using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Weapons

@@ -7,33 +7,31 @@ namespace Core.Scripts.Runtime.Items
     internal class AmmoPickUp : BasePickUpComponents
     {
         [SerializeField] private WeaponEnums.WeaponAmmoType _ammoType;
-        private MeshRenderer _weaponRender;
+        [SerializeField] private int _ammoValue;
 
-        protected void Awake()
+        protected void Awake() => LoadItemEffect(itemMeshRenderer, transform);
+
+        protected override void LoadItemEffect(MeshRenderer meshRenderer, Transform itemTransform)
         {
-            LoadItemEffect(_weaponRender, transform);
+            itemMeshRenderer = GetComponent<MeshRenderer>();
+            itemMeshRenderer.material = _componentMaterial;
+            
+            //TODO some Visual Effect or Animation
+        }
+        private void OnTriggerEnter(Collider other) => PickUpBehaviour(other);
+        protected override void PickUpBehaviour(Collider other)
+        {
+            base.PickUpBehaviour(other);
+            var ammoType = other.GetComponentInChildren<IItemPickUP<WeaponEnums.WeaponAmmoType>>();
+
+            OnDestroyObject(onPickUp, ammoType);
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnDestroyObject(INotifyEvent destroyable, IItemPickUP<WeaponEnums.WeaponAmmoType> itemPickUp)
         {
-            PickUpBehaviour(other);
-        }
-
-        private void PickUpBehaviour(Collider other)
-        {
-            var destroyable = other.GetComponentInChildren<NotifyEvent>();
-            var itemPickUp = other.GetComponentInChildren<IItemPickUP<WeaponEnums.WeaponAmmoType>>();
-
-            if (destroyable is null && itemPickUp is null) return;
-            KillItemEffect(transform);
-            OnDestroyObject(destroyable, itemPickUp);
-        }
-
-        private void OnDestroyObject(NotifyEvent destroyable, IItemPickUP<WeaponEnums.WeaponAmmoType> itemPickUp)
-        {
-            destroyable.NotifyAction += DestroyComponent;
-            itemPickUp.PickUpObject(_ammoType);                   
-            destroyable.NotifyAction -= DestroyComponent;
+            destroyable.NotifyItemAction += DestroyComponent;
+            itemPickUp.PickUpObject(_ammoType, _ammoValue);                   
+            destroyable.NotifyItemAction -= DestroyComponent;
         }
     }
 }

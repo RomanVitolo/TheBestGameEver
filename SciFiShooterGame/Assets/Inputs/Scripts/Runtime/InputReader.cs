@@ -7,7 +7,7 @@ namespace GlobalInputs
     [CreateAssetMenu(menuName = "Global Inputs/New InputReader", fileName = "InputReader", order = 0)]
     public class InputReader : ScriptableObject, Controls.ICharacterActions, Controls.IWeaponActions
     {
-        public Vector2 MovementValue { get; private set; }
+        public Vector2 MovementValue { get; private set; } = Vector3.zero;
         public Vector2 AimInputValue { get; private set; }
         public bool IsRunning { get; private set; }
         public int WeaponSlotLocation { get; private set; }

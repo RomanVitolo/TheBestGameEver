@@ -134,7 +134,8 @@ namespace Core.Scripts.Runtime.Agents
         {
             _currentWeapon.WeaponDataConfiguration.FireMode = 
                 _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList[weaponIndex].FireModeType;
-            weaponIndex = (weaponIndex +1) % _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList.Count;
+            weaponIndex = (weaponIndex +1) % 
+                          _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList.Count;
         }
 
         private void EquipWeaponBySpecificButtonPressed() // Actually 1,2,3 (buttons)
@@ -163,7 +164,8 @@ namespace Core.Scripts.Runtime.Agents
             if (_currentWeapon != null)
             {
                 _currentWeapon.gameObject.SetActive(true);
-                CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
+                CameraSystemBehaviour.Instance.ChangeCameraDistance(
+                    _currentWeapon.WeaponDataConfiguration.CameraDistance);
                 _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
             }
             Debug.Log("Selected weapon not found in the list, keeping current weapon.");

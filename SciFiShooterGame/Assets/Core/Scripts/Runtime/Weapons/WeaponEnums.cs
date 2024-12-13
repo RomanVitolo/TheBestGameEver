@@ -43,6 +43,7 @@
             SubMachineBullet,
             ShotgunBullet,
             RifleBullet,
+            AllBullets,
         }
     }
 }
