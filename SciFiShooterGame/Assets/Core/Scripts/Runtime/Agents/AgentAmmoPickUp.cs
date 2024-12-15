@@ -11,14 +11,10 @@ namespace Core.Scripts.Runtime.Agents
         public NotifyAction NotifyItemAction { get; set; }
         [SerializeField] private string id;
         public string ItemId => id;
-        
         [SerializeField] private AgentWeaponMotor _weaponMotor;
-
-        private void Awake()
-        {
-            _weaponMotor ??= GetComponent<AgentWeaponMotor>();
-        }
-
+        
+        private void Awake() => _weaponMotor ??= GetComponent<AgentWeaponMotor>();
+        
         public void PickUpObject(WeaponEnums.WeaponAmmoType ammoType, int? ammoValue = null)
         {
             if (_weaponMotor.AgentWeaponsSlot.Count < 0) return;
