@@ -1,27 +1,53 @@
+﻿using Core.Scripts.Runtime.Agents;
 using Core.Scripts.Runtime.Movement;
 using Core.Scripts.Runtime.Movement.Interfaces;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agents
+namespace Multiplayer.Runtime.AgentOnline
 {
-    [RequireComponent(typeof(Agent))]
-    public class AgentMotor : AgentBaseMotor
+    public class AgentOnlineMotor : NetworkBehaviour
     {
+        private Agent _agent;
+        private Camera _mainCamera;
+        
+        private IMovementHandler _movementHandler;
+        private IAimHandler _aimHandler;
+        private IRotationHandler _rotationHandler;
+        private IAnimationHandler _animationHandler;
+
+        private LayerMask _aimLayerMask;
+        
         private void Awake()
         {
-            _agent = GetComponent<Agent>();
-            _agent.GetComponents();
+            
         }
 
-        protected virtual void OnEnable()
+        public override void OnNetworkSpawn()
         {
+            if (!IsOwner) return;
+            
+            _agent = GetComponent<Agent>();
+            _agent.GetComponents();
+            
             _mainCamera = _agent.AssignMainCamera();
+            
             _aimLayerMask = _agent.AgentMovement.AimLayerMask;
+            
             InitializeHandlers();
         }
 
+        public override void OnNetworkDespawn()
+        {
+            if (!IsOwner) return;
+            
+            
+        }
+        
         protected virtual void Update()
         {
+            if (!IsOwner) return;
+            
             Vector3 movementValue = _agent.AgentInputReader.MovementValue;
             
             _movementHandler.HandleMovement();
@@ -42,6 +68,5 @@ namespace Core.Scripts.Runtime.Agents
             _rotationHandler = new RotationHandler(_agent, _mainCamera, _aimLayerMask);
             _animationHandler = new AnimationHandler(_agent);
         }
-    } 
+    }
 }
-

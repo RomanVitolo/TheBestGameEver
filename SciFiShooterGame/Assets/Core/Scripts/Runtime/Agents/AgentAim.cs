@@ -97,6 +97,7 @@ namespace Core.Scripts.Runtime.Agents
             _aimLaser.SetPosition(1, endPoint);
             _aimLaser.SetPosition(2, endPoint + laserDirection * laserTipLenght);
         }
+
         private Vector3 DesiredCameraPosition(Vector3 aimPosition, Vector2 moveInput)
         {
             float actualMaxCameraDistance = moveInput.y < -.5f ? _minCameraDistance : _maxCameraDistance;     
