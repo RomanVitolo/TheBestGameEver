@@ -1,21 +1,17 @@
-using Core.Scripts.Runtime.Ammo;
-using Core.Scripts.Runtime.Weapons;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Scripts.Runtime;
+using Core.Scripts.Runtime.Agents;
+using Core.Scripts.Runtime.Ammo;
 using Core.Scripts.Runtime.CameraSystem;
+using Core.Scripts.Runtime.Weapons;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agents
+namespace Multiplayer.Runtime.AgentOnline
 {
-    public interface IAgentWeaponMotor
-    {
-        public Weapon IWeapon { get; }
-        public void FireSingleBullet();
-        public IEnumerator BurstFireMode();
-    }
-    
-    public class AgentWeaponMotor : MonoBehaviour, IAgentWeaponMotor
+    public class AgentOnlineWeaponMotor : NetworkBehaviour, IAgentWeaponMotor
     {
         private Agent _agent;
         private WeaponAnimations _weaponAnimations;
@@ -196,6 +192,8 @@ namespace Core.Scripts.Runtime.Agents
                 EmptyMagazine();
         }
 
+        public Weapon IWeapon => CurrentWeapon();
+
         public void FireSingleBullet()
         {
             _currentWeapon.WeaponDataConfiguration.AmmoInMagazine--;
@@ -246,6 +244,5 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
-        public Weapon IWeapon => CurrentWeapon();
     }
 }

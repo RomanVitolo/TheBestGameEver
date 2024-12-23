@@ -5,9 +5,9 @@ namespace Core.Scripts.Runtime.Weapons
 {
     public class MultiShootFireModeHandler : IFireModeHandler
     {
-        public void HandleFireMode(AgentWeaponMotor weaponMotor)
+        public void HandleFireMode(IAgentWeaponMotor weaponMotor)
         {
-            weaponMotor.StartCoroutine(weaponMotor.BurstFireMode());
+            weaponMotor.IWeapon.StartCoroutine(weaponMotor.BurstFireMode());
         }
     }
 }

@@ -13,12 +13,12 @@ namespace Core.Scripts.Runtime.Weapons
             { WeaponEnums.FireModeType.MultiShoot, new MultiShootFireModeHandler() }
         };
 
-        public void HandleFireMode(AgentWeaponMotor weaponMotor)
+        public void HandleFireMode(IAgentWeaponMotor weaponMotor)
         {
-            if (!weaponMotor.CurrentWeapon().WeaponDataConfiguration.HasThisWeaponFireMode())
+            if (!weaponMotor.IWeapon.WeaponDataConfiguration.HasThisWeaponFireMode())
                 return;
 
-            if (_fireModeHandlers.TryGetValue(weaponMotor.CurrentWeapon().WeaponDataConfiguration.FireMode,
+            if (_fireModeHandlers.TryGetValue(weaponMotor.IWeapon.WeaponDataConfiguration.FireMode,
                     out var handler))
             {
                 handler.HandleFireMode(weaponMotor);

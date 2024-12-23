@@ -1,4 +1,5 @@
-﻿using Core.Scripts.Runtime.Agents;
+﻿using System;
+using Core.Scripts.Runtime.Agents;
 using Core.Scripts.Runtime.Movement;
 using Core.Scripts.Runtime.Movement.Interfaces;
 using Unity.Netcode;
@@ -17,11 +18,6 @@ namespace Multiplayer.Runtime.AgentOnline
         private IAnimationHandler _animationHandler;
 
         private LayerMask _aimLayerMask;
-        
-        private void Awake()
-        {
-            
-        }
 
         public override void OnNetworkSpawn()
         {
@@ -30,10 +26,9 @@ namespace Multiplayer.Runtime.AgentOnline
             _agent = GetComponent<Agent>();
             _agent.GetComponents();
             
-            _mainCamera = _agent.AssignMainCamera();
-            
             _aimLayerMask = _agent.AgentMovement.AimLayerMask;
             
+            _mainCamera = _agent.AssignMainCamera();
             InitializeHandlers();
         }
 
@@ -44,7 +39,7 @@ namespace Multiplayer.Runtime.AgentOnline
             
         }
         
-        protected virtual void Update()
+        private void Update()
         {
             if (!IsOwner) return;
             

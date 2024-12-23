@@ -4,6 +4,6 @@ namespace Core.Scripts.Runtime.Weapons.Interfaces
 {
     public interface IFireModeHandler
      {
-         void HandleFireMode(AgentWeaponMotor weaponMotor);
+         void HandleFireMode(IAgentWeaponMotor weaponMotor);
      }
 }

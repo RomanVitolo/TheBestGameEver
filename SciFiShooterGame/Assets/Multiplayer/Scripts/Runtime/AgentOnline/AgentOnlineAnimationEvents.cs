@@ -1,18 +1,19 @@
+﻿using Core.Scripts.Runtime.Agents;
 using Core.Scripts.Runtime.Weapons;
 using UnityEngine;
 
-namespace Core.Scripts.Runtime.Agents
+namespace Multiplayer.Runtime.AgentOnline
 {
-    public class AgentAnimationEvents : MonoBehaviour
+    public class AgentOnlineAnimationEvents : MonoBehaviour
     {
-        private AgentWeaponMotor _agentWeaponMotor;
+        private AgentOnlineWeaponMotor _agentWeaponMotor;
         private WeaponAnimations _weaponAnimations;
 
         [SerializeField] private bool _isOnline;
 
         private void Start()
         {
-            _agentWeaponMotor = GetComponentInChildren<AgentWeaponMotor>(); 
+            _agentWeaponMotor = GetComponentInChildren<AgentOnlineWeaponMotor>(); 
             _weaponAnimations = GetComponentInChildren<WeaponAnimations>(); 
         } 
        
@@ -34,7 +35,5 @@ namespace Core.Scripts.Runtime.Agents
         {
             _agentWeaponMotor.SetWeaponReady(true);
         }
-
     }
 }
-
