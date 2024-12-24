@@ -12,7 +12,6 @@ namespace Core.Scripts.Runtime.Agents
         [field: SerializeField, Header("Agent Animations"), Space] public AgentAnimatorSO AgentAnimator { get; private set; }
         public IAgentAim AgentAim { get; private set; }
         public CharacterController CharacterController { get; private set; }    
-        private Camera MainCamera;                  
       
         public void GetComponents()
         {
@@ -22,12 +21,7 @@ namespace Core.Scripts.Runtime.Agents
             AgentAim = GetComponent<IAgentAim>();
         }
         
-        private void OnDestroy() => AgentInputReader.DestroyControls();         
-
-        public Camera AssignMainCamera()
-        {
-            MainCamera = Camera.main;
-            return MainCamera;
-        }                
+        private void OnDestroy() => AgentInputReader.DestroyControls();        
+                      
     }
 }

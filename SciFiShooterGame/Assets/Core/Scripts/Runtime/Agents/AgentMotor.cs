@@ -25,7 +25,7 @@ namespace Core.Scripts.Runtime.Agents
 
         private void OnEnable()
         {
-            _mainCamera = _agent.AssignMainCamera();
+            _mainCamera = Camera.main;
             _aimLayerMask = _agent.AgentMovement.AimLayerMask;
             InitializeHandlers();
         }
