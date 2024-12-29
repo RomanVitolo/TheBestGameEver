@@ -1,4 +1,5 @@
 ﻿using Core.Scripts.Runtime.AI.StateMachine;
+using UnityEngine.AI;
 
 namespace Core.Scripts.Runtime.AI.Entities
 {
@@ -6,6 +7,8 @@ namespace Core.Scripts.Runtime.AI.Entities
     {
         public IdleState_Melee IdleState { get; private set; }
         public MoveState_Melee MoveState { get; set; }
+
+        public NavMeshAgent MeleeAgent => AIAgent;
 
         protected override void Awake()
         {

@@ -1,5 +1,6 @@
 ﻿using Core.Scripts.Runtime.AI.Entities;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Core.Scripts.Runtime.AI.StateMachine
 {
@@ -18,21 +19,39 @@ namespace Core.Scripts.Runtime.AI.StateMachine
             base.Enter();
 
             destination = entity.GetPatrolDestination();
+            entity.MeleeAgent.SetDestination(destination);
         }
 
         public override void Update()
         {
             base.Update();
 
-            entity.AIAgent.SetDestination(destination);
+            entity.transform.rotation = entity.FaceTarget(GetNextPathPoint());
             
-            if(entity.AIAgent.remainingDistance <= 1)
+            if(entity.MeleeAgent.remainingDistance <= entity.MeleeAgent.stoppingDistance + .05f)
                 entityStateMachine.ChangeState(entity.IdleState);
         }
 
         public override void Exit()
         {
             base.Exit();
+        }
+
+        public Vector3 GetNextPathPoint()
+        {
+            NavMeshAgent agent = entity.MeleeAgent;
+            NavMeshPath path = agent.path;
+
+            if (path.corners.Length < 2)
+                return agent.destination;
+
+            for (int i = 0; i < path.corners.Length; i++)
+            {
+                if(Vector3.Distance(agent.transform.position, path.corners[i]) < 1)
+                    return path.corners[i + 1];
+            }
+
+            return agent.destination;
         }
     }
 }

@@ -25,7 +25,6 @@ namespace Core.Scripts.Runtime.Agents
         private int _currentIndex;
         private bool _weaponReady;
         private int weaponIndex = 1;
-        
         public Weapon CurrentWeapon() => _currentWeapon;
         
         private void Awake()

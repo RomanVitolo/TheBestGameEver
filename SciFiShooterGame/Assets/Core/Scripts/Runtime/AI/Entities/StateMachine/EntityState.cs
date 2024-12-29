@@ -20,6 +20,7 @@ namespace Core.Scripts.Runtime.AI.StateMachine
 
         public virtual void Enter()
         {
+            entity.Animator.SetBool(animBoolName, true);
             Debug.Log("I Enter " + animBoolName + " state!");
         }
 
@@ -31,7 +32,8 @@ namespace Core.Scripts.Runtime.AI.StateMachine
 
         public virtual void Exit()
         {
-            
+            entity.Animator.SetBool(animBoolName, false);
+            Debug.Log("I Exit " + animBoolName + " state!");
         }
     }
 }

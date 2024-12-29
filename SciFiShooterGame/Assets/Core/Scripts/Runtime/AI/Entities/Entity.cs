@@ -1,26 +1,28 @@
 using Core.Scripts.Runtime.AI.StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.AI.Entities
 {
-    public class Entity : MonoBehaviour
+    public abstract class Entity : MonoBehaviour
     {
-        public float IdleTime;
-        public float MoveSpeed;
-    
-        public NavMeshAgent AIAgent { get; private set; }
+        [field: SerializeField] public float IdleTime { get; set; }
+        [field: SerializeField] public float MoveSpeed { get; set; }
+        [field: SerializeField] public float TurnSpeed { get; set; }
+        [field: SerializeField] public Animator Animator { get; private set; } 
+        [field: SerializeField] protected NavMeshAgent AIAgent { get; private set; }
         
-        [SerializeField] private Transform[] _patrolPoints;
+        [SerializeField] protected Transform[] _patrolPoints;
+        protected EntityStateMachine StateMachine { get; private set; }
+        
         private int currentPatrolIndex;
         
-    
-        public EntityStateMachine StateMachine { get; private set; }
-
         protected virtual void Awake()
         {
             StateMachine = new EntityStateMachine();
-            AIAgent = GetComponent<NavMeshAgent>();
+            if (AIAgent == null)
+                AIAgent = GetComponent<NavMeshAgent>();
         }
     
         protected virtual void Start()
@@ -42,6 +44,17 @@ namespace Core.Scripts.Runtime.AI.Entities
                 currentPatrolIndex = 0;
             
             return destination;
+        }
+
+        public Quaternion FaceTarget(Vector3 target)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(target - transform.position);
+            
+            Vector3 currentEulerAngles = transform.eulerAngles;
+            
+            float yRotation = Mathf.LerpAngle(currentEulerAngles.y, targetRotation.eulerAngles.y, TurnSpeed * Time.deltaTime);
+            
+            return Quaternion.Euler(currentEulerAngles.x, yRotation, currentEulerAngles.z);
         }
     }
 }
