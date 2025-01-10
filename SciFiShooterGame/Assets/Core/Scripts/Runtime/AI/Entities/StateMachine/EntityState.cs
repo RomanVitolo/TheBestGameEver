@@ -1,7 +1,7 @@
-using Core.Scripts.Runtime.AI.Entities;
 using UnityEngine;
+using UnityEngine.AI;
 
-namespace Core.Scripts.Runtime.AI.StateMachine
+namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class EntityState
     {
@@ -10,6 +10,7 @@ namespace Core.Scripts.Runtime.AI.StateMachine
         
         protected string animBoolName;
         protected float stateTimer;
+        protected bool triggerCalled;
 
         public EntityState(Entity entity, EntityStateMachine entityStateMachine, string animBoolName)
         {
@@ -22,6 +23,7 @@ namespace Core.Scripts.Runtime.AI.StateMachine
         {
             entity.Animator.SetBool(animBoolName, true);
             Debug.Log("I Enter " + animBoolName + " state!");
+            triggerCalled = false;
         }
 
         public virtual void Update()
@@ -34,6 +36,25 @@ namespace Core.Scripts.Runtime.AI.StateMachine
         {
             entity.Animator.SetBool(animBoolName, false);
             Debug.Log("I Exit " + animBoolName + " state!");
+        }
+
+        public void AnimationTrigger() => triggerCalled = true;
+        
+        protected Vector3 GetNextPathPoint()
+        {
+            NavMeshAgent agent = entity.AIAgent;
+            NavMeshPath path = agent.path;
+
+            if (path.corners.Length < 2)
+                return agent.destination;
+
+            for (int i = 0; i < path.corners.Length; i++)
+            {
+                if(Vector3.Distance(agent.transform.position, path.corners[i]) < 1)
+                    return path.corners[i + 1];
+            }
+
+            return agent.destination;
         }
     }
 }

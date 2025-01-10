@@ -32,11 +32,13 @@ namespace GlobalInputs
             _controls.Weapon.SetCallbacks(this);
             _controls.Character.Enable();
             _controls.Weapon.Enable();
-        }    
-    
-        public void DestroyControls() => _controls.Character.Disable();
-    
-    
+        }
+
+        public void DestroyControls()
+        {
+            _controls.Character.Disable();
+            _controls.Weapon.Disable();
+        } 
     
         public void OnFire(InputAction.CallbackContext context)
         {

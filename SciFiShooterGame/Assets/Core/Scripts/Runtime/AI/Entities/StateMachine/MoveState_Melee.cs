@@ -1,35 +1,41 @@
-﻿using Core.Scripts.Runtime.AI.Entities;
-using UnityEngine;
-using UnityEngine.AI;
+﻿using UnityEngine;
 
-namespace Core.Scripts.Runtime.AI.StateMachine
+namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class MoveState_Melee : EntityState
     {
-        private Entity_Melee entity;
+        private readonly Entity_Melee _entity;
         private Vector3 destination;
         
         public MoveState_Melee(Entity entity, EntityStateMachine entityStateMachine, string animBoolName) : 
             base(entity, entityStateMachine, animBoolName)
         {
-            this.entity = entity as Entity_Melee;
+            this._entity = entity as Entity_Melee;
         }
         public override void Enter()
         {
             base.Enter();
 
-            destination = entity.GetPatrolDestination();
-            entity.MeleeAgent.SetDestination(destination);
+            _entity.MeleeAgent.speed = _entity.AttackData.MoveSpeed;
+
+            destination = _entity.GetPatrolDestination();
+            _entity.MeleeAgent.SetDestination(destination);
         }
 
         public override void Update()
         {
             base.Update();
 
-            entity.transform.rotation = entity.FaceTarget(GetNextPathPoint());
+            if (_entity.TargetInAggressionRange())
+            {
+                entityStateMachine.ChangeState(_entity.RecoveryState);
+                return;
+            }
+
+            _entity.transform.rotation = _entity.FaceTarget(GetNextPathPoint());
             
-            if(entity.MeleeAgent.remainingDistance <= entity.MeleeAgent.stoppingDistance + .05f)
-                entityStateMachine.ChangeState(entity.IdleState);
+            if(_entity.MeleeAgent.remainingDistance <= _entity.MeleeAgent.stoppingDistance + .05f)
+                entityStateMachine.ChangeState(_entity.IdleState);
         }
 
         public override void Exit()
@@ -37,21 +43,6 @@ namespace Core.Scripts.Runtime.AI.StateMachine
             base.Exit();
         }
 
-        public Vector3 GetNextPathPoint()
-        {
-            NavMeshAgent agent = entity.MeleeAgent;
-            NavMeshPath path = agent.path;
-
-            if (path.corners.Length < 2)
-                return agent.destination;
-
-            for (int i = 0; i < path.corners.Length; i++)
-            {
-                if(Vector3.Distance(agent.transform.position, path.corners[i]) < 1)
-                    return path.corners[i + 1];
-            }
-
-            return agent.destination;
-        }
+        
     }
 }

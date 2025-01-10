@@ -1,7 +1,4 @@
-﻿using Core.Scripts.Runtime.AI.Entities;
-using UnityEngine;
-
-namespace Core.Scripts.Runtime.AI.StateMachine
+﻿namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class IdleState_Melee : EntityState
     {

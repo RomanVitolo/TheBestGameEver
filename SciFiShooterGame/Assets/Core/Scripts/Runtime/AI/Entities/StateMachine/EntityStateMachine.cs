@@ -1,4 +1,4 @@
-﻿namespace Core.Scripts.Runtime.AI.StateMachine
+﻿namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class EntityStateMachine
     {
