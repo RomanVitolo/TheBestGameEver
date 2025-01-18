@@ -1,10 +1,16 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Core.Scripts.Runtime.AI.Entities
 {
+    public enum AttackType_Melee
+    {
+        CloseAttack,
+        ChargeAttack
+    }
+    
     public class Entity_Melee : Entity
     {
         public IdleState_Melee IdleState { get; private set; }
@@ -12,6 +18,8 @@ namespace Core.Scripts.Runtime.AI.Entities
         public RecoveryState_Melee RecoveryState { get; private set; }
         public ChaseState_Melee ChaseState { get; private set; }
         public AttackState_Melee AttackState { get; private set; }
+
+        public List<AttackData> AttackList;
 
         [SerializeField] private Transform _hiddenWeapon;
         [SerializeField] private Transform _pulledWeapon;

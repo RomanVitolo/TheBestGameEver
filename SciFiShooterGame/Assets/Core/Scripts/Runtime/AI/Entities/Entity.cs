@@ -15,8 +15,6 @@ namespace Core.Scripts.Runtime.AI.Entities
         [field: SerializeField] public float TurnSpeed { get; set; }
         [field: SerializeField] public float ChaseSpeed { get; set; }
         [field: SerializeField] public float AggressionRange { get; set; }
-        //[field: SerializeField] public float AttackRange { get; set; }
-       // [field: SerializeField] public float AttackMoveSpeed { get; set; }
         [field: SerializeField] public Transform Target { get; private set; }
         [field: SerializeField] public Animator Animator { get; private set; } 
         [field: SerializeField] public NavMeshAgent AIAgent { get; private set; }
@@ -83,10 +81,11 @@ namespace Core.Scripts.Runtime.AI.Entities
             Gizmos.DrawWireSphere(transform.position, AggressionRange);
         }
     }
-    
     [System.Serializable]
     public struct AttackData
     {
+        public AttackType_Melee AttackType;
+        public string AttackName;
         public float AttackRange;
         public float AttackMoveSpeed;
         public float MoveSpeed;

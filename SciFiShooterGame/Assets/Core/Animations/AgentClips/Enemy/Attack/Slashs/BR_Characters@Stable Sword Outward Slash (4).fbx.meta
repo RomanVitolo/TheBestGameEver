@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 295b8cb5ac5d00c409a0d3f6b2b096f2
+guid: 6fd489533ca4c6441b829fdbfd133b87
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: Stable Sword Outward Slash
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 6
-      lastFrame: 66
+      firstFrame: 0
+      lastFrame: 62
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

@@ -6,7 +6,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
     {
         private readonly Entity_Melee _entity;
         private float lastTimeUpdatedDestination;
-
+        
         public ChaseState_Melee(Entity entity, EntityStateMachine entityStateMachine, string animBoolName) : base(entity, entityStateMachine, animBoolName)
         {
             _entity = entity as Entity_Melee;

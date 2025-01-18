@@ -22,9 +22,7 @@ namespace GlobalInputs
         public event Action NotifyWhenWeaponDropped;
         public event Action NotifyWhenWeaponFireModeChanged;
         
-    
         private Controls _controls;
-    
         public void InitializeControls()
         {
             _controls = new Controls();
@@ -46,15 +44,9 @@ namespace GlobalInputs
             else if (context.canceled) CanShoot = false;
         }
 
-        public void OnMovement(InputAction.CallbackContext context)
-        {
-            MovementValue = context.ReadValue<Vector2>();
-        }
+        public void OnMovement(InputAction.CallbackContext context) => MovementValue = context.ReadValue<Vector2>();
 
-        public void OnAim(InputAction.CallbackContext context)
-        {
-            AimInputValue = context.ReadValue<Vector2>();
-        }
+        public void OnAim(InputAction.CallbackContext context) => AimInputValue = context.ReadValue<Vector2>();
 
         public void OnRun(InputAction.CallbackContext context)
         {

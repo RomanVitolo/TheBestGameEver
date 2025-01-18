@@ -1,16 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class AttackState_Melee : EntityState
     {
-        private readonly int RecoveryIndex = Animator.StringToHash("RecoveryIndex");
-        private readonly int AttackAnimationSpeed = Animator.StringToHash("AttackAnimationSpeed");
-        private readonly int AttackIndex = Animator.StringToHash("AttackIndex");
+        private static readonly int SlashAttackIndex = Animator.StringToHash("SlashAttackIndex");
+        private static readonly int RecoveryIndex = Animator.StringToHash("RecoveryIndex");
+        private static readonly int AttackAnimationSpeed = Animator.StringToHash("AttackAnimationSpeed");
+        private static readonly int AttackIndex = Animator.StringToHash("AttackIndex");
+        
         private readonly Entity_Melee _entity;
         private Vector3 attackDirection;
 
-        private const float MAX_ATTACK_DISTANCE = 50f;
+        private const float MAX_ATTACK_DISTANCE = 10f;
         
         public AttackState_Melee(Entity entity, EntityStateMachine entityStateMachine, string animBoolName) 
             : base(entity, entityStateMachine, animBoolName)
@@ -23,8 +26,10 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             base.Enter();
 
             //_entity.PullWeapon();
+            
             _entity.Animator.SetFloat(AttackAnimationSpeed, _entity.AttackData.AnimationSpeed);
             _entity.Animator.SetFloat(AttackIndex, _entity.AttackData.AttackIndex);
+            _entity.Animator.SetFloat(SlashAttackIndex, Random.Range(0f, 5));
 
             _entity.MeleeAgent.isStopped = true;
             _entity.MeleeAgent.velocity = Vector3.zero;
@@ -56,11 +61,27 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         public override void Exit()
         {
             base.Exit();
+
+            SetupNextAttack();
+        }
+
+        private void SetupNextAttack()
+        {
+            int recoveryIndex = TargetIsClose() ? 1 : 0;
+            _entity.Animator.SetFloat(RecoveryIndex, recoveryIndex);
+
+            _entity.AttackData = UpdateAttackData();
+        }
+        private bool TargetIsClose() => Vector3.Distance(_entity.transform.position, _entity.Target.position) <= 1f;
+        private AttackData UpdateAttackData()
+        {
+            List<AttackData> validAttacks = new List<AttackData>(_entity.AttackList);
+           
+            if(TargetIsClose())
+                validAttacks.RemoveAll(parameter => parameter.AttackType == AttackType_Melee.ChargeAttack);
             
-            _entity.Animator.SetFloat(RecoveryIndex, 0);
-            
-            if(_entity.TargetInAttackRange())
-                _entity.Animator.SetFloat(RecoveryIndex, 1);
+            int random = Random.Range(0, validAttacks.Count);
+            return validAttacks[random];
         }
     }
 }
