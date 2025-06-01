@@ -9,12 +9,10 @@ namespace Core.Scripts.Runtime.Agents
         
         [Header("Ammo Settings")]
         [field: SerializeField] public float BulletSpeed { get; private set; }
-        public BulletPool BulletPool { get; private set; }
 
         private void Awake()
         {
             _agent = GetComponentInParent<Agent>();
-            BulletPool ??= FindAnyObjectByType<BulletPool>();
         }
 
         public Vector3 BulletDirection(Vector3 weaponPosition)

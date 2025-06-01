@@ -24,7 +24,6 @@ namespace Core.Scripts.Runtime.Weapons
         [field: SerializeField, BoxGroup("Weapon Fire Mode Data"), InlineEditor]
         public WeaponFireModeHolderSO WeaponFireMode { get; private set; }
         
-        
         [field: SerializeField, BoxGroup("Ammo Settings"), PreviewField(100), HideLabel] 
         public GameObject BulletPrefab { get; private set; }
         [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(0.3f,0.5f,1f)] 
@@ -33,7 +32,6 @@ namespace Core.Scripts.Runtime.Weapons
         public float BulletMass { get; private set; }     
         [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(1f,1f,0f)] 
         public float BulletVelocity { get; set; } 
-        
         
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int AmmoInMagazine { get; set; }
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int MagazineCapacity { get; set; }

@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+﻿using Core.Scripts.Runtime.Utilities;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Ammo
 {
     public class Bullet : MonoBehaviour
     {
         [SerializeField] private GameObject bulletImpactEffect;
-        private BulletPoolImpact _bulletPoolImpact;
         
         private Rigidbody _rigidbody => GetComponent<Rigidbody>();
         private TrailRenderer _trailRenderer => GetComponent<TrailRenderer>();
@@ -17,7 +17,7 @@ namespace Core.Scripts.Runtime.Ammo
         private void OnCollisionEnter(Collision other)
         {
             InstantiateImpactEffect(other);
-            FindAnyObjectByType<BulletPool>().ReturnObject(this);
+            GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
         }
         
         private Vector3 _startPosition;
@@ -41,7 +41,7 @@ namespace Core.Scripts.Runtime.Ammo
             CheckIfShouldBeDisabled();
             
             if(_trailRenderer.time < 0)
-                FindAnyObjectByType<BulletPool>().ReturnObject(this);
+                GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
         }
 
         private void CheckIfShouldBeDisabled()
@@ -65,10 +65,8 @@ namespace Core.Scripts.Runtime.Ammo
             if (other.contacts.Length <= 0) return;
             
             ContactPoint contact = other.contacts[0];
-            
-            _bulletPoolImpact = FindAnyObjectByType<BulletPoolImpact>();
 
-            var impact =_bulletPoolImpact.GetObject();
+            var impact = GlobalPoolContainer.Instance.BulletPoolImpact.GetObject();
             impact.transform.SetPositionAndRotation(contact.point, Quaternion.LookRotation(contact.normal));
         }
     }

@@ -29,7 +29,7 @@ namespace Core.Scripts.Runtime.Agents
           
             foreach (var weapon in weaponsToUpdate)
             {
-                weapon.WeaponDataConfiguration.TotalReserveAmmo += ammoValue.Value;
+                if (ammoValue != null) weapon.WeaponDataConfiguration.TotalReserveAmmo += ammoValue.Value;
                 NotifyItemAction?.Invoke();
             }
         }

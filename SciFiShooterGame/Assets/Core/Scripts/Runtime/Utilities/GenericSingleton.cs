@@ -5,19 +5,12 @@ namespace Core.Scripts.Runtime.Utilities
     public class GenericSingleton<T> : MonoBehaviour where T: MonoBehaviour
     {
         private static T _instance;
-        private static readonly object _lock = new object();
-        private static bool _applicationIsQuitting = false;
+        private static readonly object _lock = new();
 
         public static T Instance
         {
             get
             {
-                if (_applicationIsQuitting)
-                {
-                    Debug.LogWarning("[Singleton] Instance of " + typeof(T) + " already destroyed. Returning null.");
-                    return null;
-                }
-
                 lock (_lock)
                 {
                     if (_instance == null)
@@ -32,7 +25,7 @@ namespace Core.Scripts.Runtime.Utilities
 
         private static T CreateOrAssignInstance()
         {
-            T existingInstance = GameObject.FindFirstObjectByType<T>();
+            T existingInstance = FindFirstObjectByType<T>();
 
             if (existingInstance != null)
             {
@@ -45,15 +38,6 @@ namespace Core.Scripts.Runtime.Utilities
 
             return newInstance;
         }
-
-        protected virtual void OnDestroy()
-        {
-            _applicationIsQuitting = true;
-        }
-
-        protected virtual void OnApplicationQuit()
-        {
-            _applicationIsQuitting = true;
-        }
+       
     }
 }

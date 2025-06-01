@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Scripts.Runtime.CameraSystem;
+using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
@@ -191,8 +192,8 @@ namespace Core.Scripts.Runtime.Agents
         public void FireSingleBullet()
         {
             _currentWeapon.WeaponDataConfiguration.AmmoInMagazine--;
-            
-            Bullet newBullet = _weaponBulletMovement.BulletPool.GetObject();
+
+            Bullet newBullet = GlobalPoolContainer.Instance.BulletPool.GetObject();
 
             newBullet.gameObject.transform.SetPositionAndRotation(
                 _currentWeapon.WeaponDataConfiguration.GunPoint.position,

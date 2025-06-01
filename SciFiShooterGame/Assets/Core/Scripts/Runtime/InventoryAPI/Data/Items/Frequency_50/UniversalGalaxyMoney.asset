@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2f1675a7bc8499ea2c377b6be11cff6, type: 3}
+  m_Name: UniversalGalaxyMoney
+  m_EditorClassIdentifier: 
+  <ItemName>k__BackingField: UniversalGalaxyMoney
+  <ItemDescription>k__BackingField: 
+  <ItemID>k__BackingField: 110de5e3-9262-4583-a7d7-398d8d69945f
+  <ItemType>k__BackingField: 0
+  <SlotType>k__BackingField: 0
+  <SlotSize>k__BackingField: {x: 0, y: 0}
+  <ItemImage>k__BackingField: {fileID: 0}
+  <ItemColor>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
+  <ItemPrefab>k__BackingField: {fileID: 0}
+  <Frequency>k__BackingField: 0
+  <MoneyTypeEnum>k__BackingField: 0
+  <MoneySymbol>k__BackingField: 
+  <MoneyAmount>k__BackingField: 0

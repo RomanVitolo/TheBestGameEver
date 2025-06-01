@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee697aa6f45c4098aa321f7f4d559287, type: 3}
+  m_Name: Blue_Card
+  m_EditorClassIdentifier: 
+  <ItemName>k__BackingField: Access Pass - Blue Room
+  <ItemDescription>k__BackingField: Access card for a special room.
+  <ItemID>k__BackingField: ffea5d05-c6ce-45f5-a089-88e0c434b760
+  <ItemType>k__BackingField: 7
+  <SlotType>k__BackingField: 0
+  <SlotSize>k__BackingField: {x: 1, y: 1}
+  <ItemImage>k__BackingField: {fileID: 21300000, guid: 448b3f6a0f6b65a47a00bfedc7d35ad5, type: 3}
+  <ItemColor>k__BackingField: {r: 0, g: 0, b: 0, a: 0}
+  <ItemPrefab>k__BackingField: {fileID: 925699289886218736, guid: 6282c0d1ef2990f4b961776eee028728, type: 3}
+  <Frequency>k__BackingField: 1
+  <IsEventItem>k__BackingField: 0

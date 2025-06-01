@@ -24,7 +24,7 @@ MonoBehaviour:
   <WeaponName>k__BackingField: Rifle
   <CameraDistance>k__BackingField: 6
   <WeaponType>k__BackingField: 3
-  <FireMode>k__BackingField: 0
+  <FireMode>k__BackingField: 1
   <WeaponInputSlot>k__BackingField: 0
   <WeaponDistance>k__BackingField: 4
   <WeaponDurability>k__BackingField: 100
@@ -37,9 +37,9 @@ MonoBehaviour:
   <BulletPrefab>k__BackingField: {fileID: 4464807424448350656, guid: 30c006fd80da1054cbde419f13b1b8ed,
     type: 3}
   <AmmoType>k__BackingField: 3
-  <BulletMass>k__BackingField: 0
+  <BulletMass>k__BackingField: 1
   <BulletVelocity>k__BackingField: 20
-  <AmmoInMagazine>k__BackingField: 250
+  <AmmoInMagazine>k__BackingField: 228
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350
   <InitialWeaponAmmo>k__BackingField: 350

@@ -12,6 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310e5c88c2d14920aa8fb6601b2264bd, type: 3}
   m_Name: SubMachineWeapon
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  <WeaponName>k__BackingField: 
+  <CameraDistance>k__BackingField: 0
   <WeaponType>k__BackingField: 2
   <FireMode>k__BackingField: 0
   <WeaponInputSlot>k__BackingField: 1
@@ -22,6 +33,8 @@ MonoBehaviour:
   <AnimationLayer>k__BackingField: 3
   <EquipType>k__BackingField: 0
   <WeaponFireMode>k__BackingField: {fileID: 0}
+  <BulletPrefab>k__BackingField: {fileID: 0}
+  <AmmoType>k__BackingField: 0
   <BulletMass>k__BackingField: 0
   <BulletVelocity>k__BackingField: 0
   <AmmoInMagazine>k__BackingField: 0
