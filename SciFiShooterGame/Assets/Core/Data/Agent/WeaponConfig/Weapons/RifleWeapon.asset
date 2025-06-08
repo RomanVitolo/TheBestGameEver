@@ -39,6 +39,7 @@ MonoBehaviour:
   <AmmoType>k__BackingField: 3
   <BulletMass>k__BackingField: 1
   <BulletVelocity>k__BackingField: 20
+  <BulletImpactForce>k__BackingField: 100
   <AmmoInMagazine>k__BackingField: 228
   <MagazineCapacity>k__BackingField: 250
   <TotalReserveAmmo>k__BackingField: 350

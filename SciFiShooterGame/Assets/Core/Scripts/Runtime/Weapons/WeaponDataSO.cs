@@ -32,6 +32,8 @@ namespace Core.Scripts.Runtime.Weapons
         public float BulletMass { get; private set; }     
         [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(1f,1f,0f)] 
         public float BulletVelocity { get; set; } 
+        [field: SerializeField, VerticalGroup("Ammo Settings/Stats"), LabelWidth(100), GUIColor(1f,1f,0f)] 
+        public float BulletImpactForce { get; set; }
         
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int AmmoInMagazine { get; set; }
         [field: SerializeField, BoxGroup("Weapon Magazine")] public int MagazineCapacity { get; set; }

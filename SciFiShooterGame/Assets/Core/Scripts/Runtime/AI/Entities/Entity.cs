@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Core.Scripts.Runtime.Agents;
 using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Core.Scripts.Runtime.AI.Entities
         
         [SerializeField] protected Transform[] _patrolPoints;
         protected EntityStateMachine StateMachine { get; private set; }
+        [SerializeField] protected int _healthPoints = 20;
         
         private int currentPatrolIndex;
         private bool manualMovement;
@@ -75,6 +77,22 @@ namespace Core.Scripts.Runtime.AI.Entities
         public bool ManualRotationActive() => manualRotation;
         
         public void ActivateManualRotation(bool canManualRotation) => this.manualRotation = canManualRotation;
+
+        public virtual void GetHit()
+        {
+            _healthPoints--;
+        }
+
+        public virtual void HitImpact(Vector3 force, Vector3 hitPoint, Rigidbody rb)
+        {
+            StartCoroutine(HitImpactCoroutine(force, hitPoint, rb));
+        }
+
+        private IEnumerator HitImpactCoroutine(Vector3 force, Vector3 hitPoint, Rigidbody rb)
+        {
+            yield return new WaitForSeconds(0.2f);
+            rb.AddForceAtPosition(force, hitPoint, ForceMode.Impulse);
+        }
 
         protected virtual void OnDrawGizmos()
         {

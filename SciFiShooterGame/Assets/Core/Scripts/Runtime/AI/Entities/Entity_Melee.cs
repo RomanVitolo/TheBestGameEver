@@ -18,6 +18,7 @@ namespace Core.Scripts.Runtime.AI.Entities
         public RecoveryState_Melee RecoveryState { get; private set; }
         public ChaseState_Melee ChaseState { get; private set; }
         public AttackState_Melee AttackState { get; private set; }
+        public DeadState_Melee DeadStateMelee { get; private set; }
 
         public List<AttackData> AttackList;
 
@@ -35,6 +36,7 @@ namespace Core.Scripts.Runtime.AI.Entities
             RecoveryState = new RecoveryState_Melee(this, StateMachine, "Recovery");
             ChaseState = new ChaseState_Melee(this, StateMachine, "Chase");
             AttackState = new AttackState_Melee(this, StateMachine, "Attack");
+            DeadStateMelee = new DeadState_Melee(this, StateMachine, "Idle");
         }
 
         protected override void Start()
@@ -55,6 +57,14 @@ namespace Core.Scripts.Runtime.AI.Entities
         {
             _hiddenWeapon.gameObject.SetActive(false);
             _pulledWeapon.gameObject.SetActive(true);
+        }
+
+        public override void GetHit()
+        {
+            base.GetHit();
+            
+            if(_healthPoints <= 0)
+                StateMachine.ChangeState(DeadStateMelee);
         }
 
         protected override void OnDrawGizmos()

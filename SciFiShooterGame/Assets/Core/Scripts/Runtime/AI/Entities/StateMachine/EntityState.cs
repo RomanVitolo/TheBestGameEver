@@ -22,20 +22,17 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         public virtual void Enter()
         {
             entity.Animator.SetBool(animBoolName, true);
-            Debug.Log("I Enter " + animBoolName + " state!");
             triggerCalled = false;
         }
 
         public virtual void Update()
         {
-            Debug.Log("I Update " + animBoolName + " state!");
             stateTimer -= Time.deltaTime;
         }
 
         public virtual void Exit()
         {
             entity.Animator.SetBool(animBoolName, false);
-            Debug.Log("I Exit " + animBoolName + " state!");
         }
 
         public void AnimationTrigger() => triggerCalled = true;

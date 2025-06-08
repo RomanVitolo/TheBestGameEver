@@ -1,10 +1,13 @@
-﻿using Core.Scripts.Runtime.Utilities;
+﻿using Core.Scripts.Runtime.AI.Entities;
+using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Ammo
 {
     public class Bullet : MonoBehaviour
     {
+        public float ImpactForce;
+        
         [SerializeField] private GameObject bulletImpactEffect;
         
         private Rigidbody _rigidbody => GetComponent<Rigidbody>();
@@ -16,6 +19,16 @@ namespace Core.Scripts.Runtime.Ammo
 
         private void OnCollisionEnter(Collision other)
         {
+            Entity entity = other.gameObject.GetComponentInParent<Entity>();
+            if (entity != null)
+            {
+                Vector3 force = _rigidbody.linearVelocity.normalized * ImpactForce;
+                Rigidbody entityRigidbody = other.collider.attachedRigidbody;
+                Vector3 entityContact = other.contacts[0].point;
+                entity.GetHit();
+                entity.HitImpact(force, entityContact, entityRigidbody);
+            }
+            
             InstantiateImpactEffect(other);
             GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
         }
@@ -23,8 +36,10 @@ namespace Core.Scripts.Runtime.Ammo
         private Vector3 _startPosition;
         private float _flyDistance;
 
-        public void BulletSetup(float flyDistance)
+        public void BulletSetup(float flyDistance, float impactForce)
         {
+            ImpactForce = impactForce;
+            
             _bulletDisabled = false;
             _collider.enabled = true;
             _trailRenderer.enabled = true;

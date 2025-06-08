@@ -23,6 +23,7 @@ namespace Core.Scripts.Runtime.Items
 
         private void OnDestroyObject(INotifyEvent destroyable, IItemPickUP<WeaponEnums.WeaponType> itemPickUp)
         {
+            if(destroyable == null) return;
             destroyable.NotifyItemAction += DestroyComponent;
             itemPickUp.PickUpObject(_weaponId);                   
             destroyable.NotifyItemAction -= DestroyComponent;

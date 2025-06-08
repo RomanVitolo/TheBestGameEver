@@ -202,7 +202,7 @@ namespace Core.Scripts.Runtime.Agents
             Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
 
             var bullet = newBullet.GetComponent<Bullet>();
-            bullet.BulletSetup(_currentWeapon.WeaponDataConfiguration.WeaponDistance);
+            bullet.BulletSetup(_currentWeapon.WeaponDataConfiguration.WeaponDistance, _currentWeapon.WeaponDataConfiguration.BulletImpactForce);
                 
             Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(
                 _weaponBulletMovement.BulletDirection(_currentWeapon.WeaponDataConfiguration.GunPoint.position));
