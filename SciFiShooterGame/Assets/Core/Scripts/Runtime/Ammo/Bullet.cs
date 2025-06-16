@@ -19,18 +19,24 @@ namespace Core.Scripts.Runtime.Ammo
 
         private void OnCollisionEnter(Collision other)
         {
-            Entity entity = other.gameObject.GetComponentInParent<Entity>();
-            if (entity != null)
-            {
-                Vector3 force = _rigidbody.linearVelocity.normalized * ImpactForce;
-                Rigidbody entityRigidbody = other.collider.attachedRigidbody;
-                Vector3 entityContact = other.contacts[0].point;
-                entity.GetHit();
-                entity.HitImpact(force, entityContact, entityRigidbody);
-            }
-            
             InstantiateImpactEffect(other);
             GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
+            
+            Entity entity = other.gameObject.GetComponentInParent<Entity>();
+            Entity_Shield shield = other.gameObject.GetComponent<Entity_Shield>();
+
+            if (shield != null)
+            {
+                shield.ReduceDurability();
+                return;
+            }
+
+            if (!entity) return;
+            Vector3 force = _rigidbody.linearVelocity.normalized * ImpactForce;
+            Rigidbody entityRigidbody = other.collider.attachedRigidbody;
+            Vector3 entityContact = other.contacts[0].point;
+            entity.GetHit();
+            entity.HitImpact(force, entityContact, entityRigidbody);
         }
         
         private Vector3 _startPosition;

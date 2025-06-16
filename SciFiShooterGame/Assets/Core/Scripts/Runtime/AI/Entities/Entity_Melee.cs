@@ -10,9 +10,15 @@ namespace Core.Scripts.Runtime.AI.Entities
         CloseAttack,
         ChargeAttack
     }
-    
+
+    public enum EntityMelee_Type
+    {
+        Regular,
+        Shield
+    }
     public class Entity_Melee : Entity
     {
+        private static readonly int ChaseIndex = Animator.StringToHash("ChaseIndex");
         public IdleState_Melee IdleState { get; private set; }
         public MoveState_Melee MoveState { get; private set; }
         public RecoveryState_Melee RecoveryState { get; private set; }
@@ -20,7 +26,9 @@ namespace Core.Scripts.Runtime.AI.Entities
         public AttackState_Melee AttackState { get; private set; }
         public DeadState_Melee DeadStateMelee { get; private set; }
 
+        public EntityMelee_Type MeleeType;
         public List<AttackData> AttackList;
+        public Transform ShieldTransform;
 
         [SerializeField] private Transform _hiddenWeapon;
         [SerializeField] private Transform _pulledWeapon;
@@ -42,8 +50,8 @@ namespace Core.Scripts.Runtime.AI.Entities
         protected override void Start()
         {
             base.Start();
-            
             StateMachine.Initialize(IdleState);
+            InitializeSpeciality();
         }
 
         protected override void Update()
@@ -72,6 +80,16 @@ namespace Core.Scripts.Runtime.AI.Entities
             base.OnDrawGizmos();
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, AttackData.AttackRange);
+        }
+
+        private void InitializeSpeciality()
+        {
+            if (MeleeType == EntityMelee_Type.Shield)
+            {
+                ShieldTransform.gameObject.SetActive(true);
+                Animator.SetFloat(ChaseIndex, 1);
+            }
+            
         }
     }
 }

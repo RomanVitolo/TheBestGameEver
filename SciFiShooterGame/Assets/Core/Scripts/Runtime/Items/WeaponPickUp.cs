@@ -25,7 +25,7 @@ namespace Core.Scripts.Runtime.Items
         {
             if(destroyable == null) return;
             destroyable.NotifyItemAction += DestroyComponent;
-            itemPickUp.PickUpObject(_weaponId);                   
+            itemPickUp?.PickUpObject(_weaponId);                   
             destroyable.NotifyItemAction -= DestroyComponent;
         }
     }       

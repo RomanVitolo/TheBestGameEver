@@ -4,6 +4,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class ChaseState_Melee : EntityState
     {
+        private static readonly int ChaseIndex = Animator.StringToHash("ChaseIndex");
         private readonly Entity_Melee _entity;
         private float lastTimeUpdatedDestination;
         
