@@ -3,6 +3,7 @@ using Core.Scripts.Runtime.Weapons;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Scripts.Runtime.AI.Entities;
 using Core.Scripts.Runtime.CameraSystem;
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
@@ -184,6 +185,7 @@ namespace Core.Scripts.Runtime.Agents
 
                 var fireModeSystem = new FireModeSystem();
                 fireModeSystem.HandleFireMode(this);
+                TriggerEntityDodge();
             }
             else if(_currentWeapon.WeaponDataConfiguration.AmmoInMagazine == 0)
                 EmptyMagazine();
@@ -239,5 +241,19 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
+
+        private void TriggerEntityDodge()
+        {
+            Vector3 rayOrigin = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
+            Vector3 rayDirection = _weaponBulletMovement.BulletDirection(_currentWeapon.WeaponDataConfiguration.GunPoint.position);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hitInfo, Mathf.Infinity))
+            {
+                Entity_Melee entityMelee = hitInfo.collider.gameObject.GetComponentInParent<Entity_Melee>();
+
+                if (entityMelee != null)
+                    entityMelee.ActivateDodgeRoll();
+            }
+        }
     }
 }

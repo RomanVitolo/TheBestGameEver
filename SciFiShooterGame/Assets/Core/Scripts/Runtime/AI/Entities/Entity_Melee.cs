@@ -14,11 +14,14 @@ namespace Core.Scripts.Runtime.AI.Entities
     public enum EntityMelee_Type
     {
         Regular,
-        Shield
+        Shield,
+        Dodge
     }
+    
     public class Entity_Melee : Entity
     {
         private static readonly int ChaseIndex = Animator.StringToHash("ChaseIndex");
+        private static readonly int DodgeRoll = Animator.StringToHash("Dodge");
         public IdleState_Melee IdleState { get; private set; }
         public MoveState_Melee MoveState { get; private set; }
         public RecoveryState_Melee RecoveryState { get; private set; }
@@ -29,6 +32,9 @@ namespace Core.Scripts.Runtime.AI.Entities
         public EntityMelee_Type MeleeType;
         public List<AttackData> AttackList;
         public Transform ShieldTransform;
+        public float DodgeCooldown;
+        
+        private float _lastTimeDodge;
 
         [SerializeField] private Transform _hiddenWeapon;
         [SerializeField] private Transform _pulledWeapon;
@@ -73,6 +79,17 @@ namespace Core.Scripts.Runtime.AI.Entities
             
             if(_healthPoints <= 0)
                 StateMachine.ChangeState(DeadStateMelee);
+        }
+
+        public void ActivateDodgeRoll()
+        {
+            if (MeleeType != EntityMelee_Type.Dodge) return;
+            if (StateMachine.CurrentState != ChaseState) return;
+            if (Vector3.Distance(transform.position, Target.position) < 2f) return;
+
+            if (!(Time.time > DodgeCooldown + _lastTimeDodge)) return;
+            _lastTimeDodge = Time.time;
+            Animator.SetTrigger(DodgeRoll);
         }
 
         protected override void OnDrawGizmos()

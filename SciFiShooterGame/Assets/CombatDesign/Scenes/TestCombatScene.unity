@@ -1515,6 +1515,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 0}
+  DodgeCooldown: 0
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!4 &169647383
@@ -4962,6 +4963,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 0}
+  DodgeCooldown: 0
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!4 &510614927
@@ -5248,6 +5250,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 0}
+  DodgeCooldown: 0
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!4 &519164030
@@ -16916,6 +16919,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 0}
+  DodgeCooldown: 0
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!4 &1504239309
@@ -18371,6 +18375,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 0}
+  DodgeCooldown: 0
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!4 &1610098557
@@ -20012,7 +20017,7 @@ MonoBehaviour:
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
-  MeleeType: 1
+  MeleeType: 2
   AttackList:
   - AttackType: 1
     AttackName: AttackSwiping
@@ -20029,6 +20034,7 @@ MonoBehaviour:
     AttackIndex: 1
     AnimationSpeed: 1.5
   ShieldTransform: {fileID: 8898793286063040368}
+  DodgeCooldown: 5
   _hiddenWeapon: {fileID: 0}
   _pulledWeapon: {fileID: 0}
 --- !u!114 &1809028507
