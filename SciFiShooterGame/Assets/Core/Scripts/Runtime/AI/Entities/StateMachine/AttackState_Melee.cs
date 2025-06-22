@@ -43,7 +43,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 
             if (_entity.ManualRotationActive())
             {
-                _entity.transform.rotation = _entity.FaceTarget(_entity.Target.position);
+                _entity.FaceTarget(_entity.Target.position);
                 attackDirection = _entity.transform.position + (_entity.transform.forward * MAX_ATTACK_DISTANCE);
             }
             

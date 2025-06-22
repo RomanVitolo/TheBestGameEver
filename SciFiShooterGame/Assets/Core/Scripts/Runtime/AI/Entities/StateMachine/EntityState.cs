@@ -36,6 +36,11 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         }
 
         public void AnimationTrigger() => triggerCalled = true;
+
+        public virtual void AbilityTrigger()
+        {
+            
+        }
         
         protected Vector3 GetNextPathPoint()
         {

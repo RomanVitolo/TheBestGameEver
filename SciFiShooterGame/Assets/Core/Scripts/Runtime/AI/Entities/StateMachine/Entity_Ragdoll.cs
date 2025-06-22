@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Core.Scripts.Runtime.AI.Entities
+namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class Entity_Ragdoll : MonoBehaviour
     {

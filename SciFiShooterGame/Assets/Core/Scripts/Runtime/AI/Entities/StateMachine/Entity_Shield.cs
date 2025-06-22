@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Core.Scripts.Runtime.AI.Entities
+namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public class Entity_Shield : MonoBehaviour
     {

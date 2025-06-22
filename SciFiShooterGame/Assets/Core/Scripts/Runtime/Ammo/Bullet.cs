@@ -1,4 +1,5 @@
 ﻿using Core.Scripts.Runtime.AI.Entities;
+using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 

@@ -12,18 +12,19 @@ namespace Core.Scripts.Runtime.AI.Entities
     {
         [field: SerializeField] public AttackData AttackData { get; set; }
         [field: SerializeField] public float IdleTime { get; set; }
-        //[field: SerializeField] public float MoveSpeed { get; set; }
         [field: SerializeField] public float TurnSpeed { get; set; }
         [field: SerializeField] public float ChaseSpeed { get; set; }
         [field: SerializeField] public float AggressionRange { get; set; }
         [field: SerializeField] public Transform Target { get; private set; }
         [field: SerializeField] public Animator Animator { get; private set; } 
         [field: SerializeField] public NavMeshAgent AIAgent { get; private set; }
+        [field: SerializeField] public bool InCombatMode { get; private set; }
         
         [SerializeField] protected Transform[] _patrolPoints;
         protected EntityStateMachine StateMachine { get; private set; }
         [SerializeField] protected int _healthPoints = 20;
-        
+
+        private Vector3[] _patrolPointPosition;
         private int currentPatrolIndex;
         private bool manualMovement;
         private bool manualRotation;
@@ -35,23 +36,37 @@ namespace Core.Scripts.Runtime.AI.Entities
                 AIAgent = GetComponent<NavMeshAgent>();
             if (Target == null)
                 Target = FindAnyObjectByType<Agent>().gameObject.transform;
+            InitializePatrolPoints();
         }
     
         protected virtual void Start(){}
 
         protected virtual void Update() { }
 
+        protected bool ShouldEnterCombatMode()
+        {
+            bool inAggressionRange =  Vector3.Distance(transform.position, Target.position) < AggressionRange;
+
+            if (inAggressionRange && !InCombatMode)
+            {
+                EnterCombatMode();
+                return true;
+            }
+            return false;
+        }
+        
+        public virtual void EnterCombatMode()
+        {
+            InCombatMode = true;
+        }
 
         public void AnimationTrigger() => StateMachine.CurrentState.AnimationTrigger();
-
-        public bool TargetInAggressionRange() => 
-            Vector3.Distance(transform.position, Target.position) < AggressionRange;
 
         public bool TargetInAttackRange() => Vector3.Distance(transform.position, Target.position) < AttackData.AttackRange;
        
         public Vector3 GetPatrolDestination()
         {
-            Vector3 destination = _patrolPoints[currentPatrolIndex].position;
+            Vector3 destination = _patrolPointPosition[currentPatrolIndex];
             currentPatrolIndex++;
             
             if(currentPatrolIndex >= _patrolPoints.Length)
@@ -60,7 +75,18 @@ namespace Core.Scripts.Runtime.AI.Entities
             return destination;
         }
 
-        public Quaternion FaceTarget(Vector3 target)
+        private void InitializePatrolPoints()
+        {
+            _patrolPointPosition = new Vector3[_patrolPoints.Length];
+
+            for (int i = 0; i < _patrolPoints.Length; i++)
+            {
+                _patrolPointPosition[i] = _patrolPoints[i].position;
+                _patrolPoints[i].gameObject.SetActive(false);
+            }
+        }
+
+        public void FaceTarget(Vector3 target)
         {
             Quaternion targetRotation = Quaternion.LookRotation(target - transform.position);
             
@@ -69,7 +95,7 @@ namespace Core.Scripts.Runtime.AI.Entities
             float yRotation = Mathf.LerpAngle(currentEulerAngles.y, targetRotation.eulerAngles.y,
                 TurnSpeed * Time.deltaTime);
             
-            return Quaternion.Euler(currentEulerAngles.x, yRotation, currentEulerAngles.z);
+            transform.rotation = Quaternion.Euler(currentEulerAngles.x, yRotation, currentEulerAngles.z);
         }
         
         public void ActivateManualMovement(bool canManualMovement) => this.manualMovement = canManualMovement;
@@ -80,7 +106,13 @@ namespace Core.Scripts.Runtime.AI.Entities
 
         public virtual void GetHit()
         {
+            EnterCombatMode();
             _healthPoints--;
+        }
+
+        public virtual void AbilityTrigger()
+        {
+            StateMachine.CurrentState.AbilityTrigger();
         }
 
         public virtual void HitImpact(Vector3 force, Vector3 hitPoint, Rigidbody rb)

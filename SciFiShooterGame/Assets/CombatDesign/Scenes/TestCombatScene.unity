@@ -1493,11 +1493,16 @@ MonoBehaviour:
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 618130741}
   <AIAgent>k__BackingField: {fileID: 169647381}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
+  WeaponThrowStartPoint: {fileID: 0}
+  WeaponThrowSpeed: 0
+  WeaponThrowAimTimer: 0
+  WeaponThrowCooldown: 0
   MeleeType: 0
   AttackList:
   - AttackType: 1
@@ -4941,11 +4946,16 @@ MonoBehaviour:
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 555254387}
   <AIAgent>k__BackingField: {fileID: 510614925}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
+  WeaponThrowStartPoint: {fileID: 0}
+  WeaponThrowSpeed: 0
+  WeaponThrowAimTimer: 0
+  WeaponThrowCooldown: 0
   MeleeType: 0
   AttackList:
   - AttackType: 1
@@ -5228,11 +5238,16 @@ MonoBehaviour:
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 1791334771}
   <AIAgent>k__BackingField: {fileID: 519164028}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
+  WeaponThrowStartPoint: {fileID: 0}
+  WeaponThrowSpeed: 0
+  WeaponThrowAimTimer: 0
+  WeaponThrowCooldown: 0
   MeleeType: 0
   AttackList:
   - AttackType: 1
@@ -6609,6 +6624,37 @@ Transform:
   - {fileID: 741990886}
   - {fileID: 1957416509}
   m_Father: {fileID: 187700236}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &617770639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 617770640}
+  m_Layer: 0
+  m_Name: WeaponStartPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &617770640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617770639}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.99, z: 1.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1809028503}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &618130738
 GameObject:
@@ -13186,6 +13232,55 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.8265775, z: -0.055950202}
     m_Extent: {x: 1.0245618, y: 0.9276708, z: 0.30054608}
   m_DirtyAABB: 0
+--- !u!1 &1182640872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1182640873}
+  - component: {fileID: 1182640874}
+  m_Layer: 0
+  m_Name: Pool_WeaponThrowImpactFx
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1182640873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182640872}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1201805823}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1182640874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182640872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0907bf3cce64569a5a7dbf20c1e4adf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Core.Runtime::Core.Scripts.Runtime.Weapons.WeaponThrowImpactFxPool
+  _poolName: WeaponThrowImpactFx
+  _prefabType: {fileID: 5517454504011983412, guid: fab59643835fc4043ae19ff05710cf1a,
+    type: 3}
+  _initialPoolSize: 10
+  _objectParent: {fileID: 1182640873}
 --- !u!1 &1184503021
 GameObject:
   m_ObjectHideFlags: 0
@@ -13312,6 +13407,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BulletPool>k__BackingField: {fileID: 111679361}
   <BulletPoolImpact>k__BackingField: {fileID: 269604762}
+  <WeaponThrow>k__BackingField: {fileID: 2046947901}
+  <WeaponThrowImpactFx>k__BackingField: {fileID: 1182640874}
 --- !u!4 &1201805823
 Transform:
   m_ObjectHideFlags: 0
@@ -13327,6 +13424,8 @@ Transform:
   m_Children:
   - {fileID: 111679360}
   - {fileID: 269604763}
+  - {fileID: 2046947900}
+  - {fileID: 1182640873}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1202557034
@@ -16897,11 +16996,16 @@ MonoBehaviour:
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 936924610}
   <AIAgent>k__BackingField: {fileID: 1504239307}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
+  WeaponThrowStartPoint: {fileID: 0}
+  WeaponThrowSpeed: 0
+  WeaponThrowAimTimer: 0
+  WeaponThrowCooldown: 0
   MeleeType: 0
   AttackList:
   - AttackType: 1
@@ -18353,11 +18457,16 @@ MonoBehaviour:
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 1048182034}
   <AIAgent>k__BackingField: {fileID: 1610098555}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
   _healthPoints: 20
+  WeaponThrowStartPoint: {fileID: 0}
+  WeaponThrowSpeed: 0
+  WeaponThrowAimTimer: 0
+  WeaponThrowCooldown: 0
   MeleeType: 0
   AttackList:
   - AttackType: 1
@@ -19956,11 +20065,12 @@ Transform:
   m_GameObject: {fileID: 1809028502}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.73, y: 0, z: -11.3}
+  m_LocalPosition: {x: 8.84, y: 0, z: -11.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5512909809279333228}
+  - {fileID: 617770640}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &1809028504
@@ -19998,9 +20108,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <AttackData>k__BackingField:
-    AttackType: 0
-    AttackName: 
-    AttackRange: 3.03
+    AttackType: 1
+    AttackName: AttackSwiping
+    AttackRange: 2
     AttackMoveSpeed: 5
     MoveSpeed: 4
     AttackIndex: 0
@@ -20008,15 +20118,20 @@ MonoBehaviour:
   <IdleTime>k__BackingField: 2
   <TurnSpeed>k__BackingField: 5
   <ChaseSpeed>k__BackingField: 5
-  <AggressionRange>k__BackingField: 15
+  <AggressionRange>k__BackingField: 5
   <Target>k__BackingField: {fileID: 1595106260287762234}
   <Animator>k__BackingField: {fileID: 33821507848013332}
   <AIAgent>k__BackingField: {fileID: 1809028504}
+  <InCombatMode>k__BackingField: 0
   _patrolPoints:
   - {fileID: 1966913399}
   - {fileID: 777617980}
   - {fileID: 1952264876}
-  _healthPoints: 20
+  _healthPoints: 200
+  WeaponThrowStartPoint: {fileID: 617770640}
+  WeaponThrowSpeed: 5
+  WeaponThrowAimTimer: 1
+  WeaponThrowCooldown: 5
   MeleeType: 2
   AttackList:
   - AttackType: 1
@@ -20025,7 +20140,7 @@ MonoBehaviour:
     AttackMoveSpeed: 2.5
     MoveSpeed: 2.5
     AttackIndex: 0
-    AnimationSpeed: 1
+    AnimationSpeed: 2
   - AttackType: 0
     AttackName: AttackSwipingMutant
     AttackRange: 1.5
@@ -23193,6 +23308,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1927498232}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2046947899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046947900}
+  - component: {fileID: 2046947901}
+  m_Layer: 0
+  m_Name: Pool_WeaponThrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2046947900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046947899}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1201805823}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2046947901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046947899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b5e7fa2dc4b4a34947a0f4fee7f54de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Core.Runtime::Core.Scripts.Runtime.Weapons.WeaponThrowPool
+  _poolName: WeaponThrow
+  _prefabType: {fileID: 3133005299476630053, guid: 5d5c93c296e97f2439175037745ba1e4,
+    type: 3}
+  _initialPoolSize: 10
+  _objectParent: {fileID: 2046947900}
 --- !u!1 &2059900815
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,7 +28,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             if(entity.TargetInAttackRange()) 
                 entityStateMachine.ChangeState(_entity.AttackState);
             
-            entity.transform.rotation = entity.FaceTarget(GetNextPathPoint());
+            entity.FaceTarget(GetNextPathPoint());
 
             if (UpdateDestination())
                 _entity.MeleeAgent.destination = entity.Target.transform.position;

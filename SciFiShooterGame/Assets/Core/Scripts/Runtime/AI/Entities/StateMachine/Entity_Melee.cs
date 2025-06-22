@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Core.Scripts.Runtime.AI.Entities
+namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
     public enum AttackType_Melee
     {
@@ -15,7 +14,8 @@ namespace Core.Scripts.Runtime.AI.Entities
     {
         Regular,
         Shield,
-        Dodge
+        Dodge,
+        WeaponThrow
     }
     
     public class Entity_Melee : Entity
@@ -28,13 +28,20 @@ namespace Core.Scripts.Runtime.AI.Entities
         public ChaseState_Melee ChaseState { get; private set; }
         public AttackState_Melee AttackState { get; private set; }
         public DeadState_Melee DeadStateMelee { get; private set; }
-
+        public Entity_AbilityStateMelee  EntityAbilityStateMelee{ get; private set; }
+        
+        public Transform WeaponThrowStartPoint;
+        public float WeaponThrowSpeed;
+        public float WeaponThrowAimTimer;
+        public float WeaponThrowCooldown;
+        
         public EntityMelee_Type MeleeType;
         public List<AttackData> AttackList;
         public Transform ShieldTransform;
         public float DodgeCooldown;
-        
-        private float _lastTimeDodge;
+
+        private float _lastTimeDodge = -10f;
+        private float _lastTimeWeaponThrow;
 
         [SerializeField] private Transform _hiddenWeapon;
         [SerializeField] private Transform _pulledWeapon;
@@ -51,6 +58,7 @@ namespace Core.Scripts.Runtime.AI.Entities
             ChaseState = new ChaseState_Melee(this, StateMachine, "Chase");
             AttackState = new AttackState_Melee(this, StateMachine, "Attack");
             DeadStateMelee = new DeadState_Melee(this, StateMachine, "Idle");
+            EntityAbilityStateMelee = new Entity_AbilityStateMelee(this, StateMachine, "AxeThrow");
         }
 
         protected override void Start()
@@ -63,8 +71,25 @@ namespace Core.Scripts.Runtime.AI.Entities
         protected override void Update()
         {
             base.Update();
-            
             StateMachine.CurrentState.Update();
+
+            if (ShouldEnterCombatMode())
+                EnterCombatMode();
+        }
+
+        public override void EnterCombatMode()
+        {
+            if (InCombatMode) return;
+            
+            base.EnterCombatMode();
+            StateMachine.ChangeState(RecoveryState);
+        }
+
+        public override void AbilityTrigger()
+        {
+            base.AbilityTrigger();
+            ChaseSpeed = ChaseSpeed * .6f;
+            //_pulledWeapon.gameObject.SetActive(false);
         }
 
         public void PullWeapon()
@@ -87,9 +112,23 @@ namespace Core.Scripts.Runtime.AI.Entities
             if (StateMachine.CurrentState != ChaseState) return;
             if (Vector3.Distance(transform.position, Target.position) < 2f) return;
 
-            if (!(Time.time > DodgeCooldown + _lastTimeDodge)) return;
+            float dodgeAnimationDuration = GetAnimationClipDuration(DodgeRoll.ToString());
+            
+            if (!(Time.time > DodgeCooldown + dodgeAnimationDuration + _lastTimeDodge)) return;
             _lastTimeDodge = Time.time;
             Animator.SetTrigger(DodgeRoll);
+        }
+
+        public bool CanThrowWeapon()
+        {
+            if (MeleeType != EntityMelee_Type.WeaponThrow) return false;
+            
+            if (Time.time > _lastTimeWeaponThrow + WeaponThrowCooldown)
+            {
+                _lastTimeWeaponThrow = Time.time;
+                return true;
+            }
+            return false;
         }
 
         protected override void OnDrawGizmos()
@@ -97,6 +136,20 @@ namespace Core.Scripts.Runtime.AI.Entities
             base.OnDrawGizmos();
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, AttackData.AttackRange);
+        }
+
+        private float GetAnimationClipDuration(string clipName)
+        {
+            AnimationClip[] clips = Animator.runtimeAnimatorController.animationClips;
+
+            foreach (AnimationClip clip in clips)
+            {
+                if(clip.name == clipName)
+                    return clip.length;
+            }
+
+            Debug.Log($"{clipName} No such animation clip found");
+            return 0f;
         }
 
         private void InitializeSpeciality()

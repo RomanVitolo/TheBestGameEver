@@ -21,11 +21,13 @@
         {
             base.Update();
             
-            _entity.transform.rotation = entity.FaceTarget(entity.Target.position);
+            entity.FaceTarget(entity.Target.position);
 
             if (triggerCalled)
             {
-                if(_entity.TargetInAttackRange())
+                if(_entity.CanThrowWeapon())
+                    entityStateMachine.ChangeState(_entity.EntityAbilityStateMelee);
+                else if(_entity.TargetInAttackRange())
                     entityStateMachine.ChangeState(_entity.AttackState);
                 else
                     entityStateMachine.ChangeState(_entity.ChaseState);

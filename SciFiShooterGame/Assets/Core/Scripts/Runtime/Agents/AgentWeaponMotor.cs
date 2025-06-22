@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Scripts.Runtime.AI.Entities;
+using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using Core.Scripts.Runtime.CameraSystem;
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;

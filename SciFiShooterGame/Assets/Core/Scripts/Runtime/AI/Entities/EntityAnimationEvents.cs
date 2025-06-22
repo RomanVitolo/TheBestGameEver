@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.AI.Entities
@@ -18,5 +19,6 @@ namespace Core.Scripts.Runtime.AI.Entities
         public void StopManualMovement() => _entity.ActivateManualMovement(false);
         public void StartManualRotation() => _entity.ActivateManualRotation(true);
         public void StopManualRotation() => _entity.ActivateManualRotation(false);
+        public void AbilityEvent() => _entity.AbilityTrigger();
     }
 }

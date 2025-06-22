@@ -25,14 +25,8 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         public override void Update()
         {
             base.Update();
-
-            if (_entity.TargetInAggressionRange())
-            {
-                entityStateMachine.ChangeState(_entity.RecoveryState);
-                return;
-            }
-
-            _entity.transform.rotation = _entity.FaceTarget(GetNextPathPoint());
+            
+            _entity.FaceTarget(GetNextPathPoint());
             
             if(_entity.MeleeAgent.remainingDistance <= _entity.MeleeAgent.stoppingDistance + .05f)
                 entityStateMachine.ChangeState(_entity.IdleState);

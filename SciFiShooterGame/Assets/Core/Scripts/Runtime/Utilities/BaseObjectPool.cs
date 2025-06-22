@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Core.Scripts.Runtime.Utilities
 {
@@ -26,6 +27,20 @@ namespace Core.Scripts.Runtime.Utilities
         public virtual void ReturnObject(T objectToReturn)
         {
             objectPool.ReturnToPool(objectToReturn);
+        }
+      
+        public void ReturnObject(T objectToReturn, float delay)
+        {
+            if (delay <= 0f)
+                objectPool.ReturnToPool(objectToReturn);
+            else
+                StartCoroutine(ReturnToPoolAfterDelay(objectToReturn, delay));
+        }
+
+        private IEnumerator ReturnToPoolAfterDelay(T obj, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            objectPool.ReturnToPool(obj);
         }
         
     }
