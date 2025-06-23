@@ -4,12 +4,12 @@ using Core.Scripts.Runtime.Agents;
 using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.AI.Entities
 {
     public abstract class Entity : MonoBehaviour
     {
+        [field: SerializeField] public EntityStatsSO EntityStats { get; set; }
         [field: SerializeField] public AttackData AttackData { get; set; }
         [field: SerializeField] public float IdleTime { get; set; }
         [field: SerializeField] public float TurnSpeed { get; set; }
@@ -21,8 +21,8 @@ namespace Core.Scripts.Runtime.AI.Entities
         [field: SerializeField] public bool InCombatMode { get; private set; }
         
         [SerializeField] protected Transform[] _patrolPoints;
-        protected EntityStateMachine StateMachine { get; private set; }
         [SerializeField] protected int _healthPoints = 20;
+        protected EntityStateMachine StateMachine { get; private set; }
 
         private Vector3[] _patrolPointPosition;
         private int currentPatrolIndex;
@@ -32,9 +32,9 @@ namespace Core.Scripts.Runtime.AI.Entities
         protected virtual void Awake()
         {
             StateMachine = new EntityStateMachine();
-            if (AIAgent == null)
+            if (!AIAgent)
                 AIAgent = GetComponent<NavMeshAgent>();
-            if (Target == null)
+            if (!Target)
                 Target = FindAnyObjectByType<Agent>().gameObject.transform;
             InitializePatrolPoints();
         }
@@ -47,12 +47,9 @@ namespace Core.Scripts.Runtime.AI.Entities
         {
             bool inAggressionRange =  Vector3.Distance(transform.position, Target.position) < AggressionRange;
 
-            if (inAggressionRange && !InCombatMode)
-            {
-                EnterCombatMode();
-                return true;
-            }
-            return false;
+            if (!inAggressionRange || InCombatMode) return false;
+            EnterCombatMode();
+            return true;
         }
         
         public virtual void EnterCombatMode()
@@ -131,7 +128,7 @@ namespace Core.Scripts.Runtime.AI.Entities
             Gizmos.DrawWireSphere(transform.position, AggressionRange);
         }
     }
-    [System.Serializable]
+    [Serializable]
     public struct AttackData
     {
         public AttackType_Melee AttackType;

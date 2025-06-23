@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 {
@@ -17,9 +18,27 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         Dodge,
         WeaponThrow
     }
+
+    [CreateAssetMenu(fileName = "New Entity Melee Stats", menuName = "Core/Entity/MeleeEntity", order = 0)]
+    public class EntityMeleeDataSO : ScriptableObject
+    {
+        [field: SerializeField] public EntityMelee_Type EntityMelee_Type { get; private set; }
+        [field: SerializeField] public EntityMelee_Type AttackType_Melee { get; private set; }
+        
+        public static readonly int ChaseIndex = Animator.StringToHash("ChaseIndex");
+        public static readonly int DodgeRoll = Animator.StringToHash("Dodge");
+        
+        [field: SerializeField] public EntityMelee_Type MeleeType { get; private set; }
+        [field: SerializeField] public float WeaponThrowSpeed { get; private set; }
+        [field: SerializeField] public float WeaponThrowAimTimer { get; private set; }
+        [field: SerializeField] public float WeaponThrowCooldown { get; private set; }
+        [field: SerializeField] public List<AttackData> AttackList { get; private set; }
+        [field: SerializeField] public float DodgeCooldown { get; private set; }
+    }
     
     public class Entity_Melee : Entity
     {
+        [field: SerializeField] public EntityMeleeDataSO EntityMeleeData { get; private set; }
         private static readonly int ChaseIndex = Animator.StringToHash("ChaseIndex");
         private static readonly int DodgeRoll = Animator.StringToHash("Dodge");
         public IdleState_Melee IdleState { get; private set; }
