@@ -243,6 +243,7 @@ namespace Core.Scripts.Runtime.Agents
 
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
 
+        public Rigidbody GetRigidbody;
         private void TriggerEntityDodge()
         {
             Vector3 rayOrigin = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
@@ -251,6 +252,8 @@ namespace Core.Scripts.Runtime.Agents
             if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hitInfo, Mathf.Infinity))
             {
                 Entity_Melee entityMelee = hitInfo.collider.gameObject.GetComponentInParent<Entity_Melee>();
+                
+               
 
                 if (entityMelee != null)
                     entityMelee.ActivateDodgeRoll();

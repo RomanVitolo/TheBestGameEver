@@ -150,13 +150,6 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             return false;
         }
 
-        protected override void OnDrawGizmos()
-        {
-            base.OnDrawGizmos();
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, AttackData.AttackRange);
-        }
-
         private float GetAnimationClipDuration(string clipName)
         {
             AnimationClip[] clips = Animator.runtimeAnimatorController.animationClips;
@@ -179,6 +172,13 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
                 Animator.SetFloat(ChaseIndex, 1);
             }
             
+        }
+        
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, AttackData.AttackRange);
         }
     }
 }
