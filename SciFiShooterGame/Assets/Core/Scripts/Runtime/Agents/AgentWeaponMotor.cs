@@ -1,21 +1,23 @@
-using Core.Scripts.Runtime.Ammo;
 using Core.Scripts.Runtime.Weapons;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Scripts.Runtime.AI.Entities;
-using Core.Scripts.Runtime.AI.Entities.StateMachine;
 using Core.Scripts.Runtime.CameraSystem;
-using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
 {
+    /// <summary>
+    /// Weapon handling for one agent. Equipping runs on every peer so remote players visibly hold the right
+    /// weapon, but input, aiming and firing run only on the owning client. Bullets are still spawned into a
+    /// local pool, so they are not yet replicated: see the networked-shooting slice.
+    /// </summary>
     public class AgentWeaponMotor : MonoBehaviour
     {
         private Agent _agent;
         private WeaponAnimations _weaponAnimations;
         private WeaponBulletMovement _weaponBulletMovement;
+        private CameraSystemBehaviour _cameraSystem;
 
         [Header("Actual Weapon Type")]
         [SerializeField] private WeaponEnums.WeaponType _actualWeaponType;
@@ -28,8 +30,11 @@ namespace Core.Scripts.Runtime.Agents
         private int _currentIndex;
         private bool _weaponReady;
         private int weaponIndex = 1;
+        private bool _inputSubscribed;
         public Weapon CurrentWeapon() => _currentWeapon;
-        
+
+        private bool IsOwner => _agent.IsSpawned && _agent.IsOwner && _agent.Health.IsAlive;
+
         private void Awake()
         {
             var getWeapons = GetComponentsInChildren<Weapon>(true);
@@ -37,7 +42,7 @@ namespace Core.Scripts.Runtime.Agents
             {
                 AgentWeaponsSlot.Add(weapon);
             }
-            
+
             _agent = GetComponentInParent<Agent>();
             _weaponBulletMovement = GetComponent<WeaponBulletMovement>();
             _weaponAnimations = GetComponent<WeaponAnimations>();
@@ -45,17 +50,25 @@ namespace Core.Scripts.Runtime.Agents
                 _agentWeaponDrop = GetComponent<AgentWeaponDrop>();
         }
 
+        // Runs after OnNetworkSpawn for dynamically spawned NetworkObjects, so ownership is known here.
         private void Start()
         {
             TotalWeaponsHolder = AgentWeaponsSlot.ToArray();
-            SubscribeAgentInput();
             AssignDefaultWeapon();
+
+            if (!IsOwner) return;
+
+            _cameraSystem = FindFirstObjectByType<CameraSystemBehaviour>();
+            SubscribeAgentInput();
         }
 
         private void OnDestroy() => UnsubscribeAgentInput();
-        
-        private void SubscribeAgentInput() 
+
+        private void SubscribeAgentInput()
         {
+            if (_inputSubscribed) return;
+            _inputSubscribed = true;
+
             _agent.AgentInputReader.NotifyWeaponSwitch += SwitchOffWeaponsByGenericButtonPressed;
             _agent.AgentInputReader.NotifyMainWeaponSwitch += EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifySecondaryWeaponSwitch += EquipWeaponBySpecificButtonPressed;
@@ -65,8 +78,11 @@ namespace Core.Scripts.Runtime.Agents
             _agent.AgentInputReader.NotifyWhenWeaponFireModeChanged += SwitchWeaponFireMode;
         }
 
-        private void UnsubscribeAgentInput() 
+        private void UnsubscribeAgentInput()
         {
+            if (!_inputSubscribed) return;
+            _inputSubscribed = false;
+
             _agent.AgentInputReader.NotifyWeaponSwitch -= SwitchOffWeaponsByGenericButtonPressed;
             _agent.AgentInputReader.NotifyMainWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
             _agent.AgentInputReader.NotifySecondaryWeaponSwitch -= EquipWeaponBySpecificButtonPressed;
@@ -79,15 +95,19 @@ namespace Core.Scripts.Runtime.Agents
         private void OnWeaponReload()
         {
             SetWeaponReady(false);
-            if (!_currentWeapon.WeaponDataConfiguration.CanReload() && !_weaponReady) return;
+            if (!_currentWeapon.Runtime.CanReload() && !_weaponReady) return;
 
             _weaponAnimations.WeaponReloadAnimation(_currentWeapon.WeaponDataConfiguration.WeaponReloadSpeed);
         }
-        
+
         private void Update()
         {
-            _agent.AgentAim.UpdateAimVisuals(_currentWeapon.WeaponDataConfiguration.GunPoint, 
-                _weaponBulletMovement.BulletDirection(_currentWeapon.WeaponDataConfiguration.GunPoint.position), 
+            if (!IsOwner || _currentWeapon == null) return;
+
+            Transform gunPoint = _currentWeapon.Runtime.GunPoint;
+
+            _agent.AgentAim.UpdateAimVisuals(gunPoint,
+                _weaponBulletMovement.BulletDirection(gunPoint.position),
                 _weaponReady, _currentWeapon.WeaponDataConfiguration.WeaponDistance);
 
             if (_agent.AgentInputReader.CanShoot)
@@ -122,7 +142,6 @@ namespace Core.Scripts.Runtime.Agents
             AgentWeaponsSlot[_currentIndex].gameObject.SetActive(false);
             _currentIndex = (_currentIndex + 1) % AgentWeaponsSlot.Count;
             AgentWeaponsSlot[_currentIndex].gameObject.SetActive(true);
-            //CameraSystemBehaviour.Instance.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
             _actualWeaponType = AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.WeaponType;
             _weaponAnimations.AttachLeftHand(AgentWeaponsSlot[_currentIndex].gameObject.transform);
             _weaponAnimations.SwitchAnimationLayer((int)AgentWeaponsSlot[_currentIndex].WeaponDataConfiguration.AnimationLayer);
@@ -134,9 +153,8 @@ namespace Core.Scripts.Runtime.Agents
 
         private void SwitchWeaponFireMode()
         {
-            _currentWeapon.WeaponDataConfiguration.FireMode = 
-                _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList[weaponIndex].FireModeType;
-            weaponIndex = (weaponIndex +1) % 
+            _currentWeapon.Runtime.CycleFireMode(weaponIndex);
+            weaponIndex = (weaponIndex + 1) %
                           _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList.Count;
         }
 
@@ -166,8 +184,10 @@ namespace Core.Scripts.Runtime.Agents
             if (_currentWeapon != null)
             {
                 _currentWeapon.gameObject.SetActive(true);
-                CameraSystemBehaviour.Instance.ChangeCameraDistance(
-                    _currentWeapon.WeaponDataConfiguration.CameraDistance);
+
+                if (_cameraSystem != null)
+                    _cameraSystem.ChangeCameraDistance(_currentWeapon.WeaponDataConfiguration.CameraDistance);
+
                 _currentIndex = _currentWeapon.WeaponDataConfiguration.WeaponInputSlot;
             }
             Debug.Log("Selected weapon not found in the list, keeping current weapon.");
@@ -176,57 +196,53 @@ namespace Core.Scripts.Runtime.Agents
         private void WeaponShoot()
         {
             if (!_weaponReady) return;
-            
-            if (_currentWeapon.WeaponDataConfiguration.FireMode == WeaponEnums.FireModeType.Single)
+
+            if (_currentWeapon.Runtime.FireMode == WeaponEnums.FireModeType.Single)
                 _agent.AgentInputReader.CanShoot = false;
-            
-            if (_currentWeapon != null && _currentWeapon.WeaponDataConfiguration.ReadyToShoot())
+
+            if (_currentWeapon != null && _currentWeapon.Runtime.ReadyToShoot())
             {
                 _weaponAnimations.TriggerShootAnimation();
 
                 var fireModeSystem = new FireModeSystem();
                 fireModeSystem.HandleFireMode(this);
-                TriggerEntityDodge();
             }
-            else if(_currentWeapon.WeaponDataConfiguration.AmmoInMagazine == 0)
+            else if (!_currentWeapon.Runtime.HaveEnoughBullets())
                 EmptyMagazine();
         }
 
         public void FireSingleBullet()
         {
-            _currentWeapon.WeaponDataConfiguration.AmmoInMagazine--;
+            WeaponRuntime runtime = _currentWeapon.Runtime;
+            Transform gunPoint = runtime.GunPoint;
 
-            Bullet newBullet = GlobalPoolContainer.Instance.BulletPool.GetObject();
+            runtime.ConsumeBullet();
 
-            newBullet.gameObject.transform.SetPositionAndRotation(
-                _currentWeapon.WeaponDataConfiguration.GunPoint.position,
-                Quaternion.LookRotation(_currentWeapon.WeaponDataConfiguration.GunPoint.forward));
+            // Recoil is drawn from Random, so the direction is settled here, once, and replicated verbatim.
+            var fireParams = new BulletFireParams
+            {
+                Origin = gunPoint.position,
+                Direction = runtime.ApplyRecoil(_weaponBulletMovement.BulletDirection(gunPoint.position)),
+                FlyDistance = _currentWeapon.WeaponDataConfiguration.WeaponDistance,
+                ImpactForce = _currentWeapon.WeaponDataConfiguration.BulletImpactForce,
+                BulletSpeed = _weaponBulletMovement.BulletSpeed
+            };
 
-            Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
-
-            var bullet = newBullet.GetComponent<Bullet>();
-            bullet.BulletSetup(_currentWeapon.WeaponDataConfiguration.WeaponDistance, _currentWeapon.WeaponDataConfiguration.BulletImpactForce);
-                
-            Vector3 bulletDirection = _currentWeapon.WeaponDataConfiguration.ApplyRecoil(
-                _weaponBulletMovement.BulletDirection(_currentWeapon.WeaponDataConfiguration.GunPoint.position));
-                
-            rbNewBullet.mass = 5f / _weaponBulletMovement.BulletSpeed;
-            rbNewBullet.linearVelocity = bulletDirection * _weaponBulletMovement.BulletSpeed;
+            _agent.WeaponFire.Fire(fireParams);
         }
-        
+
         public IEnumerator BurstFireMode()
         {
             SetWeaponReady(false);
-            
+
             foreach (var type in _currentWeapon.WeaponDataConfiguration.WeaponFireMode.FireModeTypesList
-                         .Where(type => type.FireModeType 
-                                        == _currentWeapon.WeaponDataConfiguration.FireMode))
+                         .Where(type => type.FireModeType == _currentWeapon.Runtime.FireMode))
             {
                 for (int i = 1; i <= type.BulletsPerShotInBurstMode(); i++)
                 {
                     FireSingleBullet();
                     yield return new WaitForSeconds(type.BurstModeDelay());
-                    
+
                     if(i >= type.BulletsPerShotInBurstMode())
                         SetWeaponReady(true);
                 }
@@ -234,7 +250,7 @@ namespace Core.Scripts.Runtime.Agents
         }
 
         private void EmptyMagazine() => Debug.Log("NEED MORE AMMO");
-        
+
         private void DropWeapon()
         {
             _agentWeaponDrop.DropWeapon(AgentWeaponsSlot, _currentWeapon, _actualWeaponType, _currentIndex);
@@ -244,20 +260,5 @@ namespace Core.Scripts.Runtime.Agents
         public void SetWeaponReady(bool ready) => _weaponReady = ready;
 
         public Rigidbody GetRigidbody;
-        private void TriggerEntityDodge()
-        {
-            Vector3 rayOrigin = _currentWeapon.WeaponDataConfiguration.GunPoint.position;
-            Vector3 rayDirection = _weaponBulletMovement.BulletDirection(_currentWeapon.WeaponDataConfiguration.GunPoint.position);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hitInfo, Mathf.Infinity))
-            {
-                Entity_Melee entityMelee = hitInfo.collider.gameObject.GetComponentInParent<Entity_Melee>();
-                
-               
-
-                if (entityMelee != null)
-                    entityMelee.ActivateDodgeRoll();
-            }
-        }
     }
 }

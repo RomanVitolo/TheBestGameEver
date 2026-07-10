@@ -54,11 +54,8 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         {
             base.AbilityTrigger();
 
-            var newThrowWeapon = GlobalPoolContainer.Instance.WeaponThrow.GetObject();
-            newThrowWeapon.transform.position = _entityMelee.WeaponThrowStartPoint.position;
-            
-            newThrowWeapon.gameObject.GetComponent<Entity_WeaponThrow>()
-                .WeaponThrowSetup(_entityMelee.WeaponThrowSpeed, _entityMelee.Target, _entityMelee.WeaponThrowAimTimer);
+            // Entity_Melee spawns the damaging weapon on the server and mirrors a cosmetic one to the clients.
+            _entityMelee.ThrowWeapon();
         }
     }
 }

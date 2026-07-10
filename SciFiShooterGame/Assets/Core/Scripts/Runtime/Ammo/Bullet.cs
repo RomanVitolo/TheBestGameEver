@@ -1,5 +1,5 @@
-﻿using Core.Scripts.Runtime.AI.Entities;
-using Core.Scripts.Runtime.AI.Entities.StateMachine;
+﻿using Core.Scripts.Runtime.AI.Entities.StateMachine;
+using Core.Scripts.Runtime.Combat;
 using Core.Scripts.Runtime.Utilities;
 using UnityEngine;
 
@@ -8,9 +8,10 @@ namespace Core.Scripts.Runtime.Ammo
     public class Bullet : MonoBehaviour
     {
         public float ImpactForce;
-        
+
         [SerializeField] private GameObject bulletImpactEffect;
-        
+        [SerializeField] private int _damage = 1;
+
         private Rigidbody _rigidbody => GetComponent<Rigidbody>();
         private TrailRenderer _trailRenderer => GetComponent<TrailRenderer>();
         private BoxCollider _collider => GetComponent<BoxCollider>();
@@ -18,12 +19,22 @@ namespace Core.Scripts.Runtime.Ammo
 
         private bool _bulletDisabled;
 
+        /// <summary>Only the server's copy of a shot deals damage; the others exist to be seen.</summary>
+        public bool IsAuthoritative { get; private set; }
+
         private void OnCollisionEnter(Collision other)
         {
             InstantiateImpactEffect(other);
+
+            Vector3 travelDirection = _rigidbody.linearVelocity.normalized;
+            bool wasAuthoritative = IsAuthoritative;
+            bool hasContact = other.contacts.Length > 0;
+            Vector3 contactPoint = hasContact ? other.contacts[0].point : transform.position;
+
             GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
-            
-            Entity entity = other.gameObject.GetComponentInParent<Entity>();
+
+            if (!wasAuthoritative || !hasContact) return;
+
             Entity_Shield shield = other.gameObject.GetComponent<Entity_Shield>();
 
             if (shield != null)
@@ -32,25 +43,26 @@ namespace Core.Scripts.Runtime.Ammo
                 return;
             }
 
-            if (!entity) return;
-            Vector3 force = _rigidbody.linearVelocity.normalized * ImpactForce;
-            Rigidbody entityRigidbody = other.collider.attachedRigidbody;
-            Vector3 entityContact = other.contacts[0].point;
-            entity.GetHit();
-            entity.HitImpact(force, entityContact, entityRigidbody);
+            IDamageable damageable = other.gameObject.GetComponentInParent<IDamageable>();
+
+            if (damageable == null || !damageable.IsAlive) return;
+
+            damageable.TakeDamage(_damage, travelDirection * ImpactForce, contactPoint);
         }
-        
+
         private Vector3 _startPosition;
         private float _flyDistance;
 
-        public void BulletSetup(float flyDistance, float impactForce)
+        public void BulletSetup(float flyDistance, float impactForce, bool isAuthoritative)
         {
             ImpactForce = impactForce;
-            
+            IsAuthoritative = isAuthoritative;
+
             _bulletDisabled = false;
             _collider.enabled = true;
             _trailRenderer.enabled = true;
-            
+            _bulletMeshRenderer.enabled = true;
+
             _trailRenderer.time = 0.25f;
             _startPosition = transform.position;
             _flyDistance = flyDistance + 1f;
@@ -61,7 +73,7 @@ namespace Core.Scripts.Runtime.Ammo
             FaceTrailIfNeeded();
 
             CheckIfShouldBeDisabled();
-            
+
             if(_trailRenderer.time < 0)
                 GlobalPoolContainer.Instance.BulletPool.ReturnObject(this);
         }
@@ -85,7 +97,7 @@ namespace Core.Scripts.Runtime.Ammo
         private void InstantiateImpactEffect(Collision other)
         {
             if (other.contacts.Length <= 0) return;
-            
+
             ContactPoint contact = other.contacts[0];
 
             var impact = GlobalPoolContainer.Instance.BulletPoolImpact.GetObject();

@@ -41,9 +41,9 @@ namespace Core.Scripts.Runtime.Weapons
 
             _leftHandIK.weight = 0;
             ReduceRigWeight();
-            _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimationsKeys.EquipWeapon);
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimationsKeys.EquipType, ((float)equipType));
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimationsKeys.EquipSpeed, equipmentSpeed);
+            _agent.Animator.SetTrigger(_weaponAnimationsKeys.EquipWeapon);
+            _agent.Animator.SetFloat(_weaponAnimationsKeys.EquipType, ((float)equipType));
+            _agent.Animator.SetFloat(_weaponAnimationsKeys.EquipSpeed, equipmentSpeed);
         }
         
         private void ReduceRigWeight() => _rig.weight = 0.15f;
@@ -82,20 +82,20 @@ namespace Core.Scripts.Runtime.Weapons
         public void WeaponReloadAnimation(float weaponReloadSpeed)
         {
             float reloadSpeed = weaponReloadSpeed;
-            _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimationsKeys.Reload);
-            _agent.AgentAnimator.Animator.SetFloat(_weaponAnimationsKeys.WeaponReloadSpeed, reloadSpeed);
+            _agent.Animator.SetTrigger(_weaponAnimationsKeys.Reload);
+            _agent.Animator.SetFloat(_weaponAnimationsKeys.WeaponReloadSpeed, reloadSpeed);
             ReduceRigWeight();
         }
         
         public void SwitchAnimationLayer(int layerIndex)
         {
-            for (int i = 0; i < _agent.AgentAnimator.Animator.layerCount; i++)
-                _agent.AgentAnimator.Animator.SetLayerWeight(i, 0);
+            for (int i = 0; i < _agent.Animator.layerCount; i++)
+                _agent.Animator.SetLayerWeight(i, 0);
 
-            _agent.AgentAnimator.Animator.SetLayerWeight(layerIndex, 1);
+            _agent.Animator.SetLayerWeight(layerIndex, 1);
         }
         
         public void TriggerShootAnimation() => PlayFireAnimation();
-        private void PlayFireAnimation() => _agent.AgentAnimator.Animator.SetTrigger(_weaponAnimationsKeys.Fire);
+        private void PlayFireAnimation() => _agent.Animator.SetTrigger(_weaponAnimationsKeys.Fire);
     }
 }

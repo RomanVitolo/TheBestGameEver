@@ -35,7 +35,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             entity.Animator.SetBool(animBoolName, false);
         }
 
-        public void AnimationTrigger() => triggerCalled = true;
+        public virtual void AnimationTrigger() => triggerCalled = true;
 
         public virtual void AbilityTrigger()
         {

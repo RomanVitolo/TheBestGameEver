@@ -15,10 +15,10 @@ namespace Core.Scripts.Runtime.Weapons
 
         public void HandleFireMode(AgentWeaponMotor weaponMotor)
         {
-            if (!weaponMotor.CurrentWeapon().WeaponDataConfiguration.HasThisWeaponFireMode())
+            if (!weaponMotor.CurrentWeapon().Runtime.HasThisWeaponFireMode())
                 return;
 
-            if (_fireModeHandlers.TryGetValue(weaponMotor.CurrentWeapon().WeaponDataConfiguration.FireMode,
+            if (_fireModeHandlers.TryGetValue(weaponMotor.CurrentWeapon().Runtime.FireMode,
                     out var handler))
             {
                 handler.HandleFireMode(weaponMotor);

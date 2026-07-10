@@ -24,7 +24,35 @@ namespace Core.Scripts.Runtime.Agents
         [SerializeField] private float _cameraSensitivity;
 
         private RaycastHit _lastKnownMouseHit;
-        
+
+        public Transform CameraTarget => _cameraTarget;
+
+        /// <summary>Remote agents keep no laser: it is a first-person affordance for the owning client.</summary>
+        public void SetAimVisualsEnabled(bool isEnabled)
+        {
+            if (_aimLaser != null)
+                _aimLaser.enabled = isEnabled;
+        }
+
+        /// <summary>
+        /// The reticle and the camera target ride along on the prefab so that every player instantiates a
+        /// private pair, but they are world-space markers: this component assigns their absolute positions
+        /// each frame. Left parented, the agent's own rotation would swing them around it after
+        /// <see cref="Movement.RotationHandler"/> runs, and the bullet direction and camera would read the
+        /// swung value. Call this once the agent is standing at its spawn point.
+        /// </summary>
+        public void DetachWorldMarkers()
+        {
+            if (Aim != null) Aim.SetParent(null, true);
+            if (_cameraTarget != null) _cameraTarget.SetParent(null, true);
+        }
+
+        private void OnDestroy()
+        {
+            if (Aim != null) Destroy(Aim.gameObject);
+            if (_cameraTarget != null) Destroy(_cameraTarget.gameObject);
+        }
+
         public void UpdateAgentCameraPosition(Vector3 mousePosition, Vector2 moveInput)
         {
             _cameraTarget.position = Vector3.Lerp(_cameraTarget.position, DesiredCameraPosition(

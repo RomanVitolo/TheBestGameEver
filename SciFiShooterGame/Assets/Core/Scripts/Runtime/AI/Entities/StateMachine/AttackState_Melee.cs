@@ -37,6 +37,13 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             attackDirection = _entity.transform.position + (_entity.transform.forward * MAX_ATTACK_DISTANCE);
         }
 
+        /// <summary>The animation event that lands the blow. Server-only, like the rest of the state machine.</summary>
+        public override void AnimationTrigger()
+        {
+            base.AnimationTrigger();
+            _entity.TryDealMeleeDamage();
+        }
+
         public override void Update()
         {
             base.Update();
@@ -72,7 +79,9 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
 
             _entity.AttackData = UpdateAttackData();
         }
-        private bool TargetIsClose() => Vector3.Distance(_entity.transform.position, _entity.Target.position) <= 1f;
+        // Exit() runs on the transition into DeadState, by which point the target may have disconnected.
+        private bool TargetIsClose() =>
+            _entity.Target != null && Vector3.Distance(_entity.transform.position, _entity.Target.position) <= 1f;
         private AttackData UpdateAttackData()
         {
             List<AttackData> validAttacks = new List<AttackData>(_entity.AttackList);

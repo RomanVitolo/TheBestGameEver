@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using Core.Scripts.Runtime.Combat;
+using Core.Scripts.Runtime.Utilities;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -83,13 +86,21 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         protected override void Start()
         {
             base.Start();
-            StateMachine.Initialize(IdleState);
             InitializeSpeciality();
+        }
+
+        protected override void OnServerSpawn()
+        {
+            base.OnServerSpawn();
+            StateMachine.Initialize(IdleState);
         }
 
         protected override void Update()
         {
             base.Update();
+
+            if (!CanSimulate) return;
+
             StateMachine.CurrentState.Update();
 
             if (ShouldEnterCombatMode())
@@ -99,7 +110,7 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
         public override void EnterCombatMode()
         {
             if (InCombatMode) return;
-            
+
             base.EnterCombatMode();
             StateMachine.ChangeState(RecoveryState);
         }
@@ -117,16 +128,51 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             _pulledWeapon.gameObject.SetActive(true);
         }
 
-        public override void GetHit()
+        protected override void OnServerDeath() => StateMachine.ChangeState(DeadStateMelee);
+
+        /// <summary>Called on the attack animation's hit frame, server-side only.</summary>
+        public void TryDealMeleeDamage()
         {
-            base.GetHit();
-            
-            if(_healthPoints <= 0)
-                StateMachine.ChangeState(DeadStateMelee);
+            if (!IsServer || !IsAlive || !TargetInAttackRange()) return;
+
+            IDamageable damageable = TargetAgent.GetComponent<IDamageable>();
+
+            if (damageable == null || !damageable.IsAlive) return;
+
+            Vector3 hitPoint = TargetAgent.transform.position + Vector3.up;
+            damageable.TakeDamage(_attackDamage, transform.forward * AttackData.AttackMoveSpeed, hitPoint);
+        }
+
+        /// <summary>Server spawns the damaging thrown weapon; clients spawn a cosmetic copy of it.</summary>
+        public void ThrowWeapon()
+        {
+            if (!IsServer || TargetAgent == null) return;
+
+            NetworkObjectReference targetReference = TargetAgent.NetworkObject;
+
+            SpawnThrownWeapon(targetReference, isAuthoritative: true);
+            SpawnCosmeticThrownWeaponRpc(targetReference);
+        }
+
+        [Rpc(SendTo.NotServer)]
+        private void SpawnCosmeticThrownWeaponRpc(NetworkObjectReference targetReference) =>
+            SpawnThrownWeapon(targetReference, isAuthoritative: false);
+
+        private void SpawnThrownWeapon(NetworkObjectReference targetReference, bool isAuthoritative)
+        {
+            if (!targetReference.TryGet(out NetworkObject targetObject)) return;
+
+            Entity_WeaponThrow thrownWeapon = GlobalPoolContainer.Instance.WeaponThrow.GetObject();
+            thrownWeapon.transform.position = WeaponThrowStartPoint.position;
+
+            thrownWeapon.WeaponThrowSetup(WeaponThrowSpeed, targetObject.transform, WeaponThrowAimTimer,
+                isAuthoritative, _attackDamage);
         }
 
         public void ActivateDodgeRoll()
         {
+            // Called from the server's hit resolution; a client deciding this alone would desync the enemy.
+            if (!CanSimulate) return;
             if (MeleeType != EntityMelee_Type.Dodge) return;
             if (StateMachine.CurrentState != ChaseState) return;
             if (Vector3.Distance(transform.position, Target.position) < 2f) return;

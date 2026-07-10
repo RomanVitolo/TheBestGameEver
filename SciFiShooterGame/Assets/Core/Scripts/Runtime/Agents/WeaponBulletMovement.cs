@@ -21,8 +21,9 @@ namespace Core.Scripts.Runtime.Agents
 
             Vector3 direction = (aim.position - weaponPosition).normalized;
 
+            // Screen-space aim only exists on the owning client, which is the only caller of this method.
             if (!_agent.AgentAim.CanAimPrecisely() &&
-                _agent.AgentAim.Target(_agent.AgentAim.GetMouseHitInfo(Camera.main,
+                _agent.AgentAim.Target(_agent.AgentAim.GetMouseHitInfo(_agent.AgentCamera,
                     _agent.AgentInputReader.AimInputValue, _agent.AgentMovement.AimLayerMask)) == null)
                 direction.y = 0;
 

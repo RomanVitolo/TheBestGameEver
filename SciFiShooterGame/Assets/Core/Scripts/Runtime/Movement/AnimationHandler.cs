@@ -16,7 +16,7 @@ namespace Core.Scripts.Runtime.Movement
         public AnimationHandler(Agent agent)
         {
             _agent = agent;
-            _animator = _agent.AgentAnimator.Animator;
+            _animator = _agent.Animator;
             _xVelocityHash = _agent.AgentAnimator.XVelocity;
             _zVelocityHash = _agent.AgentAnimator.ZVelocity;
             _isRunningHash = _agent.AgentAnimator.IsRunning;

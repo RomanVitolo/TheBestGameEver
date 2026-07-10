@@ -31,6 +31,25 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
                 _ragdollCollider.enabled = active;
             }
         }
+
+        /// <summary>Kicks the bone nearest the hit so the corpse falls away from the shot.</summary>
+        public void ApplyImpulse(Vector3 force, Vector3 hitPoint)
+        {
+            Rigidbody nearest = null;
+            float nearestSqr = float.MaxValue;
+
+            foreach (var ragdollRigidbody in _ragdollRigidbodies)
+            {
+                float sqr = (ragdollRigidbody.worldCenterOfMass - hitPoint).sqrMagnitude;
+                if (sqr >= nearestSqr) continue;
+
+                nearestSqr = sqr;
+                nearest = ragdollRigidbody;
+            }
+
+            if (nearest != null)
+                nearest.AddForceAtPosition(force, hitPoint, ForceMode.Impulse);
+        }
         
     }
 }

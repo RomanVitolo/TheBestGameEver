@@ -19,11 +19,10 @@ namespace Core.Scripts.Runtime.AI.Entities.StateMachine
             base.Enter();
 
             interactionDisabled = false;
-            
-            entityMelee.Animator.enabled = false;
+
+            // The Animator and the ragdoll are switched over by Entity.DieRpc, which runs on every peer.
+            // Doing it here too would only affect the server's copy.
             entityMelee.MeleeAgent.isStopped = true;
-            
-            ragdoll.RagdollActive(true);
 
             stateTimer = 1.5f;
         }

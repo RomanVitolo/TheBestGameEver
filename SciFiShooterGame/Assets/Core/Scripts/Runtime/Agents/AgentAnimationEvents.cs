@@ -17,7 +17,7 @@ namespace Core.Scripts.Runtime.Agents
         public void ReloadIsOver()
         {
             _weaponAnimations.MaximizeRigWeight();
-            _agentWeaponMotor.CurrentWeapon().WeaponDataConfiguration.RefillAmmo();    
+            _agentWeaponMotor.CurrentWeapon().Runtime.RefillAmmo();
             
             _agentWeaponMotor.SetWeaponReady(true);
         }
