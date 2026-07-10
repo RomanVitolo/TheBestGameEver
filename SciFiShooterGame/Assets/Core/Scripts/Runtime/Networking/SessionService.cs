@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -27,27 +28,46 @@ namespace Core.Scripts.Runtime.Networking
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
 
-        public static async Task<ISession> HostAsync(int maxPlayers)
+        public static async Task<ISession> HostAsync(string sessionName, int maxPlayers)
         {
             await InitializeAsync();
 
-            // Private: not listed in queries or quick-join, but still joinable with the code.
+            // Public so it shows up in the lobby browser. Still joinable by code as well as by id.
             var options = new SessionOptions
             {
+                Name = string.IsNullOrWhiteSpace(sessionName) ? "Session" : sessionName.Trim(),
                 MaxPlayers = maxPlayers,
-                IsPrivate = true
+                IsPrivate = false
             }.WithRelayNetwork();
 
             Current = await MultiplayerService.Instance.CreateSessionAsync(options);
             return Current;
         }
 
-        public static async Task<ISession> JoinAsync(string joinCode)
+        public static async Task<ISession> JoinByCodeAsync(string joinCode)
         {
             await InitializeAsync();
 
             Current = await MultiplayerService.Instance.JoinSessionByCodeAsync(joinCode);
             return Current;
+        }
+
+        public static async Task<ISession> JoinByIdAsync(string sessionId)
+        {
+            await InitializeAsync();
+
+            Current = await MultiplayerService.Instance.JoinSessionByIdAsync(sessionId);
+            return Current;
+        }
+
+        /// <summary>Lists public, joinable sessions for the lobby browser.</summary>
+        public static async Task<IList<ISessionInfo>> QueryAsync()
+        {
+            await InitializeAsync();
+
+            var options = new QuerySessionsOptions();
+            QuerySessionsResults results = await MultiplayerService.Instance.QuerySessionsAsync(options);
+            return results.Sessions;
         }
 
         public static async Task LeaveAsync()
