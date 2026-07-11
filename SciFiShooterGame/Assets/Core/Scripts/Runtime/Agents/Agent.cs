@@ -3,6 +3,7 @@ using Core.Scripts.Runtime.CameraSystem;
 using Core.Scripts.Runtime.Networking;
 using GlobalInputs;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Core.Scripts.Runtime.Agents
@@ -18,6 +19,8 @@ namespace Core.Scripts.Runtime.Agents
         public IAgentAim AgentAim { get; private set; }
         public CharacterController CharacterController { get; private set; }
         public Animator Animator { get; private set; }
+        /// <summary>Replicates triggers. Only the authority (the owner, on this prefab) may call SetTrigger.</summary>
+        public NetworkAnimator NetworkAnimator { get; private set; }
         public AgentHealth Health { get; private set; }
         public AgentWeaponFire WeaponFire { get; private set; }
 
@@ -30,6 +33,8 @@ namespace Core.Scripts.Runtime.Agents
             CharacterController = GetComponent<CharacterController>();
             AgentAim = GetComponent<IAgentAim>();
             Animator = GetComponentInChildren<Animator>();
+            // The NetworkAnimator lives on the character model child (next to the Animator), not the root.
+            NetworkAnimator = GetComponentInChildren<NetworkAnimator>();
             Health = GetComponent<AgentHealth>();
             WeaponFire = GetComponent<AgentWeaponFire>();
         }

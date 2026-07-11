@@ -41,7 +41,9 @@ namespace Core.Scripts.Runtime.Weapons
 
             _leftHandIK.weight = 0;
             ReduceRigWeight();
-            _agent.Animator.SetTrigger(_weaponAnimationsKeys.EquipWeapon);
+            // Trigger goes through NetworkAnimator so remote peers replay the equip animation. The floats
+            // around it are ordinary parameters NetworkAnimator already auto-syncs from the authority.
+            _agent.NetworkAnimator.SetTrigger(_weaponAnimationsKeys.EquipWeapon);
             _agent.Animator.SetFloat(_weaponAnimationsKeys.EquipType, ((float)equipType));
             _agent.Animator.SetFloat(_weaponAnimationsKeys.EquipSpeed, equipmentSpeed);
         }
@@ -82,7 +84,7 @@ namespace Core.Scripts.Runtime.Weapons
         public void WeaponReloadAnimation(float weaponReloadSpeed)
         {
             float reloadSpeed = weaponReloadSpeed;
-            _agent.Animator.SetTrigger(_weaponAnimationsKeys.Reload);
+            _agent.NetworkAnimator.SetTrigger(_weaponAnimationsKeys.Reload);
             _agent.Animator.SetFloat(_weaponAnimationsKeys.WeaponReloadSpeed, reloadSpeed);
             ReduceRigWeight();
         }
@@ -96,6 +98,6 @@ namespace Core.Scripts.Runtime.Weapons
         }
         
         public void TriggerShootAnimation() => PlayFireAnimation();
-        private void PlayFireAnimation() => _agent.Animator.SetTrigger(_weaponAnimationsKeys.Fire);
+        private void PlayFireAnimation() => _agent.NetworkAnimator.SetTrigger(_weaponAnimationsKeys.Fire);
     }
 }
